@@ -1,0 +1,55 @@
+test_nbody.cpp tests the NBODY algorithm of NVIDIA SDK
+
+It is highly recommanded to use it before using Simbuca V3.0 with NBODY algorithm.
+
+How to use it:
+- in Makefile, set the good PATH of CUDA include. (by default /usr/local/cuda/include)
+- compilation with make
+
+then launch 
+./test_nbody Npart Niteration options 
+Npart is the number of particles (2^n)
+Niteration is the number of calculation 
+
+options: 
+benchmark : returns the performance of the NBODY algorithm
+cpu : compares the results with the CPU calculation
+sync : use synchronised mode of the NBODY algorithm (it's slower), asynchronised mode is by default)
+
+examples
+./test_nbody 1024 100 benchmark cpu 
+
+        NBODY test for SIMBUCA V3.0
+        Number of particles : 1024
+        Number of iteration : 100
+        Asynchro mode enable
+        Benchmark mode enable
+        Comparison with CPU calculation
+
+*** CUDA SIMULATION STARTS ***
+######################################
+            NBODY ALGO USED         
+ tiles of 128 x 128 bodies              
+ 8 thread(s) per body               
+ 8 blocks used                       
+######################################
+*** CUDA SIMULATION ENDS ***
+
+CUDA time elapsed: 3.689888 ms
+PERF = 568.351126 GFLOPS/s
+Number of double addition on the CPU during GPU calculation : 22473
+
+
+######################################
+            NBODY ALGO USED         
+ tiles of 128 x 128 bodies              
+ 8 thread(s) per body               
+ 8 blocks used                       
+######################################
+*** CUDA SIMULATION ENDS ***
+
+Maximal error  between CPU and GPU : 8.055401e-05
+Minimal error  between CPU and GPU : 1.382626e-09
+Mean error between CPU and GPU : 2.934498e-07
+
+
