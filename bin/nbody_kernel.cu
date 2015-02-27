@@ -69,7 +69,7 @@ float3 *acc_Dev;
 //cudaEvent_t start, stop;
 
 //CUDA PROPS
-int p = 512;
+int p_nb = 512;
 int q = 1;
 bool bMT =false;
 dim3 grid, threads;
@@ -128,31 +128,31 @@ extern "C" void initialize(int n_,int p_, int q_ ,int gridx_)
 	{
 		cudaGetDeviceProperties(&props, 0);
 	
-		p=min(nbody,p);
+		p_nb=min(nbody,p_nb);
 		
-		while ((nbody > 0) && p > 1 && (nbody / p < (unsigned)props.multiProcessorCount))
+		while ((nbody > 0) && p_nb > 1 && (nbody / p_nb < (unsigned)props.multiProcessorCount))
        		{
-            		p /= 2;
+            		p_nb /= 2;
             		q *= 2;
         	}
 
-       		grid.x = (int)(nbody + (p-1))/p;
+       		grid.x = (int)(nbody + (p_nb-1))/p_nb;
 	}
 	else
 	{
-		p = p_;
+		p_nb = p_;
 		q = q_;
 		grid.x = gridx_;
 	}
 	
-	threads.x = p;
+	threads.x = p_nb;
 	threads.y = q;
 	threads.z = 1;
 	grid.y = 1;
 	grid.z = 1;
 	printf("######################################\n");
 	printf("            NBODY ALGO USED         \n");
-	printf(" tiles of %d x %d bodies              \n",p,p);
+	printf(" tiles of %d x %d bodies              \n",p_nb,p_nb);
 	printf(" %d thread(s) per body               \n",q);
 	printf(" %d blocks used                       \n",grid.x);
 	printf("######################################\n");
@@ -167,7 +167,7 @@ extern "C" void initialize(int n_,int p_, int q_ ,int gridx_)
           	bMT = true;
 	}
 	
-	sharedMemSize = p * q  * 4 * sizeof(float);	
+	sharedMemSize = p_nb * q  * 4 * sizeof(float);	
 }
 
 
@@ -258,10 +258,10 @@ __global__ void computeBodyAccel(float4 * positions, float3 * DevA, int numBodie
     //extern __shared__ float4 sharedPos[];
     float3 acc = {0.0f, 0.0f, 0.0f};
 
-    int p = blockDim.x;
+    int p_nb = blockDim.x;
     int q = blockDim.y;
     int n = numBodies;
-    int numTiles = n / (p * q);
+    int numTiles = n / (p_nb * q);
    // float3 * globalA = (float3*) DevA;
     int index = blockIdx.x * blockDim.x + threadIdx.x;
     float4 myposition = positions[index];
@@ -271,8 +271,8 @@ __global__ void computeBodyAccel(float4 * positions, float3 * DevA, int numBodie
     {
         sharedPos[threadIdx.x+blockDim.x*threadIdx.y] = 
             multithreadBodies ? 
-            positions[WRAP(blockIdx.x + q * tile + threadIdx.y, gridDim.x) * p + threadIdx.x] :
-        positions[WRAP(blockIdx.x + tile,                   gridDim.x) * p + threadIdx.x];
+            positions[WRAP(blockIdx.x + q * tile + threadIdx.y, gridDim.x) * p_nb + threadIdx.x] :
+        positions[WRAP(blockIdx.x + tile,                   gridDim.x) * p_nb + threadIdx.x];
 
         __syncthreads();
 

@@ -25,7 +25,7 @@ help:
 COMPILER=g++
 
 #processing unit: cpu / gpu
-PU=cpu
+PU=gpu
 
 #NBODY algorithm for the calculation: CUNBODY / NBODY
 #after changing $PU, type 'make clean' to remove all *.o files.
@@ -76,11 +76,12 @@ LINK_icpc=icpc -lm -O3 -std=c++11 -o
 
 # CUDA Compiler
 CUDASYS = /usr/local/cuda
-NVCC = nvcc	
-NVCCFLAGS = --compiler-options -fno-strict-aliasing,-Wall,-Wextra,-Wno-unused-parameter -O3
+NVCC = /usr/local/cuda/bin/nvcc	
+NVCCFLAGS = -ccbin gcc --compiler-options -fno-strict-aliasing,-Wall,-Wextra,-Wno-unused-parameter -O3
 #MPI Compiler
-CC_mpicpp=mpicxx  -O3 -D__MPI_ON__ -finline-functions -Wno-write-strings  -DMPICH_IGNORE_CXX_SEEK  $(NBODY_ALGO_FLAGS) -c 
-LINK_mpicpp=mpicxx -O3   -std -lm -o 
+MPI_PATH = /usr/local/mpich2/bin
+CC_mpicpp=$(MPI_PATH)/mpicxx  -O3 -D__MPI_ON__ -finline-functions -Wno-write-strings  -DMPICH_IGNORE_CXX_SEEK  $(NBODY_ALGO_FLAGS) -c 
+LINK_mpicpp=$(MPI_PATH)/mpicxx -O3   -std -lm -o 
 #CC_mpicpp=mpicxx  -Wall -O3 -D__MPI_ON__ -finline-functions -I/Users/pdupre/mpich2/include    -DMPICH_IGNORE_CXX_SEEK -c
 #LINK_mpicpp=g++ -O3  -L/Users/pdupre/mpich2/lib -lmpichcxx -lpmpich -lmpich -Wwrite-strings -std -lm -o 
 
@@ -175,7 +176,7 @@ ifeq ($(PU),gpu)
   ifeq ($(NBODY_ALGO),NBODY)
 	$(LINK) $(EXECUTABLE)  main.o parser.o ionFly.o ode.o force.o \
 	-L $(CUDASYS)/lib64 -lcuda -lcudart -lGL -lGLU \
--L $(CUDASYS)/lib -L /home/dupre/NVIDIA_GPU_Computing_SDK/C/lib -lcuda -lcudart -lGL -lGLU  \
+-L $(CUDASYS)/lib -L /usr/local/NVIDIA_GPU_Computing_SDK-v40/C/lib -lcuda -lcudart -lGL -lGLU  \
     coll.o ImageCharges.o CreateRecoilDistr.o fieldcalc.o fieldmap.o matrix.o  ioncloud.o particle.o ion.o mtrand.o logfile.o IonTable.o PDGTable.o nbody_kernel.o Operation.o SimParser.o Initialization.o mpi_funcs.o nbody.o trapparameters.o numrec.o Potmap.o SLogger.o SLogWriter.o
   else
 	$(LINK) $(EXECUTABLE)  main.o parser.o ionFly.o ode.o force.o \
