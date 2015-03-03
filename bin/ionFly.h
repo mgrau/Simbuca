@@ -1,4 +1,3 @@
-//ionFly.h
 #ifndef IONFLY_H
 #define IONFLY_H
 
@@ -11,7 +10,6 @@ using namespace std;
 #include "force.h"
 #include "ode.h"
 #include "ImageCharges.h"
-#include "coll.h"
 #include "logfile.h"
 #include "trapparameters.h"
 #include "SLogger.h"
@@ -27,8 +25,8 @@ using namespace std;
 #include <sstream>
 
 #ifdef __GUI_ON__
-  #include <QObject>
-  #include "../GUI/counter.h"
+#include <QObject>
+#include "../GUI/counter.h"
 #endif
 
 #ifdef __GUI_ON__
@@ -76,7 +74,7 @@ void DoAxialCouplingExcitationWithoutBuffergas(double _time_movement, long doubl
 void DoSIMCOWithoutBuffergas(double _time_movement, long double _exc_w, double _U_exc, long double _exc_w2, double _U_exc2,IonCloud &_cloud,_ode_vars & odev);
 // NOT CODED YET
 void DoAxialQuadCoulpingExcitationWithoutBuffergas(double _time_movement, long double _exc_w, double _U_exc, long double _exc_w2, double _U_exc2,
-                                                   long double _exc_w3, double _U_exc3,long double _exc_w4, double _U_exc4,IonCloud &_cloud,_ode_vars & odev);
+        long double _exc_w3, double _U_exc3,long double _exc_w4, double _U_exc4,IonCloud &_cloud,_ode_vars & odev);
 
 void DoARexcitation(double _time_movement, double _U_exc,double _exc_w, double _exc_w2, IonCloud & _cloud,_ode_vars & odev);
 

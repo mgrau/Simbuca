@@ -22,20 +22,16 @@ Operation::Operation()
 {
   name="NE";
   time_operation=1e-9;
-  p_buff_mbar = 0.;
   frequency = 0.;
   amplitude = 0.;
-  buffergas = true;
 }
 
 Operation::Operation(string _name)
 {
   name=_name;
   time_operation=1e-9;
-  p_buff_mbar = 0.;
   frequency = 0.;
   amplitude = 0.;
-  buffergas = true;
 }
 
 Operation::~Operation(){};
@@ -130,15 +126,6 @@ void Operation::Launch(IonCloud &_cloud, _ode_vars & odev)
       odev.forcev.Load_EXC_EMAP(file_name,amplitude);
       odev.forcev.Reset_excitation_type();
       odev.forcev.Set_excitation_type(10);
-      if(p_buff_mbar==0)
-      {
-          SetBufferGas(false);
-      }
-      else
-      {
-          SetBufferGas(true);
-      }
-      SetPressure(p_buff_mbar/1000.);
       
       MoveParticles(time_operation,_cloud,odev);
 #ifdef __MPI_ON__

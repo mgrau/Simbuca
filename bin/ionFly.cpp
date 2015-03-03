@@ -42,7 +42,6 @@ void IncludeElectrodeBoundaries(bool _bool){
 void InitIonFly(const char * _filenamebegin, int _ode_order, double _timestep, bool _adaptive_stepsize,IonCloud &_cloud, _ode_vars & odev){ //IonFly stands above Ode and Coll...
 	ilogger<<"In case of ideal trap: B = ";ilogger<<odev.forcev.trap_param.B0;ilogger<<" T.U0/d2 = ";ilogger<< odev.forcev.trap_param.Ud2;ilogger<<"\n";
   	//InitOde(_ode_order, _timestep, _adaptive_stepsize);
-	InitColl();
     	odev.Init_ode( _ode_order,  _timestep,  _adaptive_stepsize);
     	_cloud.Create(_filenamebegin);
 	filename_begin=_filenamebegin;
@@ -169,17 +168,6 @@ void MoveParticles(double _time_movement,IonCloud &_cloud,_ode_vars &odev){
         
         
 		step(_cloud,odev);
-        
-		if(buffergas){
-			for(int j=0; j< _cloud.nrparticles ; j++){
-				collision = gas_interact(_cloud.vel[j][0],_cloud.vel[j][1],_cloud.vel[j][2],(*_cloud.ions)[j].Getmass(),GetTimeStep(odev));
-				if(collision == true)
-                {
-                    _cloud.nrcoll[j]++;
-                }
-			}
-		}//--buffergas
-        
         
 		//if CALCPOTENTIAL
 		if(odev.forcev.trap_param.trap_config == 2){
@@ -352,12 +340,8 @@ void UseScaledCoulomb(double _ScaledCoulombFactor){
 
 
 void DoNoExcitation(double _time_movement, bool _buffergas, double _p_buffergas, IonCloud &_cloud, _ode_vars & odev){
-    buffergas = _buffergas; SetPressure(_p_buffergas);
     odev.InitExcitationVars(0,false, false,0.0, 0.0);
     ilogger<<"No excitation for ";ilogger<<_time_movement;ilogger<<" sec,\n";
-    if(_buffergas){ilogger<<"with buffergas: ";ilogger<<_p_buffergas*1000.0;ilogger<<" mbar\n";}
-    else{ilogger<<"with no buffergas\n";}
-    
     MoveParticles(_time_movement,_cloud,odev);
 }
 void ChangeEfieldmap(char * _trapErz){
@@ -366,7 +350,6 @@ void ChangeEfieldmap(char * _trapErz){
 }
 
 void DoTransfer(double _time_movement, bool _buffergas, double _p_buffergas, char * _transferErz, char * _trapErz, IonCloud &_cloud, _ode_vars & odev){
-    buffergas = _buffergas; SetPressure(_p_buffergas);
     odev.InitExcitationVars(0,false, false,0.0, 0.0);
     ilogger<<"Doing Trap Transfer";ilogger<<_time_movement;ilogger<<" sec\n";
     ChangeEfield(_transferErz);
@@ -376,7 +359,6 @@ void DoTransfer(double _time_movement, bool _buffergas, double _p_buffergas, cha
 
 
 void DoQuadrupoleExcitationWithoutBuffergas(double _time_movement, long double _exc_w, double _U_exc, IonCloud &_cloud, _ode_vars & odev){
-    buffergas = false;
     odev.InitExcitationVars(2,false,false,_U_exc, _exc_w);
     ilogger<<"Quadrupole no buffergas for ";ilogger<<_time_movement;ilogger<<" sec\n";
     ilogger<<"\t with frequency ";ilogger<<_exc_w;ilogger<<" Hz and amplitude ";ilogger<<_U_exc;ilogger<<"V\n";
@@ -384,7 +366,6 @@ void DoQuadrupoleExcitationWithoutBuffergas(double _time_movement, long double _
 }
 
 void DoQuadrupoleExcitationWithBuffergas(double _time_movement, long double _exc_w, double _U_exc, double _p_buffergas, IonCloud &_cloud, _ode_vars & odev){
-    buffergas = true; SetPressure(_p_buffergas);
     odev.InitExcitationVars(2,false,false,_U_exc, _exc_w);
     ilogger<<"Quadrupole and Buffergas ";ilogger<<_p_buffergas*1000.0;ilogger<<" mbar for ";ilogger<<_time_movement;ilogger<<" sec\n";
     ilogger<<"\t with frequency ";ilogger<<_exc_w;ilogger<<" Hz and amplitude ";ilogger<<_U_exc;ilogger<<"V\n";
@@ -393,16 +374,13 @@ void DoQuadrupoleExcitationWithBuffergas(double _time_movement, long double _exc
 }
 
 void DoDipoleExcitationWithoutBuffergas(double _time_movement, long double _exc_w, double _U_exc, IonCloud &_cloud, _ode_vars & odev){
-    buffergas = false;
     odev.InitExcitationVars(1,false,false,_U_exc, _exc_w);
     ilogger<<"Dipole no Buffergas for ";ilogger<<_time_movement;ilogger<<" sec\n";
     ilogger<<"\t with frequency ";ilogger<<_exc_w;ilogger<<" Hz and amplitude ";ilogger<<_U_exc;ilogger<<"V\n";
     MoveParticles(_time_movement,_cloud,odev);
 }
 void DoDipoleExcitationWithBuffergas(double _time_movement, long double _exc_w, double _U_exc, double _p_buffergas, IonCloud &_cloud, _ode_vars & odev){
-    buffergas = true;  SetPressure(_p_buffergas);
     odev.InitExcitationVars(1, false,false,_U_exc, _exc_w);
-    ilogger<<"Dipole and Buffergas ";ilogger<<_p_buffergas*1000.0;ilogger<<" mbar for ";ilogger<<_time_movement;ilogger<<" sec\n";
     ilogger<<"\t with frequency ";ilogger<<_exc_w;ilogger<<" Hz and amplitude ";ilogger<<_U_exc;ilogger<<"V\n";
     MoveParticles(_time_movement,_cloud,odev);
 }
@@ -410,16 +388,13 @@ void DoDipoleExcitationWithBuffergas(double _time_movement, long double _exc_w, 
 
 
 void DoOctupoleExcitationWithoutBuffergas(double _time_movement, long double _exc_w, double _U_exc, IonCloud &_cloud, _ode_vars & odev){
-    buffergas = false;
     odev.InitExcitationVars(3,false,false,_U_exc, _exc_w);
     ilogger<<"Octupole no Buffergas for ";ilogger<<_time_movement;ilogger<<" sec\n";
     ilogger<<"\t with frequency ";ilogger<<_exc_w;ilogger<<" Hz and amplitude ";ilogger<<_U_exc;ilogger<<"V\n";
     MoveParticles(_time_movement,_cloud,odev);
 }
 void DoOctupoleExcitationWithBuffergas(double _time_movement, long double _exc_w, double _U_exc, double _p_buffergas, IonCloud &_cloud, _ode_vars & odev){
-    buffergas = true;  SetPressure(_p_buffergas);
     odev.InitExcitationVars(3,false,false,_U_exc, _exc_w);
-    ilogger<<"Octupole and Buffergas ";ilogger<<_p_buffergas*1000.0;ilogger<<" mbar for ";ilogger<<_time_movement;ilogger<<" sec\n";
     ilogger<<"\t with frequency ";ilogger<<_exc_w;ilogger<<" Hz and amplitude ";ilogger<<_U_exc;ilogger<<"V\n";
     MoveParticles(_time_movement,_cloud,odev);
 }
@@ -428,7 +403,6 @@ void DoOctupoleExcitationWithBuffergas(double _time_movement, long double _exc_w
 
 
 void DoAxialCouplingExcitationWithoutBuffergas(double _time_movement, long double _exc_w, double _U_exc, IonCloud &_cloud, _ode_vars & odev){
-	buffergas = false;
 	odev.InitExcitationVars(4,false,false,_U_exc,_exc_w);
 	ilogger<<"Axial Coupling excitation no Buffergas for ";ilogger<<_time_movement;ilogger<<" sec\n";
 	ilogger<<"\t with frequency ";ilogger<<_exc_w;ilogger<<" Hz and amplitude ";ilogger<<_U_exc;ilogger<<"V\n";
@@ -438,7 +412,6 @@ void DoAxialCouplingExcitationWithoutBuffergas(double _time_movement, long doubl
 
 void DoAxialQuadCoulpingExcitationWithoutBuffergas(double _time_movement, long double _exc_w, double _U_exc, long double _exc_w2, double _U_exc2,
                                                    long double _exc_w3, double _U_exc3,long double _exc_w4, double _U_exc4, IonCloud &_cloud, _ode_vars & odev){
-	buffergas = false;
 	odev.InitExcitationVars(8,false,false,_U_exc,_exc_w);
     odev.U_exc2 = _U_exc2;
     odev.U_exc3 = _U_exc3;
@@ -455,7 +428,6 @@ void DoAxialQuadCoulpingExcitationWithoutBuffergas(double _time_movement, long d
 }
 
 void DoSIMCOWithoutBuffergas(double _time_movement, long double _exc_w, double _U_exc, long double _exc_w2, double _U_exc2, IonCloud &_cloud, _ode_vars & odev){
-	buffergas = false;
 	odev.InitExcitationVars(7,false,false,_U_exc,_exc_w);
     odev.U_exc2 = _U_exc2;
     odev.w_exc2 = _exc_w2;
@@ -466,7 +438,6 @@ void DoSIMCOWithoutBuffergas(double _time_movement, long double _exc_w, double _
 }
 
 void DoRotatingWall(int _order,double _time_movement, long double _exc_w, double _U_exc, bool _buffergas, double _p_buffergas, IonCloud &_cloud, _ode_vars & odev){
-    buffergas = _buffergas;  SetPressure(_p_buffergas);
     switch ( _order )
     {  case 0:
             odev.InitExcitationVars(1,true,false,_U_exc, _exc_w);
@@ -490,9 +461,6 @@ void DoRotatingWall(int _order,double _time_movement, long double _exc_w, double
             slogger << ERROR << "choose a correct order for Rotating wall." << SLogger::endmsg;exit(1);
     }
     
-    if(buffergas){  ilogger<<"and Buffergas ";ilogger<<_p_buffergas*1000.0;ilogger<<" mbar for ";}
-    else {ilogger<<"without Buffergas for ";}
-    
     ilogger<<_time_movement;ilogger<<" sec\n";
     ilogger<<"\t with frequency ";ilogger<<_exc_w;ilogger<<" Hz and amplitude ";ilogger<<_U_exc;ilogger<<"V\n";
     
@@ -501,7 +469,6 @@ void DoRotatingWall(int _order,double _time_movement, long double _exc_w, double
 
 
 void DoAntiRW(int _order,double _time_movement, long double _exc_w, double _U_exc, bool _buffergas, double _p_buffergas, IonCloud &_cloud, _ode_vars & odev){
-    buffergas = _buffergas;  SetPressure(_p_buffergas);
     switch ( _order )
     {
         case 1:
@@ -518,8 +485,6 @@ void DoAntiRW(int _order,double _time_movement, long double _exc_w, double _U_ex
             slogger << ERROR << "choose a correct order for anti-rotating wall." << SLogger::endmsg;exit(1);
     }
     
-    if(buffergas){  ilogger<<"and Buffergas ";ilogger<<_p_buffergas*1000.0;ilogger<<" mbar for ";}
-    else {ilogger<<"without Buffergas for ";}
     
     ilogger<<_time_movement;ilogger<<" sec\n";
     ilogger<<"\t with frequency ";ilogger<<_exc_w;ilogger<<" Hz and amplitude ";ilogger<<_U_exc;ilogger<<"V\n";
@@ -530,7 +495,6 @@ void DoAntiRW(int _order,double _time_movement, long double _exc_w, double _U_ex
 
 void DoARexcitation(double _time_movement, double _U_exc,double _exc_w, double _exc_w2, IonCloud & _cloud,_ode_vars & odev){
     // in case of AR: set sweeprate = _exc_wc2
-    buffergas = false;
     odev.InitExcitationVars(9,false,false,_U_exc,_exc_w);
     odev.w_exc2 = (_exc_w2-_exc_w)/_time_movement; //sweeprate
     InitARexcitation("../../fieldmaps/E_fieldmap_U8_1V.txt",filename_begin);
@@ -541,7 +505,6 @@ void DoARexcitation(double _time_movement, double _U_exc,double _exc_w, double _
 }
 
 void DoFBexcitation(double _time_movement, double _U_exc,double _exc_w, double _exc_w2, IonCloud & _cloud,_ode_vars & odev){
-    buffergas = false;
     imagecharges = true;
     odev.InitExcitationVars(10,false,false,_U_exc,_exc_w);
     odev.w_exc2 = _exc_w2; 
@@ -553,23 +516,7 @@ void DoFBexcitation(double _time_movement, double _U_exc,double _exc_w, double _
     MoveParticles(_time_movement,_cloud,odev);
 }
 
-/*
-void DoFBexcitation(double _time_movement, IonCloud & _cloud,_ode_vars & odev){
-    buffergas = false;
-    imagecharges = true;
-    odev.InitExcitationVars(10,false,false,_U_exc,_exc_w);
-    odev.w_exc2 = _exc_w2;
-    InitFBexcitation("../../fieldmaps/E_fieldmap_U8_1V.txt",filename_begin);
-    ilogger<<"FB excitation for ";ilogger<<_time_movement;ilogger<<" sec\n";
-    ilogger<<"\t with amplitude ";ilogger<<_U_exc;ilogger<<" V\n";
-    ilogger<<"\t frequency 1 ";ilogger<<_exc_w;ilogger<<" Hz\n ";
-    ilogger<<"\t frequency 2 ";ilogger<<_exc_w2;ilogger<<" Hz\n ";
-    MoveParticles(_time_movement,_cloud,odev);
-}
-*/
-
 void DoFrequencyScan(double _time_movement, double _U_exc, int _order, bool _rotatingwall, double _p_buffergas, double _central_freq, double _freq_dev, int _nr_steps, IonCloud &_cloud, _ode_vars & odev){
-    buffergas = true; SetPressure(_p_buffergas);
     if(_order > 3){ilogger<<"ERROR order should be < 3 , You shall choose the correct order!\n";}
     odev.InitExcitationVars(_order, _rotatingwall, false, _U_exc, _central_freq);
     
@@ -677,9 +624,6 @@ void SetFileNamePrefix(char * filenameprefix){
 }
 void SetTotalTime_of_Simu(double t_,_ode_vars & odev){
     odev.total_time = t_;
-}
-void SetBufferGas(bool b_){
-    buffergas = b_;
 }
 static inline void loadbar(unsigned int x, unsigned int n, unsigned int w = 50)
 {
