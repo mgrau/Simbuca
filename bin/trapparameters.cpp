@@ -1,4 +1,3 @@
-
 #include "trapparameters.h"
 
 int countword2(string line)

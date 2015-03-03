@@ -3,7 +3,7 @@
 #define ION_H
 #include "globals.h"
 #include "trapparameters.h"
-#include "math.h"
+#include <math.h>
 #include "logfile.h"
 #include <iostream>
 using namespace std;

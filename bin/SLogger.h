@@ -9,12 +9,6 @@
 #include "SMsgType.h"
 #include "SLogWriter.h"
 
-#ifdef __GUI_ON__
-  #include <QObject>
-  #include <QMessageBox>
-  #include <QApplication>
-#endif
-
 
 // Forward declaration(s):
 class SLogWriter;

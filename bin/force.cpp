@@ -106,27 +106,6 @@ void Initpoolvector(int nrParticles,const IonCloud &_cloud,_force_vars &forcev){
 
 }
 
-/*
- vector<vector<double> >& dadaforce(){
- if(!poolvectorsinitialized){Initpoolvector(_cloud.nrparticles);}
- for(j_=0; j_< _cloud.nrparticles; j_++)
- {
- pool_force[j_][0]=0.0;
- pool_force[j_][0]=0.0;
- pool_force[j_][0]=0.0;
- }
- return pool_force;
- }
- */
-
-
-
-
-
-
-
-// ** FUNCTION force() **//
-// ** FUNCTION force() **//
 // ** FUNCTION force() **//
 void force(const IonCloud &_cloud,_ode_vars &odev){
     double x,y,z,vx,vy,vz,r2,r3,r5,z2,r4,z4, qDmassa,qqDmassaXke, el2ke;

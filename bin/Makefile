@@ -86,7 +86,7 @@ LINK_mpicpp=$(MPI_PATH)/mpicxx -O3   -std -lm -o
 #LINK_mpicpp=g++ -O3  -L/Users/pdupre/mpich2/lib -lmpichcxx -lpmpich -lmpich -Wwrite-strings -std -lm -o 
 
 #libraries
-cunbodylib=../CoulombSnippet/cunbody_CUDA5.0/libcunbody1.a_TI20130122_CUDA5.0
+cunbodylib=../libraries/cunbody/libcunbody1.a_TI20140519_CUDA60
 TREE_LIB=../libraries/octgrav_v1.7d/
 #--------------------------------------------#
 

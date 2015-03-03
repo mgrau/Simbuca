@@ -9,10 +9,6 @@
 #include "SLogger.h"
 
 
-#ifdef __GUI_ON__
-#include <QTextBrowser>
-#endif
-
 using namespace std;
 //----------------------------------
 struct Operation_sim{
@@ -42,10 +38,6 @@ class SimParser {
   void PrintFile(char * filename);
 
   void SetTrapConfigOff();
-#ifdef __GUI_ON__
- void PrintParser(QTextEdit * textwindow);
-#endif
-
 
 
   vector < Operation_sim > operation_vec;
