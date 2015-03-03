@@ -1,10 +1,3 @@
-//
-//  Operation.cpp
-//
-//
-//  Created by pierre dupre on 27/09/12.
-//
-//
 #include <math.h>
 #include <sstream>
 #include <string>
@@ -25,7 +18,6 @@ Operation::Operation()
   p_buff_mbar = 0.;
   frequency = 0.;
   amplitude = 0.;
-  buffergas = true;
 }
 
 Operation::Operation(string _name)
@@ -48,128 +40,9 @@ void Operation::Launch(IonCloud &_cloud, _ode_vars & odev)
   {
   	DoNoExcitation(time_operation,buffergas,p_buff_mbar/1000.0,_cloud,odev);
   }
-  if(name=="DE")
-  {
-  	if(p_buff_mbar==0)
-	{
-		DoDipoleExcitationWithoutBuffergas(time_operation, frequency, amplitude,_cloud,odev);
-	}
-	else
-	{
-		DoDipoleExcitationWithBuffergas(time_operation, frequency, amplitude,p_buff_mbar/1000.,_cloud,odev);
-	}	
-  }
-  if(name=="QE")
-  {
-  	if(p_buff_mbar==0)
-	{
-		DoQuadrupoleExcitationWithoutBuffergas(time_operation, frequency, amplitude,_cloud,odev);
-	}
-	else
-	{
-		DoQuadrupoleExcitationWithBuffergas(time_operation, frequency, amplitude,p_buff_mbar/1000.,_cloud,odev);
-	}	
-  }
-  if(name=="OE")
-  {
-  	if(p_buff_mbar==0)
-	{
-		DoOctupoleExcitationWithoutBuffergas(time_operation, frequency, amplitude,_cloud,odev);
-	}
-	else
-	{
-		DoOctupoleExcitationWithBuffergas(time_operation, frequency, amplitude,p_buff_mbar/1000.,_cloud,odev);
-	}	
-  }
-  if(name=="RW")
-  {
-  	//if(p_buff_mbar==0.) 
-  	DoRotatingWall(order,time_operation, frequency, amplitude, buffergas, p_buff_mbar/1000.,_cloud,odev);
-  }  
-  if(name=="AW")
-  {
-  	if(p_buff_mbar==0.) 
-  	DoAntiRW(order,time_operation, frequency, amplitude, buffergas, p_buff_mbar/1000.,_cloud,odev);
-  }
-  if(name=="AC")
-  {
-	DoAxialCouplingExcitationWithoutBuffergas(time_operation,frequency,amplitude,_cloud,odev);
-  }
-  if(name=="AQ")
-  {
-      DoAxialQuadCoulpingExcitationWithoutBuffergas(time_operation,frequency,amplitude,frequency2,amplitude2,f3,a3,f4,a4,_cloud,odev);
-  }
-  if(name=="SC")
   {
       DoSIMCOWithoutBuffergas(time_operation,frequency,amplitude,frequency2,amplitude2,_cloud,odev);
   }
-  if(name=="AR")
-  {
-     DoARexcitation(time_operation,amplitude,frequency,frequency2,_cloud,odev);
-  }
-  if(name=="FB")
-  {
-     DoFBexcitation(time_operation,amplitude,frequency,frequency2,_cloud,odev);
-  }
-  if(name=="SWIFT")
-  {
-      odev.SetSWIFT(true);
-      if(p_buff_mbar==0)
-      {
-          DoDipoleExcitationWithoutBuffergas(time_operation, frequency, amplitude,_cloud,odev);
-      }
-      else
-      {
-          DoDipoleExcitationWithBuffergas(time_operation, frequency, amplitude,p_buff_mbar/1000.,_cloud,odev);
-      }
-      odev.SetSWIFT(false);
-      odev.UnsetSWIFT();
-  }
-  if(name=="EXC_EMAP")
-  {
-      odev.forcev.Load_EXC_EMAP(file_name,amplitude);
-      odev.forcev.Reset_excitation_type();
-      odev.forcev.Set_excitation_type(10);
-      if(p_buff_mbar==0)
-      {
-          SetBufferGas(false);
-      }
-      else
-      {
-          SetBufferGas(true);
-      }
-      SetPressure(p_buff_mbar/1000.);
-      
-      MoveParticles(time_operation,_cloud,odev);
-#ifdef __MPI_ON__
-      MPI_Barrier(MPI::COMM_WORLD);
-#endif // __MPI_ON__
-      // add logger stuff
-      
-      //DoNoExcitation(time_operation,buffergas,p_buff_mbar/1000.0,_cloud,odev);
-      odev.forcev.Reset_EXC_EMAP();
-  }
-    if(name=="PI_PULSE")
-    {
-        if(p_buff_mbar==0)
-        {
-            DoQuadrupoleExcitationWithoutBuffergas(time_operation, frequency, amplitude,_cloud,odev);
-        }
-        else
-        {
-            DoQuadrupoleExcitationWithBuffergas(time_operation, frequency, amplitude,p_buff_mbar/1000.,_cloud,odev);
-        }	
-    }
-    if(name=="RW_SWIFT")
-    {
-        odev.SetSWIFT(true);
-        odev.SetSWIFT_RW(true);
-        DoRotatingWall(order,time_operation, frequency, amplitude, buffergas, p_buff_mbar/1000.,_cloud,odev);
-        odev.SetSWIFT(false);
-        odev.SetSWIFT_RW(false);
-        odev.UnsetSWIFT();
-    }
-    
     
   return;
 }

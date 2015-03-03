@@ -11,7 +11,6 @@ using namespace std;
 #include "force.h"
 #include "ode.h"
 #include "ImageCharges.h"
-#include "coll.h"
 #include "logfile.h"
 #include "trapparameters.h"
 #include "SLogger.h"
@@ -27,8 +26,8 @@ using namespace std;
 #include <sstream>
 
 #ifdef __GUI_ON__
-  #include <QObject>
-  #include "../GUI/counter.h"
+#include <QObject>
+#include "../GUI/counter.h"
 #endif
 
 #ifdef __GUI_ON__
@@ -53,37 +52,9 @@ void DoTransfer(double _time_movement, bool _buffergas, double _p_buffergas,char
 // ACCESSOR
 void SetCoulomb(bool _coulombinteraction);
 void UseScaledCoulomb(double _ScaledCoulombFactor);
-//Dipole Excitations
-void DoDipoleExcitationWithoutBuffergas(double _time_movement, long double _exc_w, double _U_d,IonCloud &_cloud,_ode_vars & odev);
-void DoDipoleExcitationWithBuffergas(double _time_movement, long double _exc_w, double _U_d, double p_buffergas,IonCloud &_cloud,_ode_vars & odev);
-
-//Quadrupole Excitations
-void DoQuadrupoleExcitationWithoutBuffergas(double _time_movement, long double _exc_w, double _U_q,IonCloud &_cloud,_ode_vars & odev);
-void DoQuadrupoleExcitationWithBuffergas(double _time_movement, long double _exc_w, double _U_q, double p_buffergas,IonCloud &_cloud,_ode_vars & odev);
-
-//Octupole Excitations
-void DoOctupoleExcitationWithoutBuffergas(double _time_movement, long double _exc_w, double _U_q,IonCloud &_cloud,_ode_vars & odev);
-void DoOctupoleExcitationWithBuffergas(double _time_movement, long double _exc_w, double _U_q, double p_buffergas,IonCloud &_cloud,_ode_vars & odev);
-
-//Rotating wall Excitations
-void DoRotatingWall(int _order,double _time_movement, long double _exc_w, double _U_exc, bool _buffergas, double _p_buffergas,IonCloud &_cloud,_ode_vars & odev);
-void DoAntiRW(int _order,double _time_movement, long double _exc_w, double _U_exc, bool _buffergas, double _p_buffergas,IonCloud &_cloud,_ode_vars & odev);
-
-// Axial coupling excitations
-void DoAxialCouplingExcitationWithoutBuffergas(double _time_movement, long double _exc_w, double _U_exc,IonCloud &_cloud,_ode_vars & odev);
 
 // SIMCO
 void DoSIMCOWithoutBuffergas(double _time_movement, long double _exc_w, double _U_exc, long double _exc_w2, double _U_exc2,IonCloud &_cloud,_ode_vars & odev);
-// NOT CODED YET
-void DoAxialQuadCoulpingExcitationWithoutBuffergas(double _time_movement, long double _exc_w, double _U_exc, long double _exc_w2, double _U_exc2,
-                                                   long double _exc_w3, double _U_exc3,long double _exc_w4, double _U_exc4,IonCloud &_cloud,_ode_vars & odev);
-
-void DoARexcitation(double _time_movement, double _U_exc,double _exc_w, double _exc_w2, IonCloud & _cloud,_ode_vars & odev);
-
-void DoFBexcitation(double _time_movement, double _U_exc,double _exc_w, double _exc_w2, IonCloud & _cloud,_ode_vars & odev);
-
-//Scans
-void DoFrequencyScan(double _time_movement, double _U_exc, int _order, bool _rotatingwall, double _p_buffergas, double _central_freq, double _freq_dev, int _nr_steps,IonCloud &_cloud,_ode_vars & odev);
 
 void IncludeElectrodeBoundaries(bool _bool);
 

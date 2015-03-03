@@ -1,10 +1,4 @@
-//
 //  IonTable.cpp
-//
-//
-//  Created by pierre dupre on 27/09/12.
-//
-//
 #include <math.h>
 #include <sstream>
 #include <string>
