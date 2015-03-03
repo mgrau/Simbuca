@@ -74,8 +74,6 @@ int jj_;
 
 bool asynchro = true;
 
-inline void Excitation_computation(int j_,const IonCloud &cloud,_force_vars &forcev);
-
 
 void VV_BField_off(){
     Bfield = false;
@@ -263,9 +261,6 @@ void force(const IonCloud &_cloud,_ode_vars &odev){
 
         /// end of EM field calculation 
 
-        //excitation computation
-        //
-        Excitation_computation(j_,_cloud,odev.forcev ); // excitations computation
 
         if((*forcev).excitation_type[8]){ //AR excitation
             double smoothfactor= 1.0;//(_cloud.lifetime-odev.time_ini_ope)/0.001;
@@ -526,106 +521,3 @@ void InitFBexcitation(char *Erz_filename, const char * filename_begin){
     tmpinterval = 0.0;
     //Electrodefieldmap.PrintOnAxis();
 }
-
-
-
-// ** FUNCTION Excitation_computation(int j_) **//
-// ** FUNCTION Excitation_computation(int j_) **//
-// ** FUNCTION Excitation_computation(int j_) **//
-inline void Excitation_computation(int j_,const IonCloud &_cloud,_force_vars &forcev)
-{
-    double qDmassa;
-    if(!forcev.excitation_type[4]&&!forcev.excitation_type[5]){
-        if (forcev.excitation_type[0]){
-            //if (dipoolexcitation){
-            forcev.derivs[j_][0] -= (*_cloud.ions)[j_].Getkd_div_u()*forcev.coswTtimeTU;	//dipool
-
-        }
-        if (forcev.excitation_type[1]){
-            //if (quadrupoolexcitation ){
-            forcev.derivs[j_][0] -= (*_cloud.ions)[j_].Getkq_div_u()*_cloud.pos2[j_][0]*forcev.coswTtimeTU;	//quadrupool
-            forcev.derivs[j_][1] += (*_cloud.ions)[j_].Getkq_div_u()*_cloud.pos2[j_][1]*forcev.coswTtimeTU;	//quadrupool
-        }
-        if (forcev.excitation_type[2]){
-            //if (octupoolexcitation){
-            forcev.derivs[j_][0] -= (*_cloud.ions)[j_].Getko_div_u()*forcev.coswTtimeTU*
-                (_cloud.pos2[j_][0]*_cloud.pos2[j_][0]*_cloud.pos2[j_][0]
-                 -3.0*_cloud.pos2[j_][0]*_cloud.pos2[j_][1]*_cloud.pos2[j_][1]);	//octupool
-            forcev.derivs[j_][1] += (*_cloud.ions)[j_].Getko_div_u()*forcev.coswTtimeTU*
-                (_cloud.pos2[j_][1]*_cloud.pos2[j_][1]*_cloud.pos2[j_][1]
-                 -3.0*_cloud.pos2[j_][0]*_cloud.pos2[j_][0]*_cloud.pos2[j_][1]);	//octupool
-        }
-        if (forcev.excitation_type[3]){
-            //if(axialcoupling){
-            forcev.derivs[j_][0] += (*_cloud.ions)[j_].Getkq_div_u()*_cloud.pos2[j_][2]*forcev.coswTtimeTU;	//quadrupool
-            forcev.derivs[j_][2] += (*_cloud.ions)[j_].Getkq_div_u()*_cloud.pos2[j_][0]*forcev.coswTtimeTU;	//quadrupool  axial coupling
-        }
-        }
-        // RW
-        if(forcev.excitation_type[0]&&forcev.excitation_type[4]){
-            if(dipool_sym_RW){
-                forcev.derivs[j_][0] -= (*_cloud.ions)[j_].Getkd_div_u()*forcev.coswTtimeTU;	//dipool
-                forcev.derivs[j_][1] += (*_cloud.ions)[j_].Getkd_div_u()*forcev.sinwTtimeTU;	//dipool
-            }
-            else
-            {
-                forcev.derivs[j_][0] -=  _cloud.pos2[j_][2]*(*_cloud.ions)[j_].Getkd_div_u()*forcev.coswTtimeTU;	//dipool
-                forcev.derivs[j_][1] +=  _cloud.pos2[j_][2]*(*_cloud.ions)[j_].Getkd_div_u()*forcev.sinwTtimeTU;	//dipool
-                forcev.derivs[j_][2] -=   (*_cloud.ions)[j_].Getkd_div_u()*(_cloud.pos2[j_][0]*forcev.coswTtimeTU -  _cloud.pos2[j_][1]*forcev.sinwTtimeTU );
-            }
-        }
-        if(forcev.excitation_type[1]&&forcev.excitation_type[4]){
-            //if (quadrupoolexcitation && rotatingwall){
-            forcev.derivs[j_][0] += (*_cloud.ions)[j_].Getkq_div_u()*(_cloud.pos2[j_][0]*forcev.cos2wTtimeTU+_cloud.pos2[j_][1]*forcev.sin2wTtimeTU);	//quadrupool
-            forcev.derivs[j_][1] -= (*_cloud.ions)[j_].Getkq_div_u()*(_cloud.pos2[j_][1]*forcev.cos2wTtimeTU-_cloud.pos2[j_][0]*forcev.sin2wTtimeTU);	//quadrupool
-        }
-
-        //antiRW
-        if(forcev.excitation_type[0]&&forcev.excitation_type[5]){
-            //if (dipoolexcitation && antirotatingwall){
-            forcev.derivs[j_][0] -= (*_cloud.ions)[j_].Getkd_div_u()*forcev.coswTtimeTU;	//dipool
-            forcev.derivs[j_][1] -= (*_cloud.ions)[j_].Getkd_div_u()*forcev.sinwTtimeTU;	//dipool        
-        }
-        if(forcev.excitation_type[1]&&forcev.excitation_type[5]){
-            //if (quadrupoolexcitation && antirotatingwall){
-            forcev.derivs[j_][0] += (*_cloud.ions)[j_].Getkq_div_u()*(_cloud.pos2[j_][0]*forcev.cos2wTtimeTU-_cloud.pos2[j_][1]*forcev.sin2wTtimeTU);	//quadrupool
-            forcev.derivs[j_][1] -= (*_cloud.ions)[j_].Getkq_div_u()*(_cloud.pos2[j_][1]*forcev.cos2wTtimeTU+_cloud.pos2[j_][0]*forcev.sin2wTtimeTU);	//quadrupool
-
-        }
-        // SIMCO
-        if(forcev.excitation_type[6])
-        {
-            forcev.derivs[j_][0] -= (*_cloud.ions)[j_].Getkd_div_u()*forcev.coswTtimeTU;	//dipool
-            forcev.derivs[j_][0] -= (*_cloud.ions)[j_].Getkq_div_u()*_cloud.pos2[j_][0]*forcev.coswTtimeTU2;	//quadrupool
-            forcev.derivs[j_][1] += (*_cloud.ions)[j_].Getkq_div_u()*_cloud.pos2[j_][1]*forcev.coswTtimeTU2;	//quadrupool radial coupling
-
-        }
-        if(forcev.excitation_type[7])
-        {
-
-            forcev.derivs[j_][0] += (*_cloud.ions)[j_].Getkq_div_u()*_cloud.pos2[j_][2]*forcev.coswTtimeTU3;	//axial quadrupool
-            forcev.derivs[j_][2] += (*_cloud.ions)[j_].Getkq_div_u()*_cloud.pos2[j_][0]*forcev.coswTtimeTU3;	//axial quadrupool coupling
-
-            // forcev.derivs[j_][0] -= (*_cloud.ions)[j_].Getkd_div_u()*_cloud.pos2[j_][0]*coswTtimeTU4;	//quadrupool
-            // forcev.derivs[j_][1] += (*_cloud.ions)[j_].Getkq_div_u()*_cloud.pos2[j_][1]*coswTtimeTU4;	//quadrupool
-            forcev.derivs[j_][2] -= (*_cloud.ions)[j_].Getkd_div_u()*forcev.coswTtimeTU4;	//dipool
-
-
-            forcev.derivs[j_][0] -= (*_cloud.ions)[j_].Getkd_div_u()*forcev.coswTtimeTU;	//dipool
-            forcev.derivs[j_][0] -= (*_cloud.ions)[j_].Getkq_div_u()*_cloud.pos2[j_][0]*forcev.coswTtimeTU2;	//quadrupool
-            forcev.derivs[j_][1] += (*_cloud.ions)[j_].Getkq_div_u()*_cloud.pos2[j_][1]*forcev.coswTtimeTU2;	//quadrupool radial coupling
-            // forcev.derivs[j_][0] -= (*_cloud.ions)[j_].Getkd_div_u()*coswTtimeTU;	//dipool
-
-        }
-        if(forcev.excitation_type[10])
-        {
-            e_field=forcev.exc_emap->getFieldXY(_cloud.pos2[j_][0],_cloud.pos2[j_][1]);
-            qDmassa= _cloud.charge[j_]*el_charge/_cloud.mass[j_];
-            forcev.derivs[j_][0] += qDmassa*e_field[0];
-            forcev.derivs[j_][1] += qDmassa*e_field[1];
-
-        }	
-
-        }
-
-
