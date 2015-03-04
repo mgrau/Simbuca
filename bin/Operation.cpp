@@ -40,9 +40,6 @@ void Operation::Launch(IonCloud &_cloud, _ode_vars & odev)
   {
   	DoNoExcitation(time_operation,buffergas,p_buff_mbar/1000.0,_cloud,odev);
   }
-  {
-      DoSIMCOWithoutBuffergas(time_operation,frequency,amplitude,frequency2,amplitude2,_cloud,odev);
-  }
     
   return;
 }

@@ -47,14 +47,12 @@ void DelParticle(int _index, IonCloud &_cloud);
 
 void DoNoExcitation(double _time_movement, bool _buffergas, double _p_buffergas,IonCloud &_cloud,_ode_vars & odev);
 void ChangeEfieldmap(char * _trapErz);
-void DoTransfer(double _time_movement, bool _buffergas, double _p_buffergas,char * _transferErz, char * _trapErz,IonCloud &_cloud,_ode_vars & odev);
 
 // ACCESSOR
 void SetCoulomb(bool _coulombinteraction);
 void UseScaledCoulomb(double _ScaledCoulombFactor);
 
 // SIMCO
-void DoSIMCOWithoutBuffergas(double _time_movement, long double _exc_w, double _U_exc, long double _exc_w2, double _U_exc2,IonCloud &_cloud,_ode_vars & odev);
 
 void IncludeElectrodeBoundaries(bool _bool);
 

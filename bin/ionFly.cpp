@@ -319,7 +319,6 @@ void UseScaledCoulomb(double _ScaledCoulombFactor){
 
 
 void DoNoExcitation(double _time_movement, bool _buffergas, double _p_buffergas, IonCloud &_cloud, _ode_vars & odev){
-    odev.InitExcitationVars(0,false, false,0.0, 0.0);
     ilogger<<"No excitation for ";ilogger<<_time_movement;ilogger<<" sec,\n";
 
     MoveParticles(_time_movement,_cloud,odev);
@@ -328,31 +327,6 @@ void ChangeEfieldmap(char * _trapErz){
     ilogger<<"Read new electric fieldmap: ";ilogger<<_trapErz;ilogger<<"\n";
     ChangeEfield(_trapErz);
 }
-
-void DoTransfer(double _time_movement, bool _buffergas, double _p_buffergas, char * _transferErz, char * _trapErz, IonCloud &_cloud, _ode_vars & odev){
-    odev.InitExcitationVars(0,false, false,0.0, 0.0);
-    ilogger<<"Doing Trap Transfer";ilogger<<_time_movement;ilogger<<" sec\n";
-    ChangeEfield(_transferErz);
-    MoveParticles(_time_movement,_cloud,odev);
-    ChangeEfield(_trapErz);
-}
-
-
-
-
-
-
-
-void DoSIMCOWithoutBuffergas(double _time_movement, long double _exc_w, double _U_exc, long double _exc_w2, double _U_exc2, IonCloud &_cloud, _ode_vars & odev){
-    odev.InitExcitationVars(7,false,false,_U_exc,_exc_w);
-    odev.U_exc2 = _U_exc2;
-    odev.w_exc2 = _exc_w2;
-    ilogger<<"SIMCO no Buffergas for ";ilogger<<_time_movement;ilogger<<" sec\n";
-    ilogger<<"\t with dipolar frequency ";ilogger<<_exc_w;ilogger<<" Hz and amplitude ";ilogger<<_U_exc;ilogger<<"V\n";
-    ilogger<<"\t with quadrupolar frequency ";ilogger<<_exc_w2;ilogger<<" Hz and amplitude ";ilogger<<_U_exc2;ilogger<<"V\n";
-    MoveParticles(_time_movement,_cloud,odev);
-}
-
 
 void SetPrintInterval(double _print_interval){
     print_interval = _print_interval;

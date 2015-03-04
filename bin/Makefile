@@ -25,7 +25,7 @@ help:
 COMPILER=g++
 
 #processing unit: cpu / gpu
-PU=gpu
+PU=cpu
 
 #NBODY algorithm for the calculation: CUNBODY / NBODY
 #after changing $PU, type 'make clean' to remove all *.o files.
@@ -67,8 +67,8 @@ endif
 #---------COMPILE AND LINK OPTIONS------------#
 #---------------------------------------------#
 #g++ Compiler
-CC_gpp=g++ -O3 -Wno-write-strings $(NBODY_ALGO_FLAGS) -c
-LINK_gpp=g++ -lm -O3 -o
+CC_gpp=g++ -O3 -g -Wno-write-strings $(NBODY_ALGO_FLAGS) -c
+LINK_gpp=g++ -g -lm -O3 -o
 
 #icpc Compiler
 CC_icpc=icpc -O3 -std=c++11 -ipo -no-prec-div -fast -xavx $(NBODY_ALGO_FLAGS) -c

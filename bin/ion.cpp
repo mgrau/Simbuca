@@ -3,36 +3,20 @@
 
 Ion::Ion(long double _mass_amu){
     mass = _mass_amu*amu; 
-//    wc	= (el_charge*B)/mass;
-//    wz2 = (el_charge*Ud2)/mass;							//de 2 duid op het kwadraad van w_z
-//    wmin	= (wc-(sqrt(wc*wc-2.0*wz2)))*0.5;		//benaderende waarde: Ud2/(2*B)
-//    wplus	= (wc+(sqrt(wc*wc-2.0*wz2)))*0.5;		//benaderende waarde: Ud2/(2*B)
-//    kd_div_U = a*(el_charge/mass)*1.0/(r_0); 
-//    kq_div_U = 2.0*a*(el_charge/mass)*1.0/(r_0*r_0);      
-//    ko_div_U = 4.0*a*(el_charge/mass)*1.0/(r_0*r_0*r_0*r_0);
     charge=1;
-    //fraction=100;;
 }
 
 Ion::Ion(long double _mass_amu, int _charge){
     mass = _mass_amu*amu; 
-//    wc	= _charge*(el_charge*B)/mass;
-//    wz2 = _charge*(el_charge*Ud2)/mass;							//de 2 duid op het kwadraad van w_z
-//    wmin	= _charge*(wc-(sqrt(wc*wc-2.0*wz2)))*0.5;		//benaderende waarde: Ud2/(2*B)
-//    wplus	= _charge*(wc+(sqrt(wc*wc-2.0*wz2)))*0.5;		//benaderende waarde: Ud2/(2*B)
-//    kd_div_U = _charge*a*(el_charge/mass)*1.0/(r_0); 
-//    kq_div_U = _charge*2.0*a*(el_charge/mass)*1.0/(r_0*r_0);      
-//    ko_div_U = _charge*4.0*a*(el_charge/mass)*1.0/(r_0*r_0*r_0*r_0);
     charge=_charge;
-    //fraction=100.;
 }
 
 Ion::Ion(){
     mass = 0.0*amu; 
     wc	= 0.0;
-    wz2 = 0.0;							//de 2 duid op het kwadraad van w_z
-    wmin	= 0.0;		//benaderende waarde: Ud2/(2*B)
-    wplus	= 0.0;		//benaderende waarde: Ud2/(2*B)
+    wz2 = 0.0;
+    wmin	= 0.0;
+    wplus	= 0.0;
     kd_div_U = 0.0; 
     kq_div_U = 0.0; 
     ko_div_U = 0.0;  
