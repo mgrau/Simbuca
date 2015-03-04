@@ -10,7 +10,6 @@
 #include "cuda.h"
 #include "cuda_runtime_api.h"
 #endif // _NBODY_ON__
-bool dipool_sym_RW = true;
 
 const bool useTree = false;
 //if useTree = false -> Cunbody is used.
@@ -21,7 +20,6 @@ vector< vector<double> > pool_force;
 vector<double> e_field(3);
 vector<double> B_scalar(3);
 bool poolvectorsinitialized = false;
-bool Bfield = true;
 
 ofstream tmpstream;
 double tmpinterval;
@@ -76,7 +74,7 @@ void Initpoolvector(int nrParticles,const IonCloud &_cloud,_force_vars &forcev){
 
 void force(const IonCloud &_cloud,_ode_vars &odev){
     double x,y,z,vx,vy,vz,r2,r3,r5,z2,r4,z4, qDmassa,qqDmassaXke, el2ke;
-    double w_cm, w_z2m;
+    double t = _cloud.lifetime;
     _force_vars *forcev = &odev.forcev;
     int trap_config = (*forcev).trap_param.trap_config;
     double Ud2 = (*forcev).trap_param.Ud2;
@@ -86,6 +84,12 @@ void force(const IonCloud &_cloud,_ode_vars &odev){
     double B0 = (*forcev).trap_param.B0;
     double B2 = (*forcev).trap_param.B2;
     double B;
+
+    double kU0 = 0.1;
+    double Z02 = 0.05*0.05;
+    double V0 = 50.0;
+    double R02 = 0.04*0.04;
+    double Omega_rf = 2*pi*50e3;
     //given vector with positions[0,1,2] and velocities[3,4,5],
     //output is the acceleration ax, ay,az
     //force cannot alter the value of pos and vel!!!! just of pos2 and vel2 !!
@@ -95,8 +99,7 @@ void force(const IonCloud &_cloud,_ode_vars &odev){
     el2ke = el_charge*el_charge*ke; //charges should be taken into account!
 
 
-    if ((*forcev).coulombinteraction)
-    {        
+    if ((*forcev).coulombinteraction) {        
 #ifdef __CUNBODY_ON__
         odev.cunbody.begin(_cloud);
 #endif // __CUNBODY_ON__
@@ -105,11 +108,7 @@ void force(const IonCloud &_cloud,_ode_vars &odev){
 #endif // __NBODY_ON__
     }
 
-    for(unsigned j_=0; j_< _cloud.nrparticles; j_++){
-
-
-        w_cm = _cloud.wc[j_];
-        w_z2m = _cloud.wz2[j_];
+    for(unsigned j_=0; j_< _cloud.nrparticles; j_++) {
         x=_cloud.pos2[j_][0];
         y=_cloud.pos2[j_][1];
         z=_cloud.pos2[j_][2];
@@ -128,13 +127,14 @@ void force(const IonCloud &_cloud,_ode_vars &odev){
         switch (trap_config) {		   
             case 0:
                 qDmassa = _cloud.charge[j_]*el_charge/_cloud.mass[j_];
-                (*forcev).derivs[j_][0] =  qDmassa*Ud2*x*0.5;
-                (*forcev).derivs[j_][1] =  qDmassa*Ud2*y*0.5;
-                (*forcev).derivs[j_][2] = -qDmassa*Ud2*z;
-                if(Bfield) {
-                    (*forcev).derivs[j_][0] += qDmassa*B0*vy;
-                    (*forcev).derivs[j_][1] += -qDmassa*B0*vx;
-                }            
+                // (*forcev).derivs[j_][0] =  qDmassa*Ud2*x*0.5;
+                // (*forcev).derivs[j_][1] =  qDmassa*Ud2*y*0.5;
+                // (*forcev).derivs[j_][2] = -qDmassa*Ud2*z;
+                // (*forcev).derivs[j_][0] += qDmassa*B0*vy;
+                // (*forcev).derivs[j_][1] += -qDmassa*B0*vx;
+                (*forcev).derivs[j_][0] = qDmassa*(kU0/Z02 - V0*cos(Omega_rf*t)/R02)*x;
+                (*forcev).derivs[j_][1] = qDmassa*(kU0/Z02 + V0*cos(Omega_rf*t)/R02)*y;
+                (*forcev).derivs[j_][2] = qDmassa*(-2.0*kU0/Z02)*z;
                 break;
             case 1:
                 qDmassa= _cloud.charge[j_]*el_charge/_cloud.mass[j_];
@@ -154,27 +154,22 @@ void force(const IonCloud &_cloud,_ode_vars &odev){
                 (*forcev).derivs[j_][1] += qDmassa*U0*c6*(15.*y*z4 + 45./2.*z2*y*r2 -15./8.*y*r4);
                 (*forcev).derivs[j_][2] += qDmassa*U0*c6*(-6.*z*z4 + 30.*r2*z*z2 -45./4.*r4*z);
                 //B2
-                if(Bfield) {
-                    B = B0*(1-B2*(z2-r2*0.5));
-                    (*forcev).derivs[j_][0] += qDmassa*vy*B;
-                    (*forcev).derivs[j_][1] -= qDmassa*vx*B;
-                }            
+                B = B0*(1-B2*(z2-r2*0.5));
+                (*forcev).derivs[j_][0] += qDmassa*vy*B;
+                (*forcev).derivs[j_][1] -= qDmassa*vx*B;
                 break;        
             case 4:
                 e_field=(*forcev).Potential_map.GetEField_from_Pot(x,y,z);
                 B_scalar[0]=0;//normaal
                 B_scalar[1]=0;//normaal
                 B_scalar[2]=(*forcev).trap_param.B0;//normaal
-                //cout << sqrt(x*x+y*y) << " " << z << " " << (*forcev).Potential_map.GetPotential(x,y,z) << endl;
                 qDmassa= _cloud.charge[j_]*el_charge/_cloud.mass[j_];
                 (*forcev).derivs[j_][0] = qDmassa*e_field[0];
                 (*forcev).derivs[j_][1] = qDmassa*e_field[1];
                 (*forcev).derivs[j_][2] = qDmassa*e_field[2];
-                if(Bfield){
-                    (*forcev).derivs[j_][0] += qDmassa*(vy*B_scalar[2]-vz*B_scalar[1]);
-                    (*forcev).derivs[j_][1] += qDmassa*(vz*B_scalar[0]-vx*B_scalar[2]);
-                    (*forcev).derivs[j_][2] += qDmassa*(vx*B_scalar[1]-vy*B_scalar[0]);
-                }
+                (*forcev).derivs[j_][0] += qDmassa*(vy*B_scalar[2]-vz*B_scalar[1]);
+                (*forcev).derivs[j_][1] += qDmassa*(vz*B_scalar[0]-vx*B_scalar[2]);
+                (*forcev).derivs[j_][2] += qDmassa*(vx*B_scalar[1]-vy*B_scalar[0]);
                 break;
             default:
                 e_field=Efieldmap.getField(x,y,z);
@@ -183,11 +178,9 @@ void force(const IonCloud &_cloud,_ode_vars &odev){
                 (*forcev).derivs[j_][0] = qDmassa*e_field[0];
                 (*forcev).derivs[j_][1] = qDmassa*e_field[1];
                 (*forcev).derivs[j_][2] = qDmassa*e_field[2];
-                if(Bfield){
-                    (*forcev).derivs[j_][0] += qDmassa*(vy*B_scalar[2]-vz*B_scalar[1]);
-                    (*forcev).derivs[j_][1] += qDmassa*(vz*B_scalar[0]-vx*B_scalar[2]);
-                    (*forcev).derivs[j_][2] += qDmassa*(vx*B_scalar[1]-vy*B_scalar[0]);
-                }
+                (*forcev).derivs[j_][0] += qDmassa*(vy*B_scalar[2]-vz*B_scalar[1]);
+                (*forcev).derivs[j_][1] += qDmassa*(vz*B_scalar[0]-vx*B_scalar[2]);
+                (*forcev).derivs[j_][2] += qDmassa*(vx*B_scalar[1]-vy*B_scalar[0]);
         }//end case structure	
     }//end off loop over particles
 
@@ -257,7 +250,7 @@ void force(const IonCloud &_cloud,_ode_vars &odev){
         {
             fx=fy=fz=0.0;
             r_ij=0.0,
-            kTqiTqjDmj=(*forcev).scaledCoulombFactor*ke*_cloud.charge[j_]*el_charge*el_charge/_cloud.mass[j_];
+                kTqiTqjDmj=(*forcev).scaledCoulombFactor*ke*_cloud.charge[j_]*el_charge*el_charge/_cloud.mass[j_];
             //new iterator jj_ taking in account particles of previous nodes
             //jj_ = j_ + MPI_displ[myid]; 
             bjx = _cloud.pos2[j_][0];

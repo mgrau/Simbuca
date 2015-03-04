@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <string.h>
 
-
-
 //runga kutta waarden
 /*
    static const double DPc2=1.0/5.0,DPc3=3.0/10.0,DPc4=4.0/5.0,DPc5=8.0/9.0,DPc6=1.0,DPc7=1.0,
@@ -31,10 +29,6 @@ DPe5=-17253.0/339200.0,DPe6=22.0/525.0,DPe7=-1.0/40.0;
   DPd3=87487479700.0/32700410799.0, DPd4=-10690763975.0/1880347072.0,
   DPd5=701980252875.0/199316789632.0, DPd6= -1453857185.0/822651844.0,
   DPd7=69997945.0/29380423.0;*/
-
-
-
-
 
 
 LogFile ologger;
@@ -64,12 +58,7 @@ void InitAcceleraction(int nrParticles,IonCloud &_cloud,_ode_vars &odev){
         odev.forcev.derivs[i][2] = odev.accel_new_suggestion[i][2]=-5e8;
 
     } 
-
 }
-
-
-
-
 
 double Dormand_Prince_5(IonCloud &_cloud,_ode_vars &odev){
     /*	
@@ -254,11 +243,7 @@ double Dormand_Prince_5(IonCloud &_cloud,_ode_vars &odev){
     return odev.err;       
 }
 
-
-
-
 double RungaKutta4(IonCloud &_cloud,_ode_vars &odev){
-
     double h = odev.h;
     unsigned i,j;
     static const double	RKb21=0.2,
@@ -385,9 +370,7 @@ double RungaKutta4(IonCloud &_cloud,_ode_vars &odev){
 #endif // __MPI_ON__
 
     return odev.err; 
-
 }
-
 
 void GearMethod(IonCloud &_cloud,_ode_vars &odev){
     int nrparticles = _cloud.nrparticles;
@@ -468,7 +451,6 @@ void GearMethod(IonCloud &_cloud,_ode_vars &odev){
     // return err; 	
 }
 
-
 bool error_succes(const double err,_ode_vars &odev){
     //Finally, the controller tests whether err 1 and adjusts the stepsize. The
     //default setting is beta = 0 (no PI control). Set beta to 0.04 or 0.08 to turn on PI control
@@ -501,8 +483,6 @@ bool error_succes(const double err,_ode_vars &odev){
         return false;
     }
 }      
-
-
 
 void step(IonCloud &_cloud,_ode_vars &odev){
     /* 
@@ -584,11 +564,9 @@ void step(IonCloud &_cloud,_ode_vars &odev){
     //printf("step =%e\n",h);
 }
 
-
-double GetTimeStep(_ode_vars &odev){
+double GetTimeStep(_ode_vars &odev) {
     return odev.h;
 }
-
 
 _ode_vars::_ode_vars()
 {
@@ -882,7 +860,6 @@ double _ode_vars::Interpolate_SWIFT(double t_,int sc){
     return res;
 }
 
-//  ************** _force_vars
 _force_vars::_force_vars() {
     for(unsigned i=0;i<15;i++){
         excitation_type[i] = false;} // dip, quad, oct , axial , RW, AW,SIMCO,SIMCOAxial
