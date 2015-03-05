@@ -1,25 +1,18 @@
-//ioncloud.cpp
 #include "ioncloud.h"
 #include "MPI_simbuca.h"
 LogFile clogger;
-
 
 //to do with printing
 //char *stream =new char[256];
 char line[256];
 
-//accessable functions
-//due to static members, create and delete functions!
-
-IonCloud::~IonCloud(){
+IonCloud::~IonCloud() {
     //   for(int k=0;k < particles.size(); k++){
     //         delete streamvector[k];
     //   }
 }
 
-IonCloud::IonCloud(){
-
-
+IonCloud::IonCloud() {
     //definition off static things...
     //private:
     sim_time_start = 0;
@@ -36,9 +29,9 @@ IonCloud::IonCloud(){
     streamvector.resize(0); //so #streams = #particles
     nrcoll.resize(0);
     lifetime = 0.0;
-
 }
-void IonCloud::Create(const char* _filename){
+
+void IonCloud::Create(const char* _filename) {
     lifetime=0.0;
     filenamebegin = _filename;
     sim_time_start = time(0);
@@ -46,7 +39,7 @@ void IonCloud::Create(const char* _filename){
     images.push_back(pair< double,double> (0,0));
 }
 
-void IonCloud::Delete(){
+void IonCloud::Delete() {
     //time_t rawtime;
     //time ( &rawtime );
     time_t tm;
@@ -92,119 +85,42 @@ void IonCloud::Delete(){
 #endif // __MPI_ON__
 }
 
-
-void IonCloud::Reset(){
+void IonCloud::Reset() {
     lifetime=0.0;
 
     //particles =  initialvalues
     for(int k=0;k < particles.size(); k++){
         *particles[k] = initialvalues[k];
     }
-
-
 }
 
-
-
-
-
-void IonCloud::PrintParticle(int &k){
-    /*###########################################################################
-      (r+)^2= {(w-)^2*(x^2+y^2) + (vx^2+vy^2) + 2*(w-)*(x*vy-y*vx)}/{(w+)-(w-)}^2
-      (r-)^2= {(w+)^2*(x^2+y^2) + (vx^2+vy^2) + 2*(w+)*(x*vy-y*vx)}/{(w+)-(w-)}^2
-###########################################################################*/
-    //index off the particle in the particles vector
-    double xyprod;
-    double vxyprod;
-    double wmin;
-    double wplus;
-    double xvy_min_yvx;
-    double Energy ;
-    if(particles_files)
-    {
+void IonCloud::PrintParticle(int &k) {
+    double Energy = (*ions)[k].Getmass()*(vel[k][0]*vel[k][0]+vel[k][1]*vel[k][1]+vel[k][2]*vel[k][2])*0.5*Joule_to_eV;
+    if(particles_files) {
         (*streamvector[k])<<IDs[k]<<" ";
-        //write away ion
         (*streamvector[k])<<(*ions)[k];
-        //write away x,y,z (mm)
+        (*streamvector[k])<<" "<< lifetime*1000.0 ;
         (*streamvector[k])<<" "<<pos[k][0]*1000.0;
         (*streamvector[k])<<" "<<pos[k][1]*1000.0;
         (*streamvector[k])<<" "<<pos[k][2]*1000.0;
-        //speeds
         (*streamvector[k])<<" "<< vel[k][0];
         (*streamvector[k])<<" "<< vel[k][1];
         (*streamvector[k])<<" "<< vel[k][2];
-
-        //all the radii
-        xyprod = (pos[k][0]*pos[k][0]+pos[k][1]*pos[k][1]);
-        vxyprod = (vel[k][0]*vel[k][0]+vel[k][1]*vel[k][1]);
-        wmin = (*ions)[k].Getwmin();
-        wplus = (*ions)[k].Getwplus();
-        xvy_min_yvx = pos[k][0]*vel[k][1]-pos[k][1]*vel[k][0];
-        Energy = (*ions)[k].Getmass()*(vel[k][0]*vel[k][0]+vel[k][1]*vel[k][1]+vel[k][2]*vel[k][2])*0.5*Joule_to_eV;
-        /* cout<<"mass: "<<(*ions)[k].Getmass()<<endl;
-           cout<<" "<< vel[k][0];
-           cout<<"\n "<< vel[k][1];
-           cout<<"\n "<< vel[k][2]<<endl;;
-           cout<<"speed*speed: "<<(vel[k][0]*vel[k][0]+vel[k][1]*vel[k][1]+vel[k][2]*vel[k][2])<<endl;
-           cout<<"Joule_to_eV*0.5: "<<Joule_to_eV*0.5<<endl;
-           cout<<"->Energy: "<<Energy<<endl;
-           cin.get();*/
-        //Cyclotron Radius and Magnetron Radius (mm)
-        (*streamvector[k])<<" "<<(sqrt(wmin*wmin*xyprod+vxyprod+2*wmin*xvy_min_yvx)/(wplus-wmin))*1000.0;
-        (*streamvector[k])<<" "<<(sqrt(wplus*wplus*xyprod+vxyprod+2*wplus*xvy_min_yvx))/(wplus-wmin)*1000.0;
-        //Radial Distance (mm)
-        (*streamvector[k])<<" "<<sqrt(xyprod)*1000.0;
-
-        //energy of the ion
         (*streamvector[k])<<" "<<Energy;
-
-        //Temperature of the ion
-        (*streamvector[k])<<" "<<Energy*eV_to_Joule/kb;
-
-        //time in (ms)
-        (*streamvector[k])<<" "<< lifetime*1000.0 ;
-
-        (*streamvector[k])<<endl; //flush and endl
-        //put this in if you want to plot particles he   (*streamvector[k])<<endl<<endl<<endl;l
+        (*streamvector[k])<<endl;
     }
-    else
-    {
+    else {
         (*globalstream)<<IDs[k]<<" ";
-        //write away ion
         (*globalstream)<<(*ions)[k];
-        //write away x,y,z (mm)
+        (*globalstream)<<" "<< lifetime*1000.0 ;
         (*globalstream)<<" "<<pos[k][0]*1000.0;
         (*globalstream)<<" "<<pos[k][1]*1000.0;
         (*globalstream)<<" "<<pos[k][2]*1000.0;
-        //speeds
         (*globalstream)<<" "<< vel[k][0];
         (*globalstream)<<" "<< vel[k][1];
         (*globalstream)<<" "<< vel[k][2];
-
-        //all the radii
-        xyprod = (pos[k][0]*pos[k][0]+pos[k][1]*pos[k][1]);
-        vxyprod = (vel[k][0]*vel[k][0]+vel[k][1]*vel[k][1]);
-        wmin = (*ions)[k].Getwmin();
-        wplus = (*ions)[k].Getwplus();
-        xvy_min_yvx = pos[k][0]*vel[k][1]-pos[k][1]*vel[k][0];
-        Energy = (*ions)[k].Getmass()*(vel[k][0]*vel[k][0]+vel[k][1]*vel[k][1]+vel[k][2]*vel[k][2])*0.5*Joule_to_eV;
-        (*globalstream)<<" "<<(sqrt(wmin*wmin*xyprod+vxyprod+2*wmin*xvy_min_yvx)/(wplus-wmin))*1000.0;
-        (*globalstream)<<" "<<(sqrt(wplus*wplus*xyprod+vxyprod+2*wplus*xvy_min_yvx))/(wplus-wmin)*1000.0;
-        //Radial Distance (mm)
-        (*globalstream)<<" "<<sqrt(xyprod)*1000.0;
-
-        //energy of the ion
         (*globalstream)<<" "<<Energy;
-
-        //Temperature of the ion
-        (*globalstream)<<" "<<Energy*eV_to_Joule/kb;
-
-        //time in (ms)
-        (*globalstream)<<" "<< lifetime*1000.0 ;
-
         (*globalstream)<<endl;
-
-
     }
 }
 
@@ -213,12 +129,11 @@ void IonCloud::PrintParticles() {
         PrintParticle(k);
 }
 
-void IonCloud::use_particles_files(bool _bool){
+void IonCloud::use_particles_files(bool _bool) {
     particles_files = _bool;
 }
 
-
-void IonCloud::PrintMembers(){
+void IonCloud::PrintMembers() {
     for(int j=0; j< ions->size(); j++){
         cout<<"ion ";cout<<j;clogger<<" ";cout<<(*ions)[j];cout<<"\n";
         cout<<"nrcoll = ";cout<<nrcoll[j];cout<<"\n";
@@ -226,13 +141,7 @@ void IonCloud::PrintMembers(){
     clogger<<"cloud lifetime = ";clogger<<lifetime;clogger<<"\n";
 }
 
-
-
-
-
-//other functions
-
-void IonCloud::CreateFile(){
+void IonCloud::CreateFile() {
     //file initialiseren
     //IMPORTANT, Don`t delete this line, filesplitter uses the first * on the line to break the whole sequence
 
@@ -291,9 +200,7 @@ void IonCloud::CreateFile(){
     //(*streamvector[particleIndex]).setf(std::ios::showpos);
 }
 
-
-
-void IonCloud::CloseFile(int _pindex, char* _reason){
+void IonCloud::CloseFile(int _pindex, char* _reason) {
     //print particle for the last time he.
     //close the file
 
@@ -312,8 +219,7 @@ void IonCloud::CloseFile(int _pindex, char* _reason){
     //delete the particle out the streamvector he.
 }
 
-
-void IonCloud::AddParticle(Particle _p, Ion _i){
+void IonCloud::AddParticle(Particle _p, Ion _i) {
     //    Particle tmpparticle(_x,_y,_z,_vx,_vy,_vz, _Ion);
     IDs.push_back(particles.size()); //dus ID = 0,1,2,3,4,5,...
     Particle * tmpptr = new Particle;
@@ -328,7 +234,7 @@ void IonCloud::AddParticle(Particle _p, Ion _i){
     CreateFile();
 }
 
-void IonCloud::DelParticle(int _index, char* _reason){
+void IonCloud::DelParticle(int _index, char* _reason) {
     if (particles_files == true)
     {
         PrintParticle(_index);
@@ -375,11 +281,9 @@ void IonCloud::DelParticle(int _index, char* _reason){
 
     clogger<<"Deleted particle nr ";clogger<<initialvalues.size()-particles.size();clogger<<" with ID: ";
     clogger<<IDs[_index];clogger<<" because ";clogger<<_reason;clogger<<" @";clogger<<lifetime;clogger<<" sec.\n";
-
 }
 
-
-pair<double,double> IonCloud::Temperature(){
+pair<double,double> IonCloud::Temperature() {
     // E=m*v*v/2
     // gemE = 3/2*kb*T
     //dus vx,vy,vz->E -> alle E's -> Egem -> T
@@ -404,9 +308,7 @@ pair<double,double> IonCloud::Temperature(){
         return mean_energy;
 }
 #ifdef __MPI_ON__
-void IonCloud::UpdateIDs(int nrparticles)
-{
-
+void IonCloud::UpdateIDs(int nrparticles) {
     int myid = MPI::COMM_WORLD.Get_rank();
     int numprocs = MPI::COMM_WORLD.Get_size();
     int * counts = new int[numprocs];
@@ -435,7 +337,7 @@ void IonCloud::UpdateIDs(int nrparticles)
 }
 #endif // __MPI_ON__
 
-ostream& operator<<(ostream& os,IonCloud _cloud){
+ostream& operator<<(ostream& os,IonCloud _cloud) {
     for(int k=0; k<_cloud.particles.size();k++){
         //index off the particle in the particles vector
         os<<k<<" ";
@@ -455,8 +357,7 @@ ostream& operator<<(ostream& os,IonCloud _cloud){
     return os;
 }
 
-void IonCloud::InitializePoolVectors()
-{
+void IonCloud::InitializePoolVectors() {
     int n=particles.size();
     //    pos.resize(n);
     //    pos2.resize(n);
@@ -478,11 +379,9 @@ void IonCloud::InitializePoolVectors()
     vel = new double[n][3];
     vel2 = new double[n][3];
     old_z.resize(n);
-
 }
 
-void IonCloud::CopyParticlesToVectors()
-{
+void IonCloud::CopyParticlesToVectors() {
     int n=particles.size();
     for(unsigned i=0;i<n;i++)
     {
@@ -504,10 +403,9 @@ void IonCloud::CopyParticlesToVectors()
         wc[i] = (*ions)[i].Getwc();  //el_charge*B/temp.Getmass();
         wz2[i] = (*ions)[i].Getwz2();// (el_charge*Ud2)/temp.Getmass();
     }
-
 }
-void IonCloud::CopyVectorsToParticles()
-{
+
+void IonCloud::CopyVectorsToParticles() {
     int n=particles.size();
     for(unsigned i=0;i<n;i++)
     {
@@ -521,30 +419,10 @@ void IonCloud::CopyVectorsToParticles()
     }
 }
 
-void IonCloud::UpdateIonParameters(_trap_param & trap_param)
-{
+void IonCloud::UpdateIonParameters(_trap_param & trap_param) {
     int n=particles.size();
     for(unsigned i=0;i<n;i++)
     {
         (*ions)[i].SetParameters(trap_param);
     }
 }
-
-
-void IonCloud::AddImageCurrent(double _image){
-    images.push_back(pair< double,double> (lifetime,_image));
-}
-
-double IonCloud::GetImageCurrent(double delaytime) const{
-    // ******** TODO ******
-    // implement the threshold for the delay line!
-    if (lifetime > delaytime){
-        double timestep=1e-10;
-        int index= (lifetime-delaytime)/timestep;
-        //cout<<"\t asked for image current at time "<<lifetime<< "\t results in index: "<<index<<"\n\t returned the value: "<< images[index].second<<endl;cin.get();
-        return images[index].second;
-    }else return 0;
-}
-
-
-

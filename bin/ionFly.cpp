@@ -2,7 +2,6 @@
 #include "ionFly.h"
 #include "MPI_simbuca.h"
 #include "force.h"
-bool imagecharges = false;
 bool include_boundaries = true;
 bool firstoperation = true;
 LogFile ilogger;
@@ -30,8 +29,6 @@ void IncludeElectrodeBoundaries(bool _bool){
     else{ilogger<<"Without Electrode Boundaries\n";}
 }
 
-
-
 void InitIonFly(const char * _filenamebegin, int _ode_order, double _timestep, bool _adaptive_stepsize,IonCloud &_cloud, _ode_vars & odev){ //IonFly stands above Ode and Coll...
     ilogger<<"In case of ideal trap: B = ";ilogger<<odev.forcev.trap_param.B0;ilogger<<" T.U0/d2 = ";ilogger<< odev.forcev.trap_param.Ud2;ilogger<<"\n";
     //InitOde(_ode_order, _timestep, _adaptive_stepsize);
@@ -42,18 +39,6 @@ void InitIonFly(const char * _filenamebegin, int _ode_order, double _timestep, b
 
 
 void MoveParticles(double _time_movement,IonCloud &_cloud,_ode_vars &odev){
-    //main lus
-
-    // logger object
-    //SLogger m_logger("MoveParticles");
-    //SMsgType type = INFO;
-    //SLogWriter::Instance()->SetMinType( type );
-    // use e.g. : (see SMsgType.h for output levels)
-    //m_logger << ERROR << "my error message" << SLogger::endmsg;
-    //m_logger << INFO  << "my info message" << SLogger::endmsg;
-    //m_logger << DEBUG  << "my debug message" << SLogger::endmsg;
-
-
     bool firststep = true;
     double endtime = _time_movement + _cloud.lifetime;
     odev.final_time = endtime;
@@ -115,21 +100,6 @@ void MoveParticles(double _time_movement,IonCloud &_cloud,_ode_vars &odev){
             _cloud.CopyVectorsToParticles();
             // _cloud.PrintParticles();
         }
-
-        //INIT IMAGE CHARGES
-        if(imagecharges){
-            im_q.resize(_cloud.nrparticles);
-            im_i.resize(_cloud.nrparticles);
-            t_prev = 0.0 ;
-            stringstream ssltemp;ssltemp<<filename_begin<<"_imagecharges.txt";
-            char imagecharge_stream[250];ssltemp>>imagecharge_stream;
-            outfile.open(imagecharge_stream);
-            outfile<<"# (1)t\t\t\t(2)z(mm)\t\t\t(3)vz\t\t\t(4)im_q\t\t\t(5)im_i\t\t\t(6)EED\t\t\t(7)BesselCharge[q]\t\t\t(8)BesselCurrent[q/s]\t(9)BesselCharge[C]\t\t(10)BesselCurrent[A]\n";
-
-            outfile.width(12);
-            outfile.precision(10);
-            outfile.setf(std::ios::scientific, std::ios::floatfield);
-        }
     }
 
     bool collision;
@@ -168,65 +138,13 @@ void MoveParticles(double _time_movement,IonCloud &_cloud,_ode_vars &odev){
             ChangePotential(_cloud.lifetime);
         }
 
-        if(imagecharges){
-            int n = _cloud.nrparticles;
-            im_i_sum = 0.0 ;
-            double z_sum = 0.0;
-            double vz_sum = 0.0;
-            double im_q_sum = 0.0;
-            double EED = 0.0;
-            double dt = _cloud.lifetime - t_prev;
-
-            static double imageCharge = 0.0; //static so its scope is program runtime, therefore it holds its value over all integrations!! (need that to compute the current (see below))
-            double imageCharge_new = 0.0;
-            double imageCurrent = 0.0;
-
-
-            for(int j_=0;j_<n;j_++){ // calculation for each particle of the no	de
-                double q_prev = im_q[j_];
-                double z_prev = _cloud.pos[j_][2];
-                double vz_prev = _cloud.vel[j_][2];
-                im_q[j_] = GetImageChargeApprox(_cloud.charge[j_], z_prev);
-
-                im_i[j_] = (q_prev-im_q[j_])/dt; // /(z_prev-z);
-                EED = im_q[j_]/im_i[j_]*vz_prev;
-                im_i_sum += im_i[j_];
-                im_q_sum += im_q[j_];
-                z_sum += z_prev;
-                vz_sum += vz_prev;
-                //cout<<"image charge & image current \t"<< im_q[j_]<<"\t"<<im_i[j_]<<endl;
-
-                //for each particle add the deposited image charge to get the overall image charge
-                imageCharge_new += GetImageChargeBessel(_cloud.charge[j_], sqrt(pow(_cloud.pos[j_][0],2.0)+pow(_cloud.pos[j_][1],2.0)), _cloud.pos[j_][2]);
-
-
-            }
-            t_prev = _cloud.lifetime;
-
-
-            //image Current is the time derivative of the image charge, so its (q_old-q_new)/delta_t
-            imageCurrent = (imageCharge_new - imageCharge)/GetTimeStep(odev);
-            //update imageCharge to computed new value
-            imageCharge = imageCharge_new;
-            //add image current to the cloud
-            _cloud.AddImageCurrent(1.60217657E-19*imageCurrent);
-
-            if(!firststep && ((_cloud.lifetime-starttime )> (print_interval*nr_interval)) ){
-                //cout<<" total charge \t"<<im_i_sum<<endl;cin.get();
-                outfile<<t_prev<<"\t"<<z_sum*1000.<<"\t"<<vz_sum<<"\t"<<im_q_sum<<"\t"<<im_i_sum<<"\t"<<EED<< "\t" << imageCharge << "\t" << imageCurrent << "\t" << 1.60217657E-19*imageCharge << "\t" << 1.60217657E-19*imageCurrent <<endl;
-            }
-            firststep = false;
-        }//--imagecharges
-
         // PRINT PARTICLES
         if(!odev.PrintAfterOperation&&!odev.PrintatZpos_bool)
         {
             if ( (_cloud.lifetime-starttime )> (print_interval*nr_interval)){
-                //cout << _cloud.lifetime << endl;
                 _cloud.CopyVectorsToParticles();
                 _cloud.PrintParticles();
                 nr_interval++;
-                //printf("%f %f\n", starttime , _cloud.lifetime);
             }
         }
         if(odev.PrintatZpos_bool)

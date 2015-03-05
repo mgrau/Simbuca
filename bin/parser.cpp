@@ -5,18 +5,10 @@
 using namespace std;
 
 
-//defenitions to send a mail
-#define cknull(x) if((x)==NULL) {perror(""); exit(EXIT_FAILURE);}
-#define cknltz(x) if((x)<0) {perror(""); exit(EXIT_FAILURE);}
-#define LIST_LEN 2
-
-
 LogFile plogger;   
 
 
-int ImportData(const char * filename_prefix,IonTable Table,PDGTable pdgTable, IonCloud &cloud, _trap_param & trap_param)
-{
-
+int ImportData(const char * filename_prefix,IonTable Table,PDGTable pdgTable, IonCloud &cloud, _trap_param & trap_param) {
 #ifdef  __MPI_ON__  
     // MPI
     int myid = MPI::COMM_WORLD.Get_rank();
@@ -308,11 +300,8 @@ int ImportData(const char * filename_prefix,IonTable Table,PDGTable pdgTable, Io
     return npart_tot;
 }
 
-
-
 #ifdef __MPI_ON__
-void MPI_Concatenate_Data(int NRPARTICLES, char * filename_prefix)
-{
+void MPI_Concatenate_Data(int NRPARTICLES, char * filename_prefix) {
     // MPI
     int myid = MPI::COMM_WORLD.Get_rank();
     int numprocs = MPI::COMM_WORLD.Get_size();
@@ -542,11 +531,9 @@ void MPI_Concatenate_Data(int NRPARTICLES, char * filename_prefix)
             remove(ssfilename.str().c_str());
         }
     }
-
 }
 
-
-void Rename_part_file(const char* filename_prefix,int nrparticles){
+void Rename_part_file(const char* filename_prefix,int nrparticles) {
     // MPI
     int myid = MPI::COMM_WORLD.Get_rank();
     int numprocs = MPI::COMM_WORLD.Get_size();
@@ -585,16 +572,11 @@ void Rename_part_file(const char* filename_prefix,int nrparticles){
     delete [] counts;
     delete [] displ;
     return;
-
 }
-
-
 #endif // __MPI_ON__
 
 
-void BundleData(const char* filenamebegin, int nrparticles){
-
-
+void BundleData(const char* filenamebegin, int nrparticles) {
     //variables 
     int myid =0;
 #ifdef __MPI_ON__
@@ -704,11 +686,7 @@ void BundleData(const char* filenamebegin, int nrparticles){
     //printf("%c[%d;%dmProgam Ended%c[%dm\n",27,4,31,27,0);    
 }
 
-
-
-
-
-void PrintIonCloudinfo(const char *beginstream, int nrparticles, double diaphragm_radius_mm){
+void PrintIonCloudinfo(const char *beginstream, int nrparticles, double diaphragm_radius_mm) {
     /*read variables*/
     ifstream infiles[nrparticles];
     int index;
@@ -873,13 +851,9 @@ void PrintIonCloudinfo(const char *beginstream, int nrparticles, double diaphrag
     ioncloudinfo.close();
 
     cout<<"cloud evolution information stored in "<<beginstream<<"_cloudEvolution.txt \n";
+}
 
-}//end printIonCloudInfo    
-
-
-
-
-void PrintIonCloudGaussEvo(const char *beginstream, int nrparticles, double diaphragm_radius_mm, bool skipfirstparticle){
+void PrintIonCloudGaussEvo(const char *beginstream, int nrparticles, double diaphragm_radius_mm, bool skipfirstparticle) {
     // function prints out the gaussian distr evolution of x,y,z vx,vy,vz ,rp, rmin(and E, T (why not..)
     /*read variables*/
     unsigned int Noffset = 0; 
@@ -1101,42 +1075,4 @@ void PrintIonCloudGaussEvo(const char *beginstream, int nrparticles, double diap
         ioncloudinfo.close();
 
         cout<<"Gaussian cloud evolution information stored in "<<filenameioncl<<endl;
-
-
-}//end printIonCloudInfo    
-
-
-
-
-/******************************* 
- * email_it() -
- *  emails the contents of a file
- *  parms 
- *	char *filename - file to email
- *  	email recipients are in the array email_list[][] 
- *   which has to be terminated with a zero-length element
- ********************************/
-
-void email_it(char *filename, char *mailadress){                                                                       
-
-    char tmp[256]={0x0};                                                
-    char fpBuffer[512]={0x0};                                           
-
-    cknltz(sprintf (fpBuffer,                                       
-                "/usr/bin/mailx -s '%s %s' %s < %s",                        
-                "Please Review:",                                           
-                filename,                                                   
-                mailadress,                                                        
-                filename)); 	                                            
-    if(system (fpBuffer)==(-1)){                                                               
-        perror("email failure");                                    
-        exit(EXIT_FAILURE);	                                        
-    }                                                               
-
 }
-
-
-
-
-
-

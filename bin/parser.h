@@ -22,5 +22,3 @@ int ImportData(const char * filename_prefix,IonTable Table,PDGTable pdgTable, Io
 void BundleData(const char* filenamebegin, int nrparticles);
 void PrintIonCloudinfo(const char *beginstream, int nrparticles, double diaphragm_radius_mm);
 void PrintIonCloudGaussEvo(const char *beginstream, int nrparticles, double diaphragm_radius_mm, bool skipfirstparticle);
-
-void email_it(char *filename, char *mailadress); 
