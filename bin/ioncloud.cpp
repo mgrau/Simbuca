@@ -7,9 +7,6 @@ LogFile clogger;
 char line[256];
 
 IonCloud::~IonCloud() {
-    //   for(int k=0;k < particles.size(); k++){
-    //         delete streamvector[k];
-    //   }
 }
 
 IonCloud::IonCloud() {
@@ -23,8 +20,6 @@ IonCloud::IonCloud() {
     particles_files = true;
     IDs.resize(0);
     nrparticles= 0;
-    //particles.resize(0); //vector off size 0 he
-    //initialvalues.resize(0);
 
     streamvector.resize(0); //so #streams = #particles
     nrcoll.resize(0);
@@ -40,11 +35,8 @@ void IonCloud::Create(const char* _filename) {
 }
 
 void IonCloud::Delete() {
-    //time_t rawtime;
-    //time ( &rawtime );
     time_t tm;
     tm = time(NULL);
-    //printf(ctime(&tm));
 
     PrintParticles();
     if(particles_files){
@@ -62,11 +54,9 @@ void IonCloud::Delete() {
     }else{
 
         double tmpdouble=0.0;
-        for(int k=0;k < particles.size(); k++){
+        for(int k=0;k < particles.size(); k++) {
             tmpdouble += nrcoll[k];
-            //      (*streamvector[k]).flush();
         }
-        //(*globalstream)<< globalstringstream.str();
         (*globalstream)<< "#*******************************************************************************"<<endl;
         (*globalstream)<<"#simulation ended after "<<time(0)-sim_time_start<<" s\n";
         (*globalstream)<<"# #Particles left= "<<particles.size()<<endl;
@@ -87,9 +77,7 @@ void IonCloud::Delete() {
 
 void IonCloud::Reset() {
     lifetime=0.0;
-
-    //particles =  initialvalues
-    for(int k=0;k < particles.size(); k++){
+    for(int k=0;k < particles.size(); k++) {
         *particles[k] = initialvalues[k];
     }
 }
@@ -192,12 +180,8 @@ void IonCloud::CreateFile() {
         else{streamvector.push_back(globalstream);
         }
 
-        //cout<<filename<<endl; //just a check wich files are created...
-        //cout<<"no stream for particles"<<particleIndex+1<<endl;
     }
-    //(*streamvector[particleIndex]).precision(5);
     (*streamvector[particleIndex]).setf(std::ios::scientific, std::ios::floatfield);
-    //(*streamvector[particleIndex]).setf(std::ios::showpos);
 }
 
 void IonCloud::CloseFile(int _pindex, char* _reason) {
@@ -206,26 +190,19 @@ void IonCloud::CloseFile(int _pindex, char* _reason) {
 
     (*streamvector[_pindex])<<"#******************************************************************************\n";
     (*streamvector[_pindex])<<"#Particle lost: "<<_reason<<endl;
-    //(*streamvector[_pindex])<<"#Last particle position: \n#";
-    //(*streamvector[_pindex])<<particles[_pindex]<<endl;
     time_t rawtime;struct tm * timeinfo;time ( &rawtime );timeinfo = localtime ( &rawtime );
     (*streamvector[_pindex])<<"# simulation ended after "<<time(0)-sim_time_start<<" s\n";
     (*streamvector[_pindex])<<"# #Particles= "<<particles.size()<<endl;
     (*streamvector[_pindex])<<"#total number of collisions = "<< nrcoll[_pindex]<<endl;
     (*streamvector[_pindex])<<"#End time of simulation: "<<asctime (timeinfo)<<endl;
-
     (*streamvector[_pindex])<<"#simulation ended after "<<time(0)-sim_time_start<<" s\n";
-    //(*streamvector[_pindex]).close();
-    //delete the particle out the streamvector he.
 }
 
 void IonCloud::AddParticle(Particle _p, Ion _i) {
-    //    Particle tmpparticle(_x,_y,_z,_vx,_vy,_vz, _Ion);
     IDs.push_back(particles.size()); //dus ID = 0,1,2,3,4,5,...
     Particle * tmpptr = new Particle;
     *tmpptr = _p;
     particles.push_back(tmpptr);
-
 
     initialvalues.push_back(_p);
     ions->push_back(_i);
@@ -240,9 +217,6 @@ void IonCloud::DelParticle(int _index, char* _reason) {
         PrintParticle(_index);
         CloseFile(_index,_reason); //this function first, prints the particle for the last time.
     }
-
-
-
 
     particles.erase(particles.begin()+_index);//remove the index-1'th particle
 
@@ -347,29 +321,15 @@ ostream& operator<<(ostream& os,IonCloud _cloud) {
         os<<" "<<_cloud.pos[k][0]*1000;
         os<<" "<<_cloud.pos[k][1]*1000;
         os<<" "<<_cloud.pos[k][2]*1000;
-        //Radial Distance (mm)
-        os<<" "<<sqrt((_cloud.pos[k][0]*_cloud.pos[k][0]+_cloud.pos[k][1]*_cloud.pos[k][1]))*1000;
         //time in (ms)
         os<<" "<< _cloud.lifetime*1000 ;
-
-        os<<endl; //flush and endl
+        os<<endl;
     }
     return os;
 }
 
 void IonCloud::InitializePoolVectors() {
     int n=particles.size();
-    //    pos.resize(n);
-    //    pos2.resize(n);
-    //    vel.resize(n);
-    //    vel2.resize(n);
-    //    for(unsigned i=0;i<n;i++)
-    //    {
-    //        pos[i].resize(3);
-    //        pos2[i].resize(3);
-    //        vel[i].resize(3);
-    //        vel2[i].resize(3);
-    //    }
     mass.resize(n);
     charge.resize(n);
     wc.resize(n);
@@ -385,23 +345,21 @@ void IonCloud::CopyParticlesToVectors() {
     int n=particles.size();
     for(unsigned i=0;i<n;i++)
     {
-        pos[i][0] = particles[i]->px;
-        pos[i][1] = particles[i]->py;
-        pos[i][2] = particles[i]->pz;
+        pos[i][0]  = particles[i]->px;
+        pos[i][1]  = particles[i]->py;
+        pos[i][2]  = particles[i]->pz;
         pos2[i][0] = particles[i]->px;
         pos2[i][1] = particles[i]->py;
         pos2[i][2] = particles[i]->pz;
-        vel[i][0] = particles[i]->pvx;
-        vel[i][1] = particles[i]->pvy;
-        vel[i][2] = particles[i]->pvz;
+        vel[i][0]  = particles[i]->pvx;
+        vel[i][1]  = particles[i]->pvy;
+        vel[i][2]  = particles[i]->pvz;
         vel2[i][0] = particles[i]->pvx;
         vel2[i][1] = particles[i]->pvy;
         vel2[i][2] = particles[i]->pvz;
 
         mass[i] = (*ions)[i].Getmass();
         charge[i] = (*ions)[i].Getcharge();
-        wc[i] = (*ions)[i].Getwc();  //el_charge*B/temp.Getmass();
-        wz2[i] = (*ions)[i].Getwz2();// (el_charge*Ud2)/temp.Getmass();
     }
 }
 
@@ -416,13 +374,5 @@ void IonCloud::CopyVectorsToParticles() {
         particles[i]->pvx = vel[i][0] ;
         particles[i]->pvy = vel[i][1] ;
         particles[i]->pvz = vel[i][2] ;
-    }
-}
-
-void IonCloud::UpdateIonParameters(_trap_param & trap_param) {
-    int n=particles.size();
-    for(unsigned i=0;i<n;i++)
-    {
-        (*ions)[i].SetParameters(trap_param);
     }
 }

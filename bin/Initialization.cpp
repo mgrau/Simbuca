@@ -4,6 +4,8 @@
 #include <fstream>
 #include <iterator> 
 #include <math.h>
+#include <sstream>
+#include <sys/stat.h>
 #include "globals.h"
 #include "trapparameters.h"
 #include "ionFly.h"
@@ -17,9 +19,7 @@
 #include "PDGTable.h"
 #include "SimParser.h"
 #include "Operation.h"
-#include <sstream>
 #include "Initialization.h"
-#include <sys/stat.h>
 
 #ifdef __linux
 #include <sys/stat.h>
@@ -78,8 +78,7 @@ inline bool FileExists(const std::string& name) {
     return (stat (name.c_str(), &buffer) == 0);
 }
 
-inline bool IsInteger(std::string & s)
-{
+inline bool IsInteger(std::string & s) {
     if(s.empty() || ((!isdigit(s[0])) && (s[0] != '-') && (s[0] != '+'))) return false ;
     char * p ;
     strtol(s.c_str(), &p, 10) ;
@@ -110,7 +109,7 @@ void mkpath(std::string s,mode_t mode) {
 #endif
 
 
-void CreateCloud(int nparticles, vector<Ion> Ions,IonCloud &_cloud, _trap_param & trap_param){
+void CreateCloud(int nparticles, vector<Ion> Ions,IonCloud &_cloud, _trap_param & trap_param) {
     int j = 0;
     int myid=0;
     double frac_ =0;
@@ -169,8 +168,6 @@ void CreateCloud(int nparticles, vector<Ion> Ions,IonCloud &_cloud, _trap_param 
         // cout << i << endl;
     }
 #endif // __MPI_ON__
-
-    _cloud.UpdateIonParameters( trap_param);
 
 }
 
@@ -270,8 +267,7 @@ void InitCloud(int nparticles, vector<double > eV_max_boltz,int seed,double semi
     tmplogger<<" and offset = {";tmplogger<<offset[0];tmplogger<<";";tmplogger<<offset[1];tmplogger<<";";tmplogger<<offset[2];tmplogger<<"} ";
     tmplogger<<" \n";
     //if(myid==0)cout<<"cloud created\n";
-} 
-
+}
 
 void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(const char *) {
     // MPI
@@ -426,7 +422,7 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
                     ion_orig_name.push_back(orig_name);
                     if((Table.TestIonName(tmp_string))){
                         tmp_double = Table.ResearchMass(tmp_string);
-                        Ion_tmp.SetParameters(tmp_double,100.,charge,odev.forcev.trap_param);
+                        Ion_tmp.SetParameters(tmp_double,charge);
                         Ion_tmp.SetName(tmp_string);
                         speciesfound = true;
                     }
@@ -434,7 +430,7 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
                     if(pdgTable.TestPDGName(orig_name)){
                         int pdgid = pdgTable.GetPDGId(orig_name);
                         tmp_double = pdgTable.GetPDGMass(pdgid)*1000.0/mass_Mev; // PDG table: need to convert here GeV to amu
-                        Ion_tmp.SetParameters(tmp_double,100.,pdgTable.GetPDGCharge(pdgid),odev.forcev.trap_param);
+                        Ion_tmp.SetParameters(tmp_double,pdgTable.GetPDGCharge(pdgid));
                         Ion_tmp.SetName(orig_name);
                         speciesfound = true;
                     }
@@ -577,7 +573,7 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
                     ion_orig_name.push_back(orig_name);
                     if((Table.TestIonName(tmp_string))){
                         tmp_double = Table.ResearchMass(tmp_string);
-                        Ion_tmp.SetParameters(tmp_double,100.,charge,odev.forcev.trap_param);
+                        Ion_tmp.SetParameters(tmp_double,charge);
                         Ion_tmp.SetName(tmp_string);
                         Ions_particles.push_back(Ion_tmp);
                         speciesfound = true;
@@ -586,7 +582,7 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
                     if(pdgTable.TestPDGName(orig_name)){
                         int pdgid = pdgTable.GetPDGId(orig_name);
                         tmp_double = pdgTable.GetPDGMass(pdgid)*1000.0/mass_Mev; // PDG table: need to convert here GeV to amu
-                        Ion_tmp.SetParameters(tmp_double,100.,pdgTable.GetPDGCharge(pdgid),odev.forcev.trap_param);
+                        Ion_tmp.SetParameters(tmp_double,pdgTable.GetPDGCharge(pdgid));
                         Ion_tmp.SetName(orig_name);
                         Ions_particles.push_back(Ion_tmp);
                         speciesfound = true;
@@ -990,15 +986,6 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
         MPI::COMM_WORLD.Barrier();
 #endif // __MPI_ON__
 
-        //----------------------------------------------
-        // OPERATION
-        /*
-           tmp_double = Table.ResearchMass("136Te");
-           Ion_tmp.SetParameters(tmp_double,100.,odev.forcev.trap_param);
-           cout << "wm " << Ion_tmp.Getwmin()<< endl;
-           cout << "wz " << sqrt(Ion_tmp.Getwz2())<< endl;
-           */
-        //SWEEP
         if(sparser.mysweep.flag){
             odev.sweep_wi = sparser.mysweep.wi;
             odev.sweep_wf = sparser.mysweep.wf;
@@ -1049,19 +1036,7 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
                         if(myid == 0)throw( "Can't calculate particle mass for operatation ");// << i << " !" << SLogger::endmsg;
                     }
                     Ope_tmp.SetIonName(tmp_name);
-                    Ion_tmp.SetParameters(tmp_double,100.,odev.forcev.trap_param);
-                    if(tmp_string == "c")tmp_frequency = Ion_tmp.Getwc()+tmp_f_bias;
-                    if(tmp_string == "m")tmp_frequency = Ion_tmp.Getwmin()+tmp_f_bias;
-                    if(tmp_string == "p")tmp_frequency = Ion_tmp.Getwplus()+tmp_f_bias;
-                    if(tmp_string == "Pc")tmp_frequency = Ion_tmp.Getwc()+tmp_f_bias;
-                    if(tmp_string == "Pm")tmp_frequency = Ion_tmp.Getwmin()+tmp_f_bias;
-                    if(tmp_string == "Pp")tmp_frequency = Ion_tmp.Getwplus()+tmp_f_bias;
-                    if(myid==0)
-                    {
-                        //cout << tmp_amplitude << endl;
-                        //cout << Ion_tmp.Getkq_div_u()*tmp_amplitude << endl;
-                        //cout << Ion_tmp.Getkq_div_u()*tmp_amplitude/(2.*(Ion_tmp.Getwplus()-Ion_tmp.Getwmin())) << endl;
-                    }
+                    Ion_tmp.SetParameters(tmp_double);
                 }
                 if(tmp_string!="c"&&tmp_string!="f"&&tmp_string!="m"&&tmp_string!="p"&&tmp_string!="Pc"&&tmp_string!="Pf"&&tmp_string!="Pm"&&tmp_string!="Pp"){
                     if(myid==0)
@@ -1073,14 +1048,6 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
                 if(tmp_string[0]=='P')
                 {
                     if(tmp_string == "Pf")tmp_double = 2.*pi/(tmp_frequency);
-                    /*
-                       if(tmp_string == "Pc")tmp_double = 2.*pi/(Ion_tmp.Getwc()+tmp_f_bias);
-                       if(tmp_string == "Pm")tmp_double = 2.*pi/(Ion_tmp.Getwmin()+tmp_f_bias);
-                       if(tmp_string == "Pp")tmp_double = 2.*pi/(Ion_tmp.Getwplus()+tmp_f_bias);
-                       */
-                    if(tmp_string == "Pc")tmp_double = 2.*pi/(Ion_tmp.Getwc());
-                    if(tmp_string == "Pm")tmp_double = 2.*pi/(Ion_tmp.Getwmin());
-                    if(tmp_string == "Pp")tmp_double = 2.*pi/(Ion_tmp.Getwplus());
                     time_operation *=tmp_double;
                 }
                 Ope_tmp.SetTime(time_operation);
@@ -1100,337 +1067,12 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
 
                 Ope.AddOperation(Ope_tmp);
             } // end if DEW, DEB, QEW, QEB, OEW, OEB
-
-            if(ope_name=="RWW" || ope_name=="RWB" || ope_name=="AWW" || ope_name=="AWB"){
-                // RWW
-                time_operation = sparser.operation_vec[i].time;
-                tmp_order = sparser.operation_vec[i].order;
-                tmp_frequency = sparser.operation_vec[i].frequency;
-                tmp_amplitude = sparser.operation_vec[i].amp;
-
-                Ope_tmp.SetName(ope_name.substr(0,2));
-                Ope_tmp.SetTime(time_operation);
-                Ope_tmp.SetOrder(tmp_order);		    
-                Ope_tmp.SetAmplitude(tmp_amplitude);			
-                Ope_tmp.SetFrequency(tmp_frequency);
-                if(ope_name[2]=='W')
-                {
-                    Ope_tmp.SetBuffBool(false);
-                    Ope_tmp.SetBuff(0.);
-                }
-                else
-                {
-                    Ope_tmp.SetBuffBool(true);
-                    Ope_tmp.SetBuff(p_buff_mbar);
-                }
-                Ope.AddOperation(Ope_tmp);
-
-
-            } // end if RWW, RWB, AWW, AWB
-
-            //AC
-            if(ope_name=="AC"){
-                time_operation = sparser.operation_vec[i].time;
-                tmp_order = sparser.operation_vec[i].order;
-                tmp_string = sparser.operation_vec[i].Element;
-                tmp_amplitude = sparser.operation_vec[i].amp;
-                if(Table.TestIonName(tmp_string)){
-                    tmp_double = Table.ResearchMass(tmp_string);
-                }else if(pdgTable.TestPDGName(tmp_string)){
-                    int pdgid = pdgTable.GetPDGId(tmp_string);
-                    tmp_double = pdgTable.GetPDGMass(pdgid)*1000.0/mass_Mev; // PDG table: need to convert here GeV to amu
-                }else{
-                    if(myid == 0)throw( "can't calculate particle mass for AC!");// << SLogger::endmsg;
-                }
-                Ion_tmp.SetParameters(tmp_double,100.,odev.forcev.trap_param);
-                Ope_tmp.SetName("AC");
-                Ope_tmp.SetTime(time_operation);
-                //Ope_tmp.SetOrder(tmp_order);
-                Ope_tmp.SetAmplitude(tmp_amplitude);
-                //Ope_tmp.SetFrequency(tmp_f_bias);
-                if(tmp_order==0)
-                    Ope_tmp.SetFrequency(Ion_tmp.Getwplus()+sqrt(Ion_tmp.Getwz2()));
-                if(tmp_order==1)
-                    Ope_tmp.SetFrequency(Ion_tmp.Getwplus()-sqrt(Ion_tmp.Getwz2()));
-                if(tmp_order==2)
-                    Ope_tmp.SetFrequency(Ion_tmp.Getwmin()-sqrt(Ion_tmp.Getwz2()));
-                if(tmp_order==3)
-                    Ope_tmp.SetFrequency(Ion_tmp.Getwmin()+sqrt(Ion_tmp.Getwz2()));
-                if(tmp_order==4)
-                    Ope_tmp.SetFrequency(sqrt(Ion_tmp.Getwz2()));
-
-                Ope_tmp.SetBuff(0.);Ope_tmp.SetBuffBool(false);
-                Ope.AddOperation(Ope_tmp);
-            }  
-            //SC
-            if(ope_name=="SC"){
-                time_operation = sparser.operation_vec[i].time;
-                tmp_order = sparser.operation_vec[i].order;
-                if(tmp_order==0) // frequencies and amplitudes are given
-                {
-                    tmp_frequency = sparser.operation_vec[i].freq1;
-                    tmp_amplitude = sparser.operation_vec[i].amp1;
-                    tmp_frequency2 = sparser.operation_vec[i].freq2;
-                    tmp_amplitude2 = sparser.operation_vec[i].amp2;
-                }
-                else // name of the isotope is given
-                {
-                    tmp_name = sparser.operation_vec[i].Element;
-                    tmp_f_bias = sparser.operation_vec[i].freq1;
-                    tmp_amplitude = sparser.operation_vec[i].amp1;
-                    tmp_f_bias2 = sparser.operation_vec[i].freq2;
-                    tmp_amplitude2 = sparser.operation_vec[i].amp2;
-                    if(Table.TestIonName(tmp_name)){
-                        tmp_double = Table.ResearchMass(tmp_name);
-                    }else if(pdgTable.TestPDGName(tmp_name)){
-                        int pdgid = pdgTable.GetPDGId(tmp_name);
-                        tmp_double = pdgTable.GetPDGMass(pdgid)*1000.0/mass_Mev; // PDG table: need to convert here GeV to amu
-                    }else{
-                        if(myid == 0)throw( "can't calculate particle mass for SC!");
-                    }
-                    Ion_tmp.SetParameters(tmp_double,100.,odev.forcev.trap_param);
-                    tmp_frequency = Ion_tmp.Getwmin() + tmp_f_bias;
-                    tmp_frequency2 = Ion_tmp.Getwc() + tmp_f_bias2;
-                    if(myid==0)
-                    {
-                        cout << "SIMCO period " << 4.*pi/(Ion_tmp.Getkq_div_u()*tmp_amplitude2/(Ion_tmp.Getwplus()-Ion_tmp.Getwmin())) << endl;
-                    }
-                }
-
-                Ope_tmp.SetName("SC");
-                Ope_tmp.SetTime(time_operation);
-                Ope_tmp.SetBuff(0.);Ope_tmp.SetBuffBool(false);
-                Ope_tmp.SetAmplitude(tmp_amplitude);
-                Ope_tmp.SetFrequency(tmp_frequency);
-                Ope_tmp.SetAmplitude2(tmp_amplitude2);
-                Ope_tmp.SetFrequency2(tmp_frequency2);
-                Ope.AddOperation(Ope_tmp);
-            }
-            //AR
-            if(ope_name=="AR"){
-                time_operation = sparser.operation_vec[i].time;
-                tmp_frequency = sparser.operation_vec[i].freq1;
-                tmp_amplitude = sparser.operation_vec[i].amp1;
-                tmp_frequency2 = sparser.operation_vec[i].freq2;
-                Ope_tmp.SetName("AR");
-                Ope_tmp.SetTime(time_operation);
-                Ope_tmp.SetBuff(0.);Ope_tmp.SetBuffBool(false);
-                Ope_tmp.SetAmplitude(tmp_amplitude);
-                Ope_tmp.SetFrequency(tmp_frequency);
-                Ope_tmp.SetFrequency2(tmp_frequency2);
-                Ope.AddOperation(Ope_tmp);
-            }
-            //FB
-            if(ope_name=="FB"){
-                time_operation = sparser.operation_vec[i].time;
-                tmp_frequency = sparser.operation_vec[i].freq1;
-                tmp_amplitude = sparser.operation_vec[i].amp1;
-                tmp_frequency2 = sparser.operation_vec[i].freq2;
-                Ope_tmp.SetName("FB");
-                Ope_tmp.SetTime(time_operation);
-                Ope_tmp.SetBuff(0.);Ope_tmp.SetBuffBool(false);
-                Ope_tmp.SetAmplitude(tmp_amplitude);
-                Ope_tmp.SetFrequency(tmp_frequency);
-                Ope_tmp.SetFrequency2(tmp_frequency2);
-                Ope.AddOperation(Ope_tmp);
-            }
-            // SWIFT
-            if(ope_name=="SWIFT"){
-                time_operation = sparser.operation_vec[i].time;
-                Ope_tmp.SetName("SWIFT");
-                Ope_tmp.SetTime(time_operation);
-                tmp_double = odev.SetSWIFT_function(sparser.operation_vec[i].name_file);
-                if(tmp_double<time_operation)
-                {
-                    if(myid == 0)
-                        throw( "time of SWIFT OPERATION longer than the total time in the file ");// << tmp_double  << " " <<time_operation<< SLogger::endmsg;
-                }
-                Ope_tmp.SetAmplitude(1);
-                Ope_tmp.SetFrequency(0);
-                if(p_buff_mbar!=0)
-                {
-                    Ope_tmp.SetBuffBool(true);
-                }
-                else
-                {
-                    Ope_tmp.SetBuffBool(false);
-                }
-                Ope_tmp.SetBuff(p_buff_mbar);
-                Ope.AddOperation(Ope_tmp);
-            }
-            if(ope_name=="EXC_EMAP"){
-                time_operation = sparser.operation_vec[i].time;    
-                Ope_tmp.SetName("EXC_EMAP");
-                Ope_tmp.SetTime(time_operation);
-                file_map.open(sparser.operation_vec[i].name_file.c_str(),ios::in);
-                if(!file_map){
-                    if(myid == 0)
-                        throw("Er map file doesn't not exist");// << file_mapEr << "" << endl;
-                }
-                file_map.close();
-                Ope_tmp.SetAmplitude(sparser.operation_vec[i].amp);
-                Ope_tmp.SetFileName(sparser.operation_vec[i].name_file);
-                if(p_buff_mbar!=0)
-                {
-                    Ope_tmp.SetBuffBool(true);
-                }
-                else
-                {
-                    Ope_tmp.SetBuffBool(false);
-                }
-                Ope_tmp.SetBuff(p_buff_mbar);
-                Ope.AddOperation(Ope_tmp);
-            }
-            if(ope_name=="PI_PULSE"){
-                time_operation = sparser.operation_vec[i].time;
-                tmp_name = sparser.operation_vec[i].Element;
-                if(Table.TestIonName(tmp_name)){
-                    tmp_double = Table.ResearchMass(tmp_name);
-                }else if(pdgTable.TestPDGName(tmp_name)){
-                    int pdgid = pdgTable.GetPDGId(tmp_name);
-                    tmp_double = pdgTable.GetPDGMass(pdgid)*1000.0/mass_Mev; // PDG table: need to convert here GeV to amu
-                }else{
-                    if(myid == 0)throw("Can't calculate particle mass for PI PULSE");
-                }
-                Ion_tmp.SetParameters(tmp_double,100.,odev.forcev.trap_param);
-                tmp_double = 2.*pi/Ion_tmp.Getwmin();
-                time_operation *= tmp_double;
-                tmp_double = pi*(Ion_tmp.Getwplus()-Ion_tmp.Getwmin())/(time_operation*Ion_tmp.Getkq_div_u());
-                // if(myid == 0)
-                //cout << time_operation << " " << tmp_double << endl;
-                Ope_tmp.SetName("PI_PULSE");
-                Ope_tmp.SetTime(time_operation);
-                Ope_tmp.SetAmplitude(tmp_double);
-                Ope_tmp.SetFrequency(Ion_tmp.Getwc());
-                if(p_buff_mbar!=0)
-                {
-                    Ope_tmp.SetBuffBool(true);
-                }
-                else
-                {
-                    Ope_tmp.SetBuffBool(false);
-                }
-                Ope_tmp.SetBuff(p_buff_mbar);
-                Ope.AddOperation(Ope_tmp);        
-
-            }
-            if(ope_name=="ASYM_ARW"){
-                // RWW
-                if(sparser.operation_vec[i].freq_bias==0)
-                {
-                    time_operation = sparser.operation_vec[i].time;
-                    tmp_order = sparser.operation_vec[i].order;
-                    tmp_frequency = sparser.operation_vec[i].frequency;
-                    tmp_amplitude = sparser.operation_vec[i].amp;
-
-                    tmp_name = sparser.operation_vec[i].Element;
-                    if(Table.TestIonName(tmp_name)){
-                        tmp_double = Table.ResearchMass(tmp_name);
-                    }else if(pdgTable.TestPDGName(tmp_name)){
-                        int pdgid = pdgTable.GetPDGId(tmp_name);
-                        tmp_double = pdgTable.GetPDGMass(pdgid)*1000.0/mass_Mev; // PDG table: need to convert here GeV to amu
-                    }else{
-                        if(myid == 0)throw("Can't calculate particle mass for ASYM ARW");
-                    }
-                    Ion_tmp.SetParameters(tmp_double,100.,odev.forcev.trap_param);
-                    tmp_frequency += (-sqrt(Ion_tmp.Getwz2())+Ion_tmp.Getwmin());
-                    Ope_tmp.SetName("RW");
-                    Ope_tmp.SetTime(time_operation);
-                    Ope_tmp.SetOrder(1);
-                    Ope_tmp.SetAmplitude(tmp_amplitude);
-                    Ope_tmp.SetFrequency(tmp_frequency);
-                    Ope_tmp.SetBuffBool(false);
-                    Ope_tmp.SetBuff(0.);
-                    if(myid==0&&true)
-                    {
-                        cout << 0.5*sqrt(pow(tmp_amplitude*Ion_tmp.Getkd_div_u(),2)/(sqrt(Ion_tmp.Getwz2())*(Ion_tmp.Getwplus()-Ion_tmp.Getwmin())) )<< endl;
-                    }
-                }
-                else
-                {
-                    time_operation = sparser.operation_vec[i].time;    
-                    Ope_tmp.SetName("RW_SWIFT");
-                    Ope_tmp.SetTime(time_operation);
-                    Ope_tmp.SetOrder(1);
-                    tmp_double = odev.SetSWIFT_function_RW(sparser.operation_vec[i].name_file);
-                    if(tmp_double<time_operation)
-                    {
-                        if(myid == 0)
-                            throw("time of SWIFT OPERATION longer than the total time in the file");// << tmp_double  << " " <<time_operation<< SLogger::endmsg;
-                    }
-                    Ope_tmp.SetAmplitude(1);
-                    Ope_tmp.SetFrequency(0);
-                    if(p_buff_mbar!=0)
-                    {
-                        Ope_tmp.SetBuffBool(true);
-                    }
-                    else
-                    {
-                        Ope_tmp.SetBuffBool(false);
-                    }
-                    Ope_tmp.SetBuff(p_buff_mbar);
-                }
-                Ope.AddOperation(Ope_tmp);
-
-
-            } 
         }
 
-
-        // end OPERATIONS
-
-        //         if(subline=="AQ")
-        //         {
-        // 	        gui_file >> time_operation;
-        //             gui_file >> tmp_order;
-        //             if(tmp_order==0) // frequencies and amplitudes are given
-        //             {
-        //                 gui_file >> tmp_frequency;
-        //                 gui_file >> tmp_amplitude;
-        //                 gui_file >> tmp_frequency2;
-        //                 gui_file >> tmp_amplitude2;
-        //             }
-        //             else // name of the isotope is given
-        //             {
-
-        //                 gui_file >> tmp_name;
-        //                 gui_file >> tmp_f_bias;
-        //                 gui_file >> tmp_amplitude;
-        //                 gui_file >> tmp_f_bias2;
-        //                 gui_file >> tmp_amplitude2;
-        //                 gui_file >> tmp_f_bias3;
-        //                 gui_file >> tmp_amplitude3;
-        //                 gui_file >> tmp_f_bias4;
-        //                 gui_file >> tmp_amplitude4;
-        //                 tmp_double = Table.ResearchMass(tmp_name); // mass of the element
-        //                 Ion_tmp.SetParameters(tmp_double,100.,odev.forcev.trap_param);
-        //                 tmp_frequency2 =  Ion_tmp.Getwc()  + tmp_f_bias;
-        //                 tmp_frequency3 = Ion_tmp.Getwplus()-sqrt(Ion_tmp.Getwz2()) + tmp_f_bias2;
-        //                 tmp_frequency = Ion_tmp.Getwmin();
-        //                 tmp_frequency4 = sqrt(Ion_tmp.Getwz2());
-
-        //             }
-
-        //             Ope_tmp.SetName(subline);
-        //             Ope_tmp.SetTime(time_operation);
-        //             Ope_tmp.SetBuff(0.);Ope_tmp.SetBuffBool(false);
-        //             Ope_tmp.SetAmplitude(tmp_amplitude);
-        //             Ope_tmp.SetFrequency(tmp_frequency);
-        //             Ope_tmp.SetAmplitude2(tmp_amplitude2);
-        //             Ope_tmp.SetFrequency2(tmp_frequency2);
-        //             Ope_tmp.SetAmplitude3(tmp_amplitude3);
-        //             Ope_tmp.SetFrequency3(tmp_frequency3);
-        //             Ope_tmp.SetAmplitude4(tmp_amplitude4);
-        //             Ope_tmp.SetFrequency4(tmp_frequency4);
-        //             Ope.AddOperation(Ope_tmp);
-        //         }
-
-        if(myid==0)
-        {
+        if(myid==0) {
             cout << "OPERATIONS" << endl;
             Ope.Write();
             cout << "*********************************************" << endl;
-
         }
 
 #ifdef __MPI_ON__ 

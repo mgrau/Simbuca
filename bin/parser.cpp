@@ -125,7 +125,7 @@ int ImportData(const char * filename_prefix,IonTable Table,PDGTable pdgTable, Io
                 exit(-1);
             }		
             mass_.push_back(mass);
-            Ion_tmp.SetParameters(mass,0,trap_param);
+            Ion_tmp.SetParameters(mass);
             Ion_tmp.SetName(name);
             Ion_.push_back(Ion_tmp);
         }
@@ -255,7 +255,7 @@ int ImportData(const char * filename_prefix,IonTable Table,PDGTable pdgTable, Io
     for(int i=0;i < counts[myid] ;i++)
     {
         ii = i + displ[myid];
-        Ion_tmp.SetParameters(mass_[ii],0,trap_param);
+        Ion_tmp.SetParameters(mass_[ii]);
         Ion_tmp.SetName(name_[ii]);
         AddParticle(x_[ii],y_[ii],z_[ii],vx_[ii],vy_[ii],vz_[ii],Ion_tmp,cloud);
     }

@@ -112,11 +112,8 @@ void MoveParticles(double _time_movement,IonCloud &_cloud,_ode_vars &odev){
         //balint
         unsigned int nsteps = (unsigned int)((odev.total_time-starttime)/GetTimeStep(odev));
         unsigned int cstep = (unsigned int)((_cloud.lifetime-starttime)/GetTimeStep(odev));
-        if(myid==0)
-        {
-
+        if(myid==0) {
             loadbar(cstep, nsteps, 20);
-
         }
         if(_cloud.nrparticles == 0) break;
         //move particles
@@ -278,7 +275,7 @@ void SetTotalTime_of_Simu(double t_,_ode_vars & odev){
 }
 static inline void loadbar(unsigned int x, unsigned int n, unsigned int w = 50)
 {
-    if ( (x != n) && (x % (n/100) != 0) ) return;
+    if ( (x != n) && (n<100 || (x % (n/100) != 0)) ) return;
 
     float ratio  =  x/(float)n;
     int   c      =  ratio * w;

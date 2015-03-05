@@ -44,7 +44,6 @@ class IonCloud
         void CopyParticlesToVectors();
 
         // Update eigen frequency
-        void UpdateIonParameters(_trap_param & trap_param);
         vector<int> nrcoll;
         double lifetime;
 
@@ -52,7 +51,6 @@ class IonCloud
         void Create(const char* _filename); 
         void Delete();   //also close all the files he!
         void Reset();
-        //accessable functions
         void AddParticle(Particle _p, Ion _i);
         void PrintParticle(int &k);
         void PrintParticles();
