@@ -1,11 +1,3 @@
-//
-//  IonTable.h
-//
-//
-//  Created by pierre dupre on 27/09/12.
-//
-//
-
 #ifndef _OPERATION_h
 #define _OPERATION_h
 

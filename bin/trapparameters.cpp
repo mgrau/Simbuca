@@ -4,13 +4,13 @@ int countword2(string line)
 {
     int wordcount;
     if (line.at(0)==' ')
-		wordcount=0;
-	else
-		wordcount=1;
-	for(int i=1; i<line.length() ;i++)
-		if (line[i] != ' ' && line[i-1] == ' ')
+        wordcount=0;
+    else
+        wordcount=1;
+    for(int i=1; i<line.length() ;i++)
+        if (line[i] != ' ' && line[i-1] == ' ')
             wordcount++;
-	//cout<<"The string has "<<wordcount<<" words"<<endl;
+    //cout<<"The string has "<<wordcount<<" words"<<endl;
     return wordcount ;
 }
 //______________________________________________________________________________
@@ -33,7 +33,7 @@ _trap_param::_trap_param()
 //______________________________________________________________________________
 _trap_param::~_trap_param()
 {
-    
+
 }
 
 //______________________________________________________________________________
@@ -72,11 +72,11 @@ int _trap_param::ReadFile(string filename)
     else
     {
         //check for comments in the beginning of the file
-	while(file.peek() == '#'){
-          getline(file,comment);
-          comment.erase(comment.begin(), find_if(comment.begin(), comment.end(), not1(ptr_fun<int, int>(isspace))));
-          //cout<<"comment found: "<<comment<<" \n";
-	}
+        while(file.peek() == '#'){
+            getline(file,comment);
+            comment.erase(comment.begin(), find_if(comment.begin(), comment.end(), not1(ptr_fun<int, int>(isspace))));
+            //cout<<"comment found: "<<comment<<" \n";
+        }
 
         // 1st line
         getline(file,line); // MAGNETIC FIELD
@@ -100,16 +100,16 @@ int _trap_param::ReadFile(string filename)
                 return 1;
         }
         getline(file,line); //ELECTRIC POTENTIAL
-        
+
         getline(file,line); //c2 (c4) (c6)
         _countword = countword2(line);
- 
+
         switch(_countword)
         {	
             case 1:
                 streamline2.str(line.c_str());
                 streamline2 >> Ud2;
-                
+
                 break;
             case 2:
                 streamline2.str(line);
@@ -136,30 +136,23 @@ int _trap_param::ReadFile(string filename)
         getline(file,line);//ELECTRODE RADIUS
         file >> r_0; //r0
 
-	getline(file,line);//CORRECTION FACTOR
-	getline(file,line);
+        getline(file,line);//CORRECTION FACTOR
+        getline(file,line);
         file >> a;//a
-        
-	getline(file,line);//PUMPING DIAPHRAGM
-	getline(file,line);
+
+        getline(file,line);//PUMPING DIAPHRAGM
+        getline(file,line);
         file >> PUMPING_DIAPRHAGM_RADIUS;//Rd
 
-	if (_countword != 1){
-		Ud2 = U0*c2;
-	}        
+        if (_countword != 1){
+            Ud2 = U0*c2;
+        }        
 
 
-        if((B2==0)&&(c4==0)&&(c6==0))
-        {
-            trap_config = 0;
-        }
-        else
-        {
-            trap_config = 1;
-        }
+        trap_config = 1;
         file.close();
     }
-    
+
     return 0;
 }
 
@@ -174,5 +167,5 @@ void _trap_param::Print() // print Trap parameters
     cout <<"trap correction factor: "<<a << endl;
     cout <<"pumping diaprhagm radius: "<<PUMPING_DIAPRHAGM_RADIUS << endl<<endl;
     return;
-    
+
 }

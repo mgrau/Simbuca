@@ -1,10 +1,3 @@
-//
-//  Operation.cpp
-//
-//
-//  Created by pierre dupre on 27/09/12.
-//
-//
 #include <math.h>
 #include <sstream>
 #include <string>
@@ -44,6 +37,7 @@ void Operation::Launch(IonCloud &_cloud, _ode_vars & odev)
   {
   	DoNoExcitation(time_operation,buffergas,p_buff_mbar/1000.0,_cloud,odev);
   }
+<<<<<<< HEAD
   if(name=="DE")
   {
   	if(p_buff_mbar==0)
@@ -157,6 +151,8 @@ void Operation::Launch(IonCloud &_cloud, _ode_vars & odev)
         odev.UnsetSWIFT();
     }
     
+=======
+>>>>>>> temp
     
   return;
 }

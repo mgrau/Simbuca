@@ -1,4 +1,3 @@
-//ioncloud.h
 #ifndef IONCLOUD_H // header guards
 #define IONCLOUD_H
 
@@ -21,7 +20,10 @@ class IonCloud
         IonCloud();
         ~IonCloud();
 
+<<<<<<< HEAD
         //global vars 
+=======
+>>>>>>> temp
         vector<Particle*> particles;
         vector<Particle> initialvalues; //to be able to reset the cloud p.e. for quadrupolescans!
         vector<Ion> * ions; 
@@ -46,16 +48,24 @@ class IonCloud
         void CopyParticlesToVectors();
 
         // Update eigen frequency
+<<<<<<< HEAD
         void UpdateIonParameters(_trap_param & trap_param);
         vector<int> nrcoll;
         double lifetime;
         //double time; //is the same for everyone he!
+=======
+        vector<int> nrcoll;
+        double lifetime;
+>>>>>>> temp
 
         //structors!
         void Create(const char* _filename); 
         void Delete();   //also close all the files he!
         void Reset();
+<<<<<<< HEAD
         //accessable functions
+=======
+>>>>>>> temp
         void AddParticle(Particle _p, Ion _i);
         void PrintParticle(int &k);
         void PrintParticles();
@@ -70,12 +80,16 @@ class IonCloud
         const char * filenamebegin;
         void CloseFile(int _pindex, char* _reason);
 
+<<<<<<< HEAD
         void AddImageCurrent(double _image);
         double GetImageCurrent(double delaytime) const;
         //to be implemented      int nrStepChanges;
         //to be implemented      bool alive;
         bool particles_files; //standard true
         //if false: print everything in one file.
+=======
+        bool particles_files; //standard true
+>>>>>>> temp
         vector<int> IDs;
 #ifdef __MPI_ON__
         void UpdateIDs(int nrparticles);

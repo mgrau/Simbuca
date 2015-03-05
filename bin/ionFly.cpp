@@ -2,8 +2,6 @@
 #include "ionFly.h"
 #include "MPI_simbuca.h"
 #include "force.h"
-bool buffergas = false;
-bool imagecharges = false;
 bool include_boundaries = true;
 bool firstoperation = true;
 LogFile ilogger;
@@ -24,12 +22,6 @@ const char * filename_begin;
 Counter *percentage = new Counter;
 #endif
 
-/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
-////////////////////Main Stuff///////////////////////////
-/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
-
 void IncludeElectrodeBoundaries(bool _bool){
     include_boundaries = _bool;
     if(_bool){
@@ -37,44 +29,38 @@ void IncludeElectrodeBoundaries(bool _bool){
     else{ilogger<<"Without Electrode Boundaries\n";}
 }
 
-
-
 void InitIonFly(const char * _filenamebegin, int _ode_order, double _timestep, bool _adaptive_stepsize,IonCloud &_cloud, _ode_vars & odev){ //IonFly stands above Ode and Coll...
+<<<<<<< HEAD
 	ilogger<<"In case of ideal trap: B = ";ilogger<<odev.forcev.trap_param.B0;ilogger<<" T.U0/d2 = ";ilogger<< odev.forcev.trap_param.Ud2;ilogger<<"\n";
   	//InitOde(_ode_order, _timestep, _adaptive_stepsize);
     	odev.Init_ode( _ode_order,  _timestep,  _adaptive_stepsize);
     	_cloud.Create(_filenamebegin);
 	filename_begin=_filenamebegin;
+=======
+    ilogger<<"In case of ideal trap: B = ";ilogger<<odev.forcev.trap_param.B0;ilogger<<" T.U0/d2 = ";ilogger<< odev.forcev.trap_param.Ud2;ilogger<<"\n";
+    //InitOde(_ode_order, _timestep, _adaptive_stepsize);
+    odev.Init_ode( _ode_order,  _timestep,  _adaptive_stepsize);
+    _cloud.Create(_filenamebegin);
+    filename_begin=_filenamebegin;
+>>>>>>> temp
 }
 
 
 void MoveParticles(double _time_movement,IonCloud &_cloud,_ode_vars &odev){
-	//main lus
-
-  // logger object
-  //SLogger m_logger("MoveParticles");
-  //SMsgType type = INFO;
-  //SLogWriter::Instance()->SetMinType( type );
-  // use e.g. : (see SMsgType.h for output levels)
-   //m_logger << ERROR << "my error message" << SLogger::endmsg;
-   //m_logger << INFO  << "my info message" << SLogger::endmsg;
-   //m_logger << DEBUG  << "my debug message" << SLogger::endmsg;
-
-
     bool firststep = true;
-	double endtime = _time_movement + _cloud.lifetime;
+    double endtime = _time_movement + _cloud.lifetime;
     odev.final_time = endtime;
-	double starttime = 0;
+    double starttime = 0;
     int myid =0;
 #ifdef __MPI_ON__
     myid = MPI::COMM_WORLD.Get_rank();
-    
+
 #endif
-	if(firstoperation)
-	{
-	    starttime = _cloud.lifetime;
+    if(firstoperation)
+    {
+        starttime = _cloud.lifetime;
         odev.initial_time = starttime;
-	    firstoperation = false;
+        firstoperation = false;
         //odev
         odev.Initpoolvectors(_cloud.nrparticles);
         odev.forcev.coulombinteraction = coulombinteraction;
@@ -87,7 +73,7 @@ void MoveParticles(double _time_movement,IonCloud &_cloud,_ode_vars &odev){
         odev.mpiv->LoadCharge(_cloud.charge);
 #endif // CPU
 #endif // MPI
-        
+
 #ifdef __CUNBODY_ON__
 #ifdef __MPI_ON__
         odev.cunbody.InitMPI(odev.mpiv);
@@ -95,18 +81,18 @@ void MoveParticles(double _time_movement,IonCloud &_cloud,_ode_vars &odev){
         odev.cunbody.AllocArrays(_cloud.nrparticles);
 #endif //MPI
 #endif // __CUNBODY_ON__
-        
+
 #ifdef __NBODY_ON__
 #ifdef __MPI_ON__
         odev.nbody.InitMPI(odev.mpiv);
 #endif
         odev.nbody.Initialization(_cloud, false); // same charge
 #endif // __NBODY_ON__
-        
+
         //cloud
         _cloud.InitializePoolVectors();
         _cloud.CopyParticlesToVectors();
-        
+
 #ifdef __CUNBODY_ON__
         if(odev.forcev.coulombinteraction)
         {
@@ -114,50 +100,32 @@ void MoveParticles(double _time_movement,IonCloud &_cloud,_ode_vars &odev){
             odev.cunbody.end(_cloud);
         }
 #endif // __CUNBODY_ON__
-        
-        
+
+
         //PRINT PARTICLES
         if(odev.PrintAfterOperation)
         {
             _cloud.CopyVectorsToParticles();
-           // _cloud.PrintParticles();
+            // _cloud.PrintParticles();
         }
-        
-        //INIT IMAGE CHARGES
-        if(imagecharges){
-            im_q.resize(_cloud.nrparticles);
-        	im_i.resize(_cloud.nrparticles);
-            t_prev = 0.0 ;
-       	    stringstream ssltemp;ssltemp<<filename_begin<<"_imagecharges.txt";
-       	    char imagecharge_stream[250];ssltemp>>imagecharge_stream;
-            outfile.open(imagecharge_stream);
-            outfile<<"# (1)t\t\t\t(2)z(mm)\t\t\t(3)vz\t\t\t(4)im_q\t\t\t(5)im_i\t\t\t(6)EED\t\t\t(7)BesselCharge[q]\t\t\t(8)BesselCurrent[q/s]\t(9)BesselCharge[C]\t\t(10)BesselCurrent[A]\n";
-            
-            outfile.width(12);
-            outfile.precision(10);
-            outfile.setf(std::ios::scientific, std::ios::floatfield);
-        }
-	}
-    
-	bool collision;
-	//_cloud.PrintParticles();
+    }
+
+    bool collision;
+    //_cloud.PrintParticles();
     odev.time_ini_ope =_cloud.lifetime;
     // PRINT
-    
+
     double Energy_step;
-	while (_cloud.lifetime < endtime) {
+    while (_cloud.lifetime < endtime) {
         //balint
         unsigned int nsteps = (unsigned int)((odev.total_time-starttime)/GetTimeStep(odev));
         unsigned int cstep = (unsigned int)((_cloud.lifetime-starttime)/GetTimeStep(odev));
-        if(myid==0)
-        {
-
-	  loadbar(cstep, nsteps, 20);
-
+        if(myid==0) {
+            loadbar(cstep, nsteps, 20);
         }
-		if(_cloud.nrparticles == 0) break;
-		//move particles
-        
+        if(_cloud.nrparticles == 0) break;
+        //move particles
+
         if(odev.PrintatZpos_bool)
         {
             for(int i=0;i<_cloud.nrparticles;i++)
@@ -165,6 +133,7 @@ void MoveParticles(double _time_movement,IonCloud &_cloud,_ode_vars &odev){
                 _cloud.old_z[i] = _cloud.pos[i][2];
             }
         }
+<<<<<<< HEAD
         
         
 		step(_cloud,odev);
@@ -224,15 +193,25 @@ void MoveParticles(double _time_movement,IonCloud &_cloud,_ode_vars &odev){
 			firststep = false;
 		}//--imagecharges
         
+=======
+
+
+        step(_cloud,odev);
+
+
+        //if CALCPOTENTIAL
+        if(odev.forcev.trap_param.trap_config == 2){
+            ChangePotential(_cloud.lifetime);
+        }
+
+>>>>>>> temp
         // PRINT PARTICLES
         if(!odev.PrintAfterOperation&&!odev.PrintatZpos_bool)
         {
             if ( (_cloud.lifetime-starttime )> (print_interval*nr_interval)){
-                //cout << _cloud.lifetime << endl;
                 _cloud.CopyVectorsToParticles();
                 _cloud.PrintParticles();
                 nr_interval++;
-                //printf("%f %f\n", starttime , _cloud.lifetime);
             }
         }
         if(odev.PrintatZpos_bool)
@@ -245,11 +224,11 @@ void MoveParticles(double _time_movement,IonCloud &_cloud,_ode_vars &odev){
                 }
             }
         }
-        
-		if(include_boundaries){
+
+        if(include_boundaries){
             //check if particles are out of boundary
             // WARNING THE LOOP HAS TO BE DECREMENTAL
-            
+
             int n_temp = _cloud.nrparticles-1;
             for(int j= n_temp; j >=0 ;j--){   //check if radial size is ok,
                 if((_cloud.pos[j][2] > 0.094) && (_cloud.pos[j][2] < 0.147) && (sqrt(_cloud.pos[j][0]*_cloud.pos[j][0]+_cloud.pos[j][1]*_cloud.pos[j][1]) > 0.001)){
@@ -281,24 +260,15 @@ void MoveParticles(double _time_movement,IonCloud &_cloud,_ode_vars &odev){
 #endif
 #endif // __MPI_ON__
         }
-        
-	}
-	//printf("number of step : %d\n", GetCountStep() );
+
+    }
+    //printf("number of step : %d\n", GetCountStep() );
     if(odev.PrintAfterOperation)
     {
         _cloud.CopyVectorsToParticles();
         _cloud.PrintParticles();
     }
 }
-
-/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
-
-
-
 
 
 void AddParticle(double _x, double _y, double _z, double _vx, double _vy, double _vz, Ion& _Ion, IonCloud &_cloud){
@@ -311,9 +281,6 @@ void DelParticle(int _index,IonCloud &_cloud ){
 }
 
 
-// ** FUNCTION SetCoulomb **//
-// ** FUNCTION SetCoulomb **//
-// ** FUNCTION SetCoulomb **//
 void SetCoulomb(bool _coulombinteraction){
     coulombinteraction = _coulombinteraction;
     if(_coulombinteraction){
@@ -325,9 +292,6 @@ void SetCoulomb(bool _coulombinteraction){
         ilogger<<"\n";
     }
 }
-// ** FUNCTION UseScaledCoulomb **//
-// ** FUNCTION UseScaledCoulomb **//
-// ** FUNCTION UseScaledCoulomb **//
 void UseScaledCoulomb(double _ScaledCoulombFactor){
     scaledCoulombFactor = _ScaledCoulombFactor;
     ilogger<<"with scaled coulomb Interaction: factor ";
@@ -340,6 +304,7 @@ void UseScaledCoulomb(double _ScaledCoulombFactor){
 
 
 void DoNoExcitation(double _time_movement, bool _buffergas, double _p_buffergas, IonCloud &_cloud, _ode_vars & odev){
+<<<<<<< HEAD
     odev.InitExcitationVars(0,false, false,0.0, 0.0);
     ilogger<<"No excitation for ";ilogger<<_time_movement;ilogger<<" sec,\n";
     MoveParticles(_time_movement,_cloud,odev);
@@ -595,6 +560,17 @@ void DoFrequencyScan(double _time_movement, double _U_exc, int _order, bool _rot
     myfile.close();
 }
 
+=======
+    ilogger<<"No excitation for ";ilogger<<_time_movement;ilogger<<" sec,\n";
+
+    MoveParticles(_time_movement,_cloud,odev);
+}
+void ChangeEfieldmap(char * _trapErz){
+    ilogger<<"Read new electric fieldmap: ";ilogger<<_trapErz;ilogger<<"\n";
+    ChangeEfield(_trapErz);
+}
+
+>>>>>>> temp
 void SetPrintInterval(double _print_interval){
     print_interval = _print_interval;
 }
@@ -627,8 +603,8 @@ void SetTotalTime_of_Simu(double t_,_ode_vars & odev){
 }
 static inline void loadbar(unsigned int x, unsigned int n, unsigned int w = 50)
 {
-    if ( (x != n) && (x % (n/100) != 0) ) return;
-    
+    if ( (x != n) && (n<100 || (x % (n/100) != 0)) ) return;
+
     float ratio  =  x/(float)n;
     int   c      =  ratio * w;
 #ifdef __linux__
@@ -639,12 +615,12 @@ static inline void loadbar(unsigned int x, unsigned int n, unsigned int w = 50)
 #endif
 
 #ifdef __GUI_ON__
-  percentage->setValue((int)(ratio*100));
+    percentage->setValue((int)(ratio*100));
 #endif
 }
 
 #ifdef __GUI_ON__
 void SetPercentagePointer(Counter *c){
-  percentage = c;
+    percentage = c;
 }
 #endif
