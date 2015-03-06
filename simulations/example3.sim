@@ -1,0 +1,22 @@
+#
+# Input file for Simbuca
+# comments can be put in the beginning of the file
+#
+# This example uses the Velocity Verlet integrator with fixed timestep 1e-8 s. 
+# a 39K particle with charge 2+ is placed at x=0,y=1 cm and z= 1 m 
+# Then a dipole excitation on the magnetronmotion is performed with amplitude of 1.5 V
+#
+# Explanation about the input file parameters can be found here:
+# http://sourceforge.net/p/simbuca/wiki/Home/#sim-file-parameters
+#
+
+CREATEPARTICLES 1
+PARTICLES 39K2+ 0.0 0.01 1.0 0.0 0.0 0.0
+BUFFER 1 1e-4
+ODE 0 0 1e-8
+COULOMB 0 0
+OUTPUT 39K 1e-6 1
+# THIS IS a comment
+IDEALTRAP 0.02 18000 6
+DEW 0.05 m 39K 0. 1.5
+

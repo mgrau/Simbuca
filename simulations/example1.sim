@@ -1,0 +1,19 @@
+#
+# Input file for Simbuca
+# comments can be put in the beginning of the file
+#
+#
+# Explanation about the input file parameters can be found here:
+# http://sourceforge.net/p/simbuca/wiki/Home/#sim-file-parameters
+#
+
+CREATECLOUD 1 1
+CLOUDPARTS 136Te 100. 
+CLOUDCOORD 0.0002 0.0002 0.0008 0 0 0
+TEMP 0.001
+ODE 5 1 1e-9
+COULOMB 1 0
+OUTPUT test3 1e-6 0
+IDEALTRAP 0.02 18000 6
+NE 1e-3
+

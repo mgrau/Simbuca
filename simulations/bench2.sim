@@ -1,0 +1,20 @@
+#
+# Input file for Simbuca
+# comments can be put in the beginning of the file
+#
+#
+# Explanation about the input file parameters can be found here:
+# http://sourceforge.net/p/simbuca/wiki/Home/#sim-file-parameters
+#
+# Runs in 5s on node17 with cpu
+# Runs in 5s on headnode with cpu
+CREATECLOUD 100 1
+CLOUDPARTS 136Te 100. 
+CLOUDCOORD 0.0002 0.0002 0.0008 0 0 0
+TEMP 0.025
+ODE 5 1 1e-9
+COULOMB 1 1
+OUTPUT out_bench2 1e-6 0
+IDEALTRAP 0.02 23500 4.7
+NE 1e-5
+

@@ -1,0 +1,15 @@
+#
+# COMMENTS can be inserted if they start with the # character
+#
+MAGNETIC FIELD
+4.7
+ELECTRIC POTENTIAL
+47 500. 0 0
+ELECTRODE RADIUS
+0.02
+Z0 = distance(trapcenter,start endcaps)
+0.04
+CORRECTION FACTOR
+1
+PUMPING DIAPHRAGM
+0.02

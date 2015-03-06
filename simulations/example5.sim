@@ -1,0 +1,19 @@
+#
+# Input file for Simbuca
+# comments can be put in the beginning of the file
+#
+#
+# Explanation about the input file parameters can be found here:
+# http://sourceforge.net/p/simbuca/wiki/Home/#sim-file-parameters
+# ../../fieldmaps/B_fieldmap500x500_80Amps.txt
+
+CREATEPARTICLES 1
+PARTICLES e- 0.0 0.001 -0.1 0. 0. 0.
+BUFFER 0 1e-4
+ODE 5 1 1e-10
+COULOMB 0 0
+OUTPUT test 1e-10 1
+REALTRAP 2 ../../fieldmaps/E_fieldmap_plasma.txt ../../fieldmaps/B_fieldmap_Bshield_1000x1000.txt
+# REALTRAP 2 ../../fieldmaps/Erz_nested.txt ../../fieldmaps/B_fieldmap500x500_80Amps.txt
+NE 1e-5
+

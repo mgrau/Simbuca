@@ -1,0 +1,18 @@
+#
+# Input file for Simbuca
+# comments can be put in the beginning of the file
+#
+# Explanation about the input file parameters can be found here:
+# http://sourceforge.net/p/simbuca/wiki/Home/#sim-file-parameters
+#
+
+CREATEPARTICLES 1
+PARTICLES proton 0.0 0.01 0. 0. 0. 0. 
+BUFFER 0 1e-4
+# blahh
+ODE 5 1 1e-9
+COULOMB 0 1
+OUTPUT test 1e-7 1
+IDEALTRAP 0.02 18000 6
+NE 1e-4
+

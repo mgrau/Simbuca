@@ -1,0 +1,24 @@
+#
+# Input file for Simbuca
+# comments can be put in the beginning of the file
+#
+# NE 1e-4
+# Explanation about the input file parameters can be found here:
+# http://sourceforge.net/p/simbuca/wiki/Home/#sim-file-parameters
+# AR 22e-3 0.4 590e3 350e3
+# -0.145 = 346.236 kHz
+# -0.17515 = 586.96 kHz
+# REALTRAP 2 ../../fieldmaps/Erz_nested.txt ../../fieldmaps/B_fieldmap_doubleCUSP_500x500.txt
+# AR 22e-4 4 800e3 700e3 -> works! (no smoothening)
+
+
+
+CREATEPARTICLES 2
+PARTICLES antiproton 0.01 0.005 -0.17515 0. 0. 0. antiproton 0.01 -0.005 -0.17515 0. 0. 0.
+BUFFER 0 1e-4
+ODE 5 1 1e-9
+COULOMB 0 0
+OUTPUT test 1e-7 1
+# IDEALTRAP 0.02 -18000 2.4
+REALTRAP 2 ../../fieldmaps/Unested_zoom.txt ../../fieldmaps/B_fieldmap1000x1000_80Amps_zoom.txt
+NE 1e-3
