@@ -2,7 +2,7 @@
 #include <fstream>
 #include <sstream>
 
-#include "Initialization.h"
+#include "initialization.h"
 #include "SLogger.h"
 
 #if defined(__MPI_ON__)
