@@ -7,14 +7,6 @@
 ############################################ 
 VERSION=3.4
 
-help:
-	@echo "############################################ "
-	@echo "Makefile v3.0 for Simbuca"
-	@echo "Default compiler g++ . By default the program runs on CPU instead of the GPU"
-	@echo "select cpu/gpu and icpc/g++/mpic++ in Makefile"
-	@echo "Type 'make all' to build the executable $(EXECUTABLE)"
-	@echo "############################################ "
-
 
 
 #---------------------------------------------#
@@ -25,7 +17,7 @@ help:
 COMPILER=g++
 
 #processing unit: cpu / gpu
-PU=gpu
+PU=cpu
 
 #NBODY algorithm for the calculation: CUNBODY / NBODY
 #after changing $PU, type 'make clean' to remove all *.o files.
@@ -134,6 +126,14 @@ endif
 
 #------------BUILDING DEPENDENCIES------------#
 all:	$(EXECUTABLE)
+
+help:
+	@echo "############################################ "
+	@echo "Makefile v3.0 for Simbuca"
+	@echo "Default compiler g++ . By default the program runs on CPU instead of the GPU"
+	@echo "select cpu/gpu and icpc/g++/mpic++ in Makefile"
+	@echo "Type 'make all' to build the executable $(EXECUTABLE)"
+	@echo "############################################ "
 
 clean: 
 	rm -f *.o $(EXECUTABLE)

@@ -1,0 +1,1080 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+-exclude	Makefile	/^	tar --exclude=.svn -c -v -p -s -f  ..\/backup\/Simbuca_v$(VERSION).`date +"%Y%m%d-%H%M%S"`.tar ..\/bin\/Makefile ..\/bin\/*.cpp ..\/bin\/*.h ..\/bin\/*.a \\$/;"	m
+AC	SimParser.h	/^  struct AC{$/;"	s	class:SimParser
+ALWAYS	SMsgType.h	/^   ALWAYS = 7   \/**< Type that should always be shown. *\/$/;"	e	enum:SMsgType
+AR	SimParser.h	/^  struct AR{$/;"	s	class:SimParser
+AWB	SimParser.h	/^  struct AWB{$/;"	s	class:SimParser
+AWW	SimParser.h	/^  struct AWW{$/;"	s	class:SimParser
+AddOperation	Operation.cpp	/^void Operations::AddOperation(Operation _Ope)$/;"	f	class:Operations
+AddParticle	ionFly.cpp	/^void AddParticle(double _x, double _y, double _z, double _vx, double _vy, double _vz, Ion& _Ion, IonCloud &_cloud){$/;"	f
+AddParticle	ioncloud.cpp	/^void IonCloud::AddParticle(Particle _p, Ion _i) {$/;"	f	class:IonCloud
+AllocArrays	cunbody.cpp	/^void _cunbody::AllocArrays(int nrparticles) {$/;"	f	class:_cunbody
+B	SimParser.h	/^    double B;$/;"	m	struct:SimParser::IDEALTRAP
+B0	fieldcalc.cpp	/^const double B0=1.20156; \/\/ [T]$/;"	v
+B0	trapparameters.h	/^    double B0;$/;"	m	class:_trap_param
+B2	fieldcalc.cpp	/^double B2=301171; \/\/ [T\/m^2]$/;"	v
+B2	trapparameters.h	/^    double B2;$/;"	m	class:_trap_param
+BESSI0	numrec.cpp	/^double BESSI0(double X) {$/;"	f
+BESSI1	numrec.cpp	/^double BESSI1(double X) {$/;"	f
+BUFFER	SimParser.h	/^  struct BUFFER{$/;"	s	class:SimParser
+BadSize	matrix.h	/^   class BadSize { };$/;"	c	class:Matrix
+BoundsViolation	matrix.h	/^   class BoundsViolation { };$/;"	c	class:Matrix
+BundleData	parser.cpp	/^void BundleData(const char* filenamebegin, int nrparticles) {$/;"	f
+Bz	SimParser.h	/^        double Bz;$/;"	m	struct:SimParser::POTTRAP
+CALCTRAP	SimParser.h	/^  struct CALCTRAP{$/;"	s	class:SimParser
+CC	Makefile	/^    CC=UNSUPPORTED_COMPILER$/;"	m
+CC	Makefile	/^    CC=UNSUPPORTED_PROCESING_UNIT$/;"	m
+CC	Makefile	/^  CC = $(CC_gpp) $/;"	m
+CC	Makefile	/^  CC = $(CC_mpicpp) $/;"	m
+CC	Makefile	/^  CC= $(CC_icpc) $/;"	m
+CC_gpp	Makefile	/^CC_gpp=g++ -O3 -g -Wno-write-strings $(NBODY_ALGO_FLAGS) -c$/;"	m
+CC_icpc	Makefile	/^CC_icpc=icpc -O3 -std=c++11 -ipo -no-prec-div -fast -xavx $(NBODY_ALGO_FLAGS) -c$/;"	m
+CC_mpicpp	Makefile	/^CC_mpicpp=$(MPI_PATH)\/mpicxx  -O3 -D__MPI_ON__ -finline-functions -Wno-write-strings  -DMPICH_IGNORE_CXX_SEEK  $(NBODY_ALGO_FLAGS) -c $/;"	m
+CLOUDCOORD	SimParser.h	/^  struct CLOUDCOORD{$/;"	s	class:SimParser
+CLOUDPARTS	SimParser.h	/^  struct CLOUDPARTS{$/;"	s	class:SimParser
+COMPILER	Makefile	/^COMPILER=g++$/;"	m
+COULOMB	SimParser.h	/^  struct COULOMB{$/;"	s	class:SimParser
+CREATECLOUD	SimParser.h	/^  struct CREATECLOUD{$/;"	s	class:SimParser
+CREATEPARTICLES	SimParser.h	/^  struct CREATEPARTICLES{$/;"	s	class:SimParser
+CUDASYS	Makefile	/^CUDASYS = \/usr\/local\/cuda$/;"	m
+CUNBODY_H_INCLUDED	cunbody.h	3;"	d
+CalcElectricField	fieldcalc.cpp	/^void CalcElectricField(){$/;"	f
+CalcMagneticField	fieldcalc.cpp	/^void CalcMagneticField(){$/;"	f
+ChangeEfield	force.cpp	/^void ChangeEfield(char *_Erz_filename) {$/;"	f
+ChangeEfieldmap	ionFly.cpp	/^void ChangeEfieldmap(char * _trapErz){$/;"	f
+ChangePotential	fieldcalc.cpp	/^void ChangePotential(double _t){$/;"	f
+CloseFile	ioncloud.cpp	/^void IonCloud::CloseFile(int _pindex, char* _reason) {$/;"	f	class:IonCloud
+ComputeCounts_Disps	mpi_funcs.cpp	/^void _mpi_vars::ComputeCounts_Disps(int nrparticles)$/;"	f	class:_mpi_vars
+CopyParticlesToVectors	ioncloud.cpp	/^void IonCloud::CopyParticlesToVectors() {$/;"	f	class:IonCloud
+CopyVectorsToParticles	ioncloud.cpp	/^void IonCloud::CopyVectorsToParticles() {$/;"	f	class:IonCloud
+Create	ioncloud.cpp	/^void IonCloud::Create(const char* _filename) {$/;"	f	class:IonCloud
+CreateCloud	Initialization.cpp	/^void CreateCloud(int nparticles, vector<Ion> Ions,IonCloud &_cloud, _trap_param & trap_param) {$/;"	f
+CreateFile	ioncloud.cpp	/^void IonCloud::CreateFile() {$/;"	f	class:IonCloud
+DEB	SimParser.h	/^  struct DEB{$/;"	s	class:SimParser
+DEBUG	SMsgType.h	/^   DEBUG = 2,   \/**< Type for debugging messages. A few messages per event allowed. *\/$/;"	e	enum:SMsgType
+DEW	SimParser.h	/^  struct DEW{$/;"	s	class:SimParser
+DP5	ode.h	/^    bool DP5;$/;"	m	class:_ode_vars
+DelParticle	ionFly.cpp	/^void DelParticle(int _index,IonCloud &_cloud ){$/;"	f
+DelParticle	ioncloud.cpp	/^void IonCloud::DelParticle(int _index, char* _reason) {$/;"	f	class:IonCloud
+Delete	ioncloud.cpp	/^void IonCloud::Delete() {$/;"	f	class:IonCloud
+DoNoExcitation	ionFly.cpp	/^void DoNoExcitation(double _time_movement, bool _buffergas, double _p_buffergas, IonCloud &_cloud, _ode_vars & odev){$/;"	f
+DoSimulation	Initialization.cpp	/^void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(const char *) {$/;"	f
+Dormand_Prince_5	ode.cpp	/^double Dormand_Prince_5(IonCloud &_cloud,_ode_vars &odev){$/;"	f
+EPS	ode.h	/^    double EPS;        $/;"	m	class:_ode_vars
+ERROR	SMsgType.h	/^   ERROR = 5,   \/**< Type for "real" problems. *\/$/;"	e	enum:SMsgType
+EXECUTABLE	Makefile	/^EXECUTABLE=$(SIMULATION_DIR)\/simbuca$/;"	m
+EigenLett	SimParser.h	/^    string EigenLett;$/;"	m	struct:Operation_sim
+EigenLett	SimParser.h	/^    string EigenLett;$/;"	m	struct:SimParser::DEB
+EigenLett	SimParser.h	/^    string EigenLett;$/;"	m	struct:SimParser::DEW
+EigenLett	SimParser.h	/^    string EigenLett;$/;"	m	struct:SimParser::OEB
+EigenLett	SimParser.h	/^    string EigenLett;$/;"	m	struct:SimParser::OEW
+EigenLett	SimParser.h	/^    string EigenLett;$/;"	m	struct:SimParser::QEB
+EigenLett	SimParser.h	/^    string EigenLett;$/;"	m	struct:SimParser::QEW
+Element	SimParser.h	/^    string Element;$/;"	m	struct:Operation_sim
+Element	SimParser.h	/^    string Element;$/;"	m	struct:SimParser::AC
+Element	SimParser.h	/^    string Element;$/;"	m	struct:SimParser::DEB
+Element	SimParser.h	/^    string Element;$/;"	m	struct:SimParser::DEW
+Element	SimParser.h	/^    string Element;$/;"	m	struct:SimParser::OEB
+Element	SimParser.h	/^    string Element;$/;"	m	struct:SimParser::OEW
+Element	SimParser.h	/^    string Element;$/;"	m	struct:SimParser::QEB
+Element	SimParser.h	/^    string Element;$/;"	m	struct:SimParser::QEW
+Element	SimParser.h	/^    string Element;$/;"	m	struct:SimParser::SC
+ExitIonFly	ionFly.cpp	/^void ExitIonFly(IonCloud &_cloud){$/;"	f
+FATAL	SMsgType.h	/^   FATAL = 6,   \/**< Type for problems that should halt the execution. *\/$/;"	e	enum:SMsgType
+FB	SimParser.h	/^  struct FB{$/;"	s	class:SimParser
+FIELDCALC_H	fieldcalc.h	3;"	d
+FIELDMAP_H	fieldmap.h	3;"	d
+FORCE_H	force.h	2;"	d
+FileExists	Initialization.cpp	/^inline bool FileExists(const std::string& name) {$/;"	f
+Finalize	nbody.cpp	/^void _nbody::Finalize() {$/;"	f	class:_nbody
+FindSupN	nbody.cpp	/^int _nbody::FindSupN(int n_) {$/;"	f	class:_nbody
+GLOBAL_H	globals.h	3;"	d
+GPUfile	nbody.h	/^    ifstream GPUfile;$/;"	m	class:_nbody
+Gdt	ode.h	/^    double Gdt;$/;"	m	class:_ode_vars
+GearMethod	ode.cpp	/^void GearMethod(IonCloud &_cloud,_ode_vars &odev){$/;"	f
+Gear_initialized	ode.h	/^    bool Gear_initialized;$/;"	m	class:_ode_vars
+GetAmplitude	Operation.h	/^  inline double GetAmplitude(){return amplitude;};$/;"	f	class:Operation
+GetAmplitude2	Operation.h	/^  inline double GetAmplitude2(){return amplitude2;};$/;"	f	class:Operation
+GetE	Potmap.cpp	/^pair<double,double > PotMap::GetE(const double &x,const double & y, const double & z)$/;"	f	class:PotMap
+GetEField_from_Pot	Potmap.cpp	/^vector<double > PotMap::GetEField_from_Pot(const double &x,const double & y, const double & z)$/;"	f	class:PotMap
+GetEr	Potmap.cpp	/^double PotMap::GetEr(const double &x,const double & y, const double & z)$/;"	f	class:PotMap
+GetEz	Potmap.cpp	/^double PotMap::GetEz(const double &x,const double & y, const double & z)$/;"	f	class:PotMap
+GetFrequency	Operation.h	/^  inline double GetFrequency(){return frequency;};$/;"	f	class:Operation
+GetFrequency2	Operation.h	/^  inline double GetFrequency2(){return frequency2;};$/;"	f	class:Operation
+GetIndex	Potmap.cpp	/^int PotMap::GetIndex(const double &r,const double &z)$/;"	f	class:PotMap
+GetIonName	Operation.h	/^  inline string GetIonName(){return ion_name;};$/;"	f	class:Operation
+GetMinType	SLogWriter.cpp	/^SMsgType SLogWriter::GetMinType() const {$/;"	f	class:SLogWriter
+GetName	ion.h	/^  inline string GetName(){return name;};$/;"	f	class:Ion
+GetNtot	IonTable.h	/^    inline int GetNtot(){return N_ions;};$/;"	f	class:IonTable
+GetNumber_of_Ope	Operation.h	/^     inline int GetNumber_of_Ope(){return ope_N;};$/;"	f	class:Operations
+GetPDGCharge	PDGTable.cpp	/^double PDGTable::GetPDGCharge(int pdgid){$/;"	f	class:PDGTable
+GetPDGId	PDGTable.cpp	/^int PDGTable::GetPDGId(string name){$/;"	f	class:PDGTable
+GetPDGMass	PDGTable.cpp	/^double PDGTable::GetPDGMass(int pdgid){$/;"	f	class:PDGTable
+GetPDGName	PDGTable.cpp	/^string PDGTable::GetPDGName(int pdgid){$/;"	f	class:PDGTable
+GetPotential	Potmap.cpp	/^double PotMap::GetPotential(const double &x,const double & y, const double & z)$/;"	f	class:PotMap
+GetSource	SLogger.cpp	/^const char* SLogger::GetSource() const {$/;"	f	class:SLogger
+GetTime	Operation.h	/^    inline double GetTime(){return time_operation;};$/;"	f	class:Operation
+GetTimeStep	ode.cpp	/^double GetTimeStep(_ode_vars &odev) {$/;"	f
+GetTotal_time_of_Ope	Operation.h	/^     inline double GetTotal_time_of_Ope(){return ope_total_time;};$/;"	f	class:Operations
+Getcharge	ion.cpp	/^int& Ion::Getcharge() {$/;"	f	class:Ion
+GetionA	IonTable.h	/^    inline int GetionA(int i_){return ionA[i_];};$/;"	f	class:IonTable
+GetionEl	IonTable.h	/^    inline string GetionEl(int i_){return ionEl[i_];};$/;"	f	class:IonTable
+GetionMass	IonTable.h	/^    inline double GetionMass(int i_){return ionMass[i_];};$/;"	f	class:IonTable
+GetionN	IonTable.h	/^    inline int GetionN(int i_){return ionN[i_];};$/;"	f	class:IonTable
+GetionName	IonTable.h	/^    inline string GetionName(int i_){return ionName[i_];};$/;"	f	class:IonTable
+GetionZ	IonTable.h	/^    inline int GetionZ(int i_){return ionZ[i_];};$/;"	f	class:IonTable
+Getmass	ion.cpp	/^long double& Ion::Getmass() {$/;"	f	class:Ion
+GetwithCharge	ode.h	/^    inline bool GetwithCharge(){return withCharge;};$/;"	f	class:_ode_vars
+IDEALTRAP	SimParser.h	/^  struct IDEALTRAP{$/;"	s	class:SimParser
+ID_node_GPU	mpi_funcs.h	/^    int * ID_node_GPU ; \/\/ MPI rank of node using GPU$/;"	m	class:_mpi_vars
+IDs	ioncloud.h	/^        vector<int> IDs;$/;"	m	class:IonCloud
+IMPORTDATA	SimParser.h	/^  struct IMPORTDATA{$/;"	s	class:SimParser
+INFO	SMsgType.h	/^   INFO = 3,    \/**< Type for normal information messages. No messages in event processing! *\/$/;"	e	enum:SMsgType
+INITIALIZATION_H	Initialization.h	2;"	d
+IONCLOUD_H	ioncloud.h	2;"	d
+IONFLY_H	ionFly.h	2;"	d
+ION_H	ion.h	3;"	d
+ImportData	parser.cpp	/^int ImportData(const char * filename_prefix,IonTable Table,PDGTable pdgTable, IonCloud &cloud, _trap_param & trap_param) {$/;"	f
+IncludeElectrodeBoundaries	ionFly.cpp	/^void IncludeElectrodeBoundaries(bool _bool){$/;"	f
+InitAcceleraction	ode.cpp	/^void InitAcceleraction(int nrParticles,IonCloud &_cloud,_ode_vars &odev){$/;"	f
+InitCloud	Initialization.cpp	/^void InitCloud(int nparticles, vector<double > eV_max_boltz,int seed,double semiaxis[3], double offset[3], vector<Ion> Ions, IonCloud &_cloud, _trap_param & trap_param) {$/;"	f
+InitFieldCalc	fieldcalc.cpp	/^void InitFieldCalc(double parameter1, double parameter2){$/;"	f
+InitIonFly	ionFly.cpp	/^void InitIonFly(const char * _filenamebegin, int _ode_order, double _timestep, bool _adaptive_stepsize,IonCloud &_cloud, _ode_vars & odev){ \/\/IonFly stands above Ode and Coll...$/;"	f
+InitMPI	cunbody.cpp	/^void _cunbody::InitMPI(_mpi_vars * _mpiv) {$/;"	f	class:_cunbody
+InitMPI	nbody.cpp	/^void _nbody::InitMPI(_mpi_vars * _mpiv) {$/;"	f	class:_nbody
+Init_GlobalPos	mpi_funcs.cpp	/^void _mpi_vars::Init_GlobalPos(int nrparticles)$/;"	f	class:_mpi_vars
+Init_ode	ode.cpp	/^void _ode_vars::Init_ode(int _ode_order, double _timestep, bool _adaptive_stepsize)$/;"	f	class:_ode_vars
+Initialization	nbody.cpp	/^void _nbody::Initialization(const IonCloud & _cloud, bool _withCharge) {$/;"	f	class:_nbody
+InitializePoolVectors	ioncloud.cpp	/^void IonCloud::InitializePoolVectors() {$/;"	f	class:IonCloud
+Initpoolvector	force.cpp	/^void Initpoolvector(int nrParticles,const IonCloud &_cloud,_force_vars &forcev){$/;"	f
+Initpoolvectors	ode.cpp	/^void _ode_vars::Initpoolvectors(int nrParticles){$/;"	f	class:_ode_vars
+Instance	SLogWriter.cpp	/^SLogWriter* SLogWriter::Instance() {$/;"	f	class:SLogWriter
+Interpolate_SWIFT	ode.cpp	/^double _ode_vars::Interpolate_SWIFT(double t_){$/;"	f	class:_ode_vars
+Interpolate_SWIFT	ode.cpp	/^double _ode_vars::Interpolate_SWIFT(double t_,int sc){$/;"	f	class:_ode_vars
+Ion	ion.cpp	/^Ion::Ion(){$/;"	f	class:Ion
+Ion	ion.cpp	/^Ion::Ion(long double _mass_amu) {$/;"	f	class:Ion
+Ion	ion.cpp	/^Ion::Ion(long double _mass_amu, int _charge) {$/;"	f	class:Ion
+Ion	ion.h	/^class Ion$/;"	c
+IonCloud	ioncloud.cpp	/^IonCloud::IonCloud() {$/;"	f	class:IonCloud
+IonCloud	ioncloud.h	/^class IonCloud$/;"	c
+IonTable	IonTable.cpp	/^IonTable::IonTable(string filename_table_mass)$/;"	f	class:IonTable
+IonTable	IonTable.h	/^class IonTable {$/;"	c
+IsElement	fieldmap.cpp	/^bool fieldmap::IsElement(double _value){$/;"	f	class:fieldmap
+IsInteger	Initialization.cpp	/^inline bool IsInteger(std::string & s) {$/;"	f
+Joule_to_eV	globals.h	/^const double Joule_to_eV = 6.24150e18; \/\/1J = 6.24150e18 eV$/;"	v
+LAC	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LAR	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LASYM_ARW	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LAWB	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LAWW	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LBUFFER	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LCALCTRAP	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LCLOUDCOORD	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LCLOUDPARTS	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LCOULOMB	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LCREATECLOUD	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LCREATEPARTICLES	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LDEB	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LDEW	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LEXC_EMAP	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LFB	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LIDEALTRAP	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LIMPORTDATA	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LINK	Makefile	/^    LINK=UNSUPPORTED_COMPILER$/;"	m
+LINK	Makefile	/^    LINK=UNSUPPORTED_PROCESING_UNIT$/;"	m
+LINK	Makefile	/^  LINK = $(LINK_gpp)$/;"	m
+LINK	Makefile	/^  LINK = $(LINK_icpc)$/;"	m
+LINK	Makefile	/^  LINK = $(LINK_mpicpp)$/;"	m
+LINK_gpp	Makefile	/^LINK_gpp=g++ -g -lm -O3 -o$/;"	m
+LINK_icpc	Makefile	/^LINK_icpc=icpc -lm -O3 -std=c++11 -o  $/;"	m
+LINK_mpicpp	Makefile	/^LINK_mpicpp=$(MPI_PATH)\/mpicxx -O3   -std -lm -o $/;"	m
+LNE	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LNONIDEALTRAP	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LODE	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LOEB	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LOEW	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LOGFILE_H	logfile.h	5;"	d
+LOUTPUT	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LPARTICLES	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LPI_PULSE	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LPOTTRAP	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LQEB	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LQEW	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LREALTRAP	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LRWB	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LRWW	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LSC	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LSWEEP	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LSWIFT	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+LTEMP	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
+Launch	Operation.cpp	/^void Operation::Launch(IonCloud &_cloud, _ode_vars & odev)$/;"	f	class:Operation
+Launch	Operation.cpp	/^void Operations::Launch(IonCloud &_cloud, _ode_vars & odev)$/;"	f	class:Operations
+LoadCharge	mpi_funcs.cpp	/^void _mpi_vars::LoadCharge( vector<int > ion_charge)$/;"	f	class:_mpi_vars
+LoadFile	nbody.cpp	/^void _nbody::LoadFile() {$/;"	f	class:_nbody
+LoadPosition	nbody.cpp	/^void _nbody::LoadPosition(const IonCloud &_cloud) {$/;"	f	class:_nbody
+Load_EXC_EMAP	ode.cpp	/^void _force_vars::Load_EXC_EMAP(string _file_name,double _factor){$/;"	f	class:_force_vars
+LogFile	logfile.cpp	/^LogFile::LogFile(){$/;"	f	class:LogFile
+LogFile	logfile.h	/^ class LogFile {$/;"	c
+MATRIX_H	matrix.h	5;"	d
+MAXIMUM_SOURCE_NAME_LENGTH	SLogger.cpp	/^static const std::string::size_type MAXIMUM_SOURCE_NAME_LENGTH = 18;$/;"	v	file:
+MPI_Concatenate_Data	parser.cpp	/^void MPI_Concatenate_Data(int NRPARTICLES, char * filename_prefix) {$/;"	f
+MPI_FLOAT3	mpi_funcs.h	/^    MPI_Datatype MPI_FLOAT3;$/;"	m	class:_mpi_vars
+MPI_FLOAT4	mpi_funcs.h	/^    MPI_Datatype MPI_FLOAT4;$/;"	m	class:_mpi_vars
+MPI_FUNCS_H_INCLUDED	mpi_funcs.h	3;"	d
+MPI_PATH	Makefile	/^MPI_PATH = \/usr\/local\/mpich2\/bin$/;"	m
+MTRAND_H	mtrand.h	46;"	d
+MTRand	mtrand.h	/^  MTRand() : MTRand_int32() {}$/;"	f	class:MTRand
+MTRand	mtrand.h	/^  MTRand(const unsigned long* seed, int size) : MTRand_int32(seed, size) {}$/;"	f	class:MTRand
+MTRand	mtrand.h	/^  MTRand(unsigned long seed) : MTRand_int32(seed) {}$/;"	f	class:MTRand
+MTRand	mtrand.h	/^class MTRand : public MTRand_int32 {$/;"	c
+MTRand53	mtrand.h	/^  MTRand53() : MTRand_int32() {}$/;"	f	class:MTRand53
+MTRand53	mtrand.h	/^  MTRand53(const unsigned long* seed, int size) : MTRand_int32(seed, size) {}$/;"	f	class:MTRand53
+MTRand53	mtrand.h	/^  MTRand53(unsigned long seed) : MTRand_int32(seed) {}$/;"	f	class:MTRand53
+MTRand53	mtrand.h	/^class MTRand53 : public MTRand_int32 {$/;"	c
+MTRand_closed	mtrand.h	/^  MTRand_closed() : MTRand_int32() {}$/;"	f	class:MTRand_closed
+MTRand_closed	mtrand.h	/^  MTRand_closed(const unsigned long* seed, int size) : MTRand_int32(seed, size) {}$/;"	f	class:MTRand_closed
+MTRand_closed	mtrand.h	/^  MTRand_closed(unsigned long seed) : MTRand_int32(seed) {}$/;"	f	class:MTRand_closed
+MTRand_closed	mtrand.h	/^class MTRand_closed : public MTRand_int32 {$/;"	c
+MTRand_int32	mtrand.h	/^  MTRand_int32() { if (!init) seed(5489UL); init = true; }$/;"	f	class:MTRand_int32
+MTRand_int32	mtrand.h	/^  MTRand_int32(const unsigned long* array, int size) { seed(array, size); init = true; }$/;"	f	class:MTRand_int32
+MTRand_int32	mtrand.h	/^  MTRand_int32(unsigned long s) { seed(s); init = true; }$/;"	f	class:MTRand_int32
+MTRand_int32	mtrand.h	/^class MTRand_int32 { \/\/ Mersenne Twister random number generator$/;"	c
+MTRand_open	mtrand.h	/^  MTRand_open() : MTRand_int32() {}$/;"	f	class:MTRand_open
+MTRand_open	mtrand.h	/^  MTRand_open(const unsigned long* seed, int size) : MTRand_int32(seed, size) {}$/;"	f	class:MTRand_open
+MTRand_open	mtrand.h	/^  MTRand_open(unsigned long seed) : MTRand_int32(seed) {}$/;"	f	class:MTRand_open
+MTRand_open	mtrand.h	/^class MTRand_open : public MTRand_int32 {$/;"	c
+MakeVerbose	PDGTable.cpp	/^void PDGTable::MakeVerbose(bool verbose){$/;"	f	class:PDGTable
+Matrix	matrix.h	/^ class Matrix {$/;"	c
+Matrix	matrix.h	/^ inline Matrix<T>::Matrix(unsigned nrows, unsigned ncols)$/;"	f	class:Matrix
+MoveParticles	ionFly.cpp	/^void MoveParticles(double _time_movement,IonCloud &_cloud,_ode_vars &odev){$/;"	f
+NBODY_ALGO	Makefile	/^  NBODY_ALGO = CPU$/;"	m
+NBODY_ALGO	Makefile	/^NBODY_ALGO=CUNBODY$/;"	m
+NBODY_ALGO_FLAGS	Makefile	/^  NBODY_ALGO_FLAGS = -D__CPUNBODY_ON__$/;"	m
+NBODY_ALGO_FLAGS	Makefile	/^  NBODY_ALGO_FLAGS = -D__CUNBODY_ON__ -I$(CUDASYS)\/include #-D__OCTGRAV_ON__   $/;"	m
+NBODY_ALGO_FLAGS	Makefile	/^  NBODY_ALGO_FLAGS = -D__NBODY_ON__ -I$(CUDASYS)\/include $/;"	m
+NBODY_H_INCLUDED	nbody.h	3;"	d
+NE	SimParser.h	/^  struct NE{$/;"	s	class:SimParser
+NMAX	force.cpp	37;"	d	file:
+NONIDEALTRAP	SimParser.h	/^  struct NONIDEALTRAP{$/;"	s	class:SimParser
+NUMREC_H	numrec.h	3;"	d
+NVCC	Makefile	/^NVCC = \/usr\/local\/cuda\/bin\/nvcc	$/;"	m
+NVCCFLAGS	Makefile	/^NVCCFLAGS = -ccbin gcc --compiler-options -fno-strict-aliasing,-Wall,-Wextra,-Wno-unused-parameter -O3$/;"	m
+N_ions	IonTable.h	/^    int N_ions;\/\/ number of ion in the table$/;"	m	class:IonTable
+NoIdealTrap	force.cpp	/^void NoIdealTrap() { \/\/in case when the trappotentials are being calculated.$/;"	f
+NoIdealTrap	force.cpp	/^void NoIdealTrap(char *_Er_filename, char *_Ez_filename, char *_B_filename) {$/;"	f
+NoIdealTrap	force.cpp	/^void NoIdealTrap(char *_Erz_filename, char *_B_filename) {$/;"	f
+ODE	SimParser.h	/^  struct ODE{$/;"	s	class:SimParser
+ODE_H	ode.h	19;"	d
+OEB	SimParser.h	/^  struct OEB{$/;"	s	class:SimParser
+OEW	SimParser.h	/^  struct OEW{$/;"	s	class:SimParser
+OUTPUT	SimParser.h	/^  struct OUTPUT{$/;"	s	class:SimParser
+Ope	Operation.h	/^    vector<Operation > Ope;$/;"	m	class:Operations
+Operation	Operation.cpp	/^Operation::Operation()$/;"	f	class:Operation
+Operation	Operation.cpp	/^Operation::Operation(string _name)$/;"	f	class:Operation
+Operation	Operation.h	/^class Operation {$/;"	c
+Operation_sim	SimParser.h	/^struct Operation_sim{$/;"	s
+Operations	Operation.cpp	/^Operations::Operations(){ope_N=0;ope_total_time=0;};$/;"	f	class:Operations
+Operations	Operation.h	/^class Operations {$/;"	c
+PARTICLES	SimParser.h	/^  struct PARTICLES{$/;"	s	class:SimParser
+PARTICLE_H	particle.h	2;"	d
+PDGTable	PDGTable.cpp	/^PDGTable::PDGTable()$/;"	f	class:PDGTable
+PDGTable	PDGTable.cpp	/^PDGTable::PDGTable(string filename_table_pdg)$/;"	f	class:PDGTable
+PDGTable	PDGTable.h	/^class PDGTable {$/;"	c
+POTMAP_h	Potmap.h	13;"	d
+POTTRAP	SimParser.h	/^    struct POTTRAP{$/;"	s	class:SimParser
+PU	Makefile	/^PU=gpu$/;"	m
+PUMPING_DIAPRHAGM_RADIUS	trapparameters.h	/^    double PUMPING_DIAPRHAGM_RADIUS;$/;"	m	class:_trap_param
+Particle	particle.cpp	/^Particle::Particle() {$/;"	f	class:Particle
+Particle	particle.cpp	/^Particle::Particle(double _x, double _y, double _z, double _vx, double _vy, double _vz) {$/;"	f	class:Particle
+Particle	particle.h	/^class Particle$/;"	c
+PotMap	Potmap.cpp	/^PotMap::PotMap()$/;"	f	class:PotMap
+PotMap	Potmap.h	/^class PotMap{$/;"	c
+Potential_map	ode.h	/^    PotMap Potential_map;$/;"	m	class:_force_vars
+Print	PDGTable.cpp	/^void PDGTable::Print() $/;"	f	class:PDGTable
+Print	PDGTable.cpp	/^void PDGTable::Print(int pdgid) $/;"	f	class:PDGTable
+Print	PDGTable.cpp	/^void PDGTable::Print(vector<int> pdgids) $/;"	f	class:PDGTable
+Print	fieldmap.cpp	/^void fieldmap::Print(){$/;"	f	class:fieldmap
+Print	trapparameters.cpp	/^void _trap_param::Print() \/\/ print Trap parameters$/;"	f	class:_trap_param
+PrintAfterOperation	ode.h	/^    bool PrintAfterOperation;$/;"	m	class:_ode_vars
+PrintFile	SimParser.cpp	/^void SimParser::PrintFile(){$/;"	f	class:SimParser
+PrintFile	SimParser.cpp	/^void SimParser::PrintFile(char * filename){$/;"	f	class:SimParser
+PrintIonCloudGaussEvo	parser.cpp	/^void PrintIonCloudGaussEvo(const char *beginstream, int nrparticles, double diaphragm_radius_mm, bool skipfirstparticle) {$/;"	f
+PrintIonCloudinfo	parser.cpp	/^void PrintIonCloudinfo(const char *beginstream, int nrparticles, double diaphragm_radius_mm) {$/;"	f
+PrintMembers	ioncloud.cpp	/^void IonCloud::PrintMembers() {$/;"	f	class:IonCloud
+PrintOnAxis	fieldmap.cpp	/^void fieldmap::PrintOnAxis(){$/;"	f	class:fieldmap
+PrintParams	SimParser.cpp	/^void SimParser::PrintParams(){$/;"	f	class:SimParser
+PrintParser	SimParser.cpp	/^void SimParser::PrintParser(QTextEdit * textwindow){$/;"	f	class:SimParser
+PrintParticle	ioncloud.cpp	/^void IonCloud::PrintParticle(int &k) {$/;"	f	class:IonCloud
+PrintParticles	ioncloud.cpp	/^void IonCloud::PrintParticles() {$/;"	f	class:IonCloud
+PrintZpos	ode.h	/^    double PrintZpos;$/;"	m	class:_ode_vars
+Print_particles	ionFly.cpp	/^void Print_particles(IonCloud &_cloud){$/;"	f
+Printall	ion.cpp	/^void Ion::Printall() {$/;"	f	class:Ion
+PrintatZpos_bool	ode.h	/^    bool PrintatZpos_bool;$/;"	m	class:_ode_vars
+ProcessFile	SimParser.cpp	/^void SimParser::ProcessFile(){$/;"	f	class:SimParser
+QEB	SimParser.h	/^  struct QEB{$/;"	s	class:SimParser
+QEW	SimParser.h	/^  struct QEW{$/;"	s	class:SimParser
+REALTRAP	SimParser.h	/^  struct REALTRAP{$/;"	s	class:SimParser
+REPORT_ERROR	SLogger.h	195;"	d
+REPORT_FATAL	SLogger.h	209;"	d
+REPORT_VERBOSE	SLogger.h	181;"	d
+RK4	ode.h	/^    bool RK4;$/;"	m	class:_ode_vars
+RWB	SimParser.h	/^  struct RWB{$/;"	s	class:SimParser
+RWW	SimParser.h	/^  struct RWW{$/;"	s	class:SimParser
+RandGauss	fieldcalc.cpp	/^double RandGauss(double mean,double stddev){\/\/ create randoms with gaussian$/;"	f
+RandomGaussian	Initialization.cpp	/^double RandomGaussian(double mean,double stddev) {$/;"	f
+ReadEPotential	Potmap.cpp	/^void PotMap::ReadEPotential(string Potmap_name)$/;"	f	class:PotMap
+ReadField	fieldmap.cpp	/^void fieldmap::ReadField(char * _Frz_filename){$/;"	f	class:fieldmap
+ReadField	fieldmap.cpp	/^void fieldmap::ReadField(char *_Fr_filename,char *_Fz_filename){$/;"	f	class:fieldmap
+ReadFile	trapparameters.cpp	/^int _trap_param::ReadFile(string filename)$/;"	f	class:_trap_param
+ReadPDGTable	PDGTable.cpp	/^void PDGTable::ReadPDGTable(string filename_table_pdg)$/;"	f	class:PDGTable
+ReadTable	IonTable.cpp	/^void IonTable::ReadTable()$/;"	f	class:IonTable
+Rename_part_file	parser.cpp	/^void Rename_part_file(const char* filename_prefix,int nrparticles) {$/;"	f
+ResearchMass	IonTable.cpp	/^double IonTable::ResearchMass(string name_)$/;"	f	class:IonTable
+Reset	ioncloud.cpp	/^void IonCloud::Reset() {$/;"	f	class:IonCloud
+Reset_EXC_EMAP	ode.cpp	/^void _force_vars::Reset_EXC_EMAP(){$/;"	f	class:_force_vars
+Reset_excitation_type	ode.cpp	/^void _force_vars::Reset_excitation_type(){$/;"	f	class:_force_vars
+Reset_ode	ode.cpp	/^void _ode_vars::Reset_ode(){$/;"	f	class:_ode_vars
+Run	Initialization.cpp	/^void Run(SimParser & sparser) {$/;"	f
+Run	Initialization.cpp	/^void Run(int argc, char * argv[],SimParser & sparser) {$/;"	f
+RungaKutta4	ode.cpp	/^double RungaKutta4(IonCloud &_cloud,_ode_vars &odev){$/;"	f
+SC	SimParser.h	/^  struct SC{$/;"	s	class:SimParser
+SIMPARSER_H	SimParser.h	2;"	d
+SIMULATION_DIR	Makefile	/^SIMULATION_DIR=..\/simulations$/;"	m
+SLOGGER_FNAME	SLogger.h	151;"	d
+SLOGGER_FNAME	SLogger.h	153;"	d
+SLOGGER_REPORT_PREFIX	SLogger.h	167;"	d
+SLogWriter	SLogWriter.cpp	/^SLogWriter::SLogWriter()$/;"	f	class:SLogWriter
+SLogWriter	SLogWriter.h	/^class SLogWriter {$/;"	c
+SLogWriter_H	SLogWriter.h	2;"	d
+SLogger	SLogger.cpp	/^SLogger::SLogger( const SLogger& parent )$/;"	f	class:SLogger
+SLogger	SLogger.cpp	/^SLogger::SLogger( const std::string& source )$/;"	f	class:SLogger
+SLogger	SLogger.h	/^class SLogger : public std::ostringstream {$/;"	c
+SLogger_H	SLogger.h	2;"	d
+SMsgType	SMsgType.h	/^enum SMsgType {$/;"	g
+SMsgType_H	SMsgType.h	2;"	d
+SWEEP	SimParser.h	/^    struct SWEEP{$/;"	s	class:SimParser
+Send	SLogger.cpp	/^void SLogger::Send( const SMsgType type, const std::string& message ) const {$/;"	f	class:SLogger
+Send	SLogger.cpp	/^void SLogger::Send() {$/;"	f	class:SLogger
+SetAmplitude	Operation.h	/^  inline void SetAmplitude(double a_){amplitude = a_;};$/;"	f	class:Operation
+SetAmplitude2	Operation.h	/^  inline void SetAmplitude2(double a_){amplitude2 = a_;};$/;"	f	class:Operation
+SetAmplitude3	Operation.h	/^  inline void SetAmplitude3(double a_){a3 = a_;};$/;"	f	class:Operation
+SetAmplitude4	Operation.h	/^  inline void SetAmplitude4(double a_){a4 = a_;};$/;"	f	class:Operation
+SetBuff	Operation.h	/^  inline void SetBuff(double p_){p_buff_mbar = p_;};$/;"	f	class:Operation
+SetBuffBool	Operation.h	/^  inline void SetBuffBool(bool _buffergas){buffergas = _buffergas;};$/;"	f	class:Operation
+SetCoulomb	ionFly.cpp	/^void SetCoulomb(bool _coulombinteraction){$/;"	f
+SetFactor	fieldmap.h	/^    inline void SetFactor(double _f){factor = _f;};$/;"	f	class:fieldmap
+SetFileName	Operation.h	/^  inline void SetFileName(string f_){file_name = f_;};$/;"	f	class:Operation
+SetFileNamePrefix	ionFly.cpp	/^void SetFileNamePrefix(char * filenameprefix){$/;"	f
+SetFreqType	Operation.h	/^  inline void SetFreqType(string str_){freqtype=str_;};$/;"	f	class:Operation
+SetFrequency	Operation.h	/^  inline void SetFrequency(double f_){frequency = f_;};$/;"	f	class:Operation
+SetFrequency2	Operation.h	/^  inline void SetFrequency2(double f_){frequency2 = f_;};$/;"	f	class:Operation
+SetFrequency3	Operation.h	/^  inline void SetFrequency3(double f_){f3 = f_;};$/;"	f	class:Operation
+SetFrequency4	Operation.h	/^  inline void SetFrequency4(double f_){f4 = f_;};$/;"	f	class:Operation
+SetFrequencyBias	Operation.h	/^  inline void SetFrequencyBias(double f_){f_bias = f_;};$/;"	f	class:Operation
+SetInterpolate	fieldmap.cpp	/^void fieldmap::SetInterpolate(double _interpolate){ $/;"	f	class:fieldmap
+SetIonName	Operation.h	/^  inline void SetIonName(string str_){ion_name=str_;};$/;"	f	class:Operation
+SetLifetime	ionFly.cpp	/^void SetLifetime(double _lifetime,IonCloud &_cloud)$/;"	f
+SetMinType	SLogWriter.cpp	/^void SLogWriter::SetMinType( SMsgType type ) {$/;"	f	class:SLogWriter
+SetName	Operation.h	/^  inline void SetName(string name_){name=name_;};$/;"	f	class:Operation
+SetName	ion.h	/^  inline void SetName(string name_){name= name_;};$/;"	f	class:Ion
+SetOrder	Operation.h	/^  inline void SetOrder(double o_){order = o_;};$/;"	f	class:Operation
+SetParameterWithFile	nbody.cpp	/^void _nbody::SetParameterWithFile() {$/;"	f	class:_nbody
+SetParameterWithoutFile	nbody.cpp	/^void _nbody::SetParameterWithoutFile() {$/;"	f	class:_nbody
+SetParameters	ion.cpp	/^void Ion::SetParameters(double _mass_amu) {$/;"	f	class:Ion
+SetParameters	ion.cpp	/^void Ion::SetParameters(double _mass_amu, double _charge) {$/;"	f	class:Ion
+SetParameters	nbody.cpp	/^void _nbody::SetParameters() {$/;"	f	class:_nbody
+SetPercentagePointer	ionFly.cpp	/^void SetPercentagePointer(Counter *c){$/;"	f
+SetPrintAfterOperation	ode.h	/^    inline void SetPrintAfterOperation(bool b_){PrintAfterOperation=true;}$/;"	f	class:_ode_vars
+SetPrintInterval	ionFly.cpp	/^void SetPrintInterval(double _print_interval){$/;"	f
+SetPrintZpos	ode.h	/^    inline void SetPrintZpos(double z_){PrintZpos = z_;};$/;"	f	class:_ode_vars
+SetPrintatZpos_bool	ode.h	/^    inline void SetPrintatZpos_bool(bool b_){PrintatZpos_bool = b_;};$/;"	f	class:_ode_vars
+SetRmin	fieldmap.h	/^    inline void SetRmin(double _rmin){r_min = _rmin;};$/;"	f	class:fieldmap
+SetSWIFT	ode.h	/^    inline void SetSWIFT(bool b_){swift_flag = b_;};$/;"	f	class:_ode_vars
+SetSWIFT_RW	ode.h	/^    inline void SetSWIFT_RW(bool b_){swift_RW = b_;};$/;"	f	class:_ode_vars
+SetSWIFT_function	ode.cpp	/^double _ode_vars::SetSWIFT_function(string nf){$/;"	f	class:_ode_vars
+SetSWIFT_function_RW	ode.cpp	/^double _ode_vars::SetSWIFT_function_RW(string nf){$/;"	f	class:_ode_vars
+SetSource	SLogger.cpp	/^void SLogger::SetSource( const std::string& source ) {$/;"	f	class:SLogger
+SetTime	Operation.h	/^  inline void SetTime(double t_){time_operation = t_;};$/;"	f	class:Operation
+SetTotalTime_of_Simu	ionFly.cpp	/^void SetTotalTime_of_Simu(double t_,_ode_vars & odev){$/;"	f
+SetTrapConfigOff	SimParser.cpp	/^void SimParser::SetTrapConfigOff(){$/;"	f	class:SimParser
+SetZmin	fieldmap.h	/^    inline void SetZmin(double _zmin){z_min = _zmin;};$/;"	f	class:fieldmap
+Set_excitation_type	ode.h	/^    inline void Set_excitation_type(int _exc){excitation_type[_exc]=true;};$/;"	f	class:_force_vars
+SetwithCharge	ode.h	/^    inline void SetwithCharge(bool b_){withCharge = b_;};$/;"	f	class:_ode_vars
+SimParser	SimParser.cpp	/^SimParser::SimParser(const char * simfile){$/;"	f	class:SimParser
+SimParser	SimParser.h	/^class SimParser {$/;"	c
+TEMP	SimParser.h	/^  struct TEMP{$/;"	s	class:SimParser
+TRAPPARAMETERS_H	trapparameters.h	24;"	d
+TREE_LIB	Makefile	/^TREE_LIB=..\/libraries\/octgrav_v1.7d\/$/;"	m
+Temperature	ioncloud.cpp	/^pair<double,double> IonCloud::Temperature() {$/;"	f	class:IonCloud
+TestIonName	IonTable.cpp	/^bool IonTable::TestIonName(string name_)$/;"	f	class:IonTable
+TestIonNames	IonTable.cpp	/^bool IonTable::TestIonNames(vector<string > names_)$/;"	f	class:IonTable
+TestPDGName	PDGTable.cpp	/^bool PDGTable::TestPDGName(string name_){$/;"	f	class:PDGTable
+TestPDGNames	PDGTable.cpp	/^bool PDGTable::TestPDGNames(vector<string > names_){$/;"	f	class:PDGTable
+U0	trapparameters.h	/^    double U0;$/;"	m	class:_trap_param
+U_exc	ode.h	/^    double U_exc, U_exc2, U_exc3, U_exc4;$/;"	m	class:_ode_vars
+U_exc2	ode.h	/^    double U_exc, U_exc2, U_exc3, U_exc4;$/;"	m	class:_ode_vars
+U_exc3	ode.h	/^    double U_exc, U_exc2, U_exc3, U_exc4;$/;"	m	class:_ode_vars
+U_exc4	ode.h	/^    double U_exc, U_exc2, U_exc3, U_exc4;$/;"	m	class:_ode_vars
+Ud2	SimParser.h	/^    double Ud2;$/;"	m	struct:SimParser::IDEALTRAP
+Ud2	trapparameters.h	/^    double Ud2; \/\/ U\/d^2 defines w_z2 = qU\/(d^2 m)$/;"	m	class:_trap_param
+UnsetSWIFT	ode.cpp	/^void _ode_vars::UnsetSWIFT()$/;"	f	class:_ode_vars
+UpdateIDs	ioncloud.cpp	/^void IonCloud::UpdateIDs(int nrparticles) {$/;"	f	class:IonCloud
+UseScaledCoulomb	ionFly.cpp	/^void UseScaledCoulomb(double _ScaledCoulombFactor){$/;"	f
+V	fieldcalc.cpp	/^double V[6]={0.,0.,0.880428,1,0.880428,0.}; \/\/ [V] note V[0] is not used.$/;"	v
+VERBOSE	SMsgType.h	/^   VERBOSE = 1, \/**< Type for the most detailed messages. Only for serious debugging. *\/$/;"	e	enum:SMsgType
+VERSION	Makefile	/^VERSION=3.4$/;"	m
+VV	ode.h	/^    bool VV;$/;"	m	class:_ode_vars
+VV_initialized	ode.h	/^    bool VV_initialized;$/;"	m	class:_ode_vars
+Vgpu_n	nbody.h	/^    std::vector< int > Vgpu_n;$/;"	m	class:_nbody
+Vgpu_ntiles	nbody.h	/^    std::vector< int > Vgpu_ntiles;$/;"	m	class:_nbody
+Vgpu_p	nbody.h	/^    std::vector< int > Vgpu_p;$/;"	m	class:_nbody
+Vgpu_q	nbody.h	/^    std::vector< int > Vgpu_q;$/;"	m	class:_nbody
+WARNING	SMsgType.h	/^   WARNING = 4, \/**< Type for smaller problems.  *\/$/;"	e	enum:SMsgType
+Write	Operation.cpp	/^void Operation::Write()$/;"	f	class:Operation
+Write	Operation.cpp	/^void Operations::Write()$/;"	f	class:Operations
+Write	SLogWriter.cpp	/^void SLogWriter::Write( SMsgType type, const std::string& line ) const {$/;"	f	class:SLogWriter
+_IonTable_h	IonTable.h	10;"	d
+_OPERATION_h	Operation.h	2;"	d
+_PDGTable_h	PDGTable.h	22;"	d
+_cunbody	cunbody.cpp	/^_cunbody::_cunbody() {$/;"	f	class:_cunbody
+_cunbody	cunbody.h	/^class _cunbody{$/;"	c
+_f	SLogger.h	/^inline SLogger& SLogger::operator<< ( SLogger& ( *_f )( SLogger& ) ) {$/;"	f	class:SLogger
+_f	SLogger.h	/^inline SLogger& SLogger::operator<< ( std::ios& ( *_f )( std::ios& ) ) {$/;"	f	class:SLogger
+_f	SLogger.h	/^inline SLogger& SLogger::operator<< ( std::ostream& ( *_f )( std::ostream& ) ) {$/;"	f	class:SLogger
+_force_vars	ode.cpp	/^_force_vars::_force_vars() {$/;"	f	class:_force_vars
+_force_vars	ode.h	/^class _force_vars{$/;"	c
+_mpi_vars	mpi_funcs.cpp	/^_mpi_vars::_mpi_vars()$/;"	f	class:_mpi_vars
+_mpi_vars	mpi_funcs.h	/^class _mpi_vars {$/;"	c
+_nbody	nbody.cpp	/^_nbody::_nbody(){}$/;"	f	class:_nbody
+_nbody	nbody.h	/^class _nbody{$/;"	c
+_ode_vars	ode.cpp	/^_ode_vars::_ode_vars()$/;"	f	class:_ode_vars
+_ode_vars	ode.h	/^class _ode_vars {$/;"	c
+_trap_param	trapparameters.cpp	/^_trap_param::_trap_param()$/;"	f	class:_trap_param
+_trap_param	trapparameters.h	/^class _trap_param{$/;"	c
+a	fieldcalc.cpp	/^const double a=1.8\/1000.; \/\/ [mm]$/;"	v
+a	trapparameters.h	/^    double a;$/;"	m	class:_trap_param
+a3	Operation.h	/^    double a3;$/;"	m	class:Operation
+a4	Operation.h	/^    double a4;$/;"	m	class:Operation
+a_diff	ode.h	/^    vector<vector<double> >  accel_new_suggestion, a_diff;$/;"	m	class:_ode_vars
+abs	Potmap.cpp	/^double abs(double _x)$/;"	f
+accel_new_suggestion	ode.h	/^    vector<vector<double> >  accel_new_suggestion, a_diff;$/;"	m	class:_ode_vars
+adaptive	SimParser.h	/^    int adaptive;\/\/ 0 - no, 1 - yes$/;"	m	struct:SimParser::ODE
+ai	cunbody.h	/^        double (*ai)[3];$/;"	m	class:_cunbody
+ai_temp	cunbody.h	/^        double (*ai_temp)[3];$/;"	m	class:_cunbody
+algrand	Initialization.cpp	/^MTRand algrand;$/;"	v
+amp	SimParser.h	/^    double amp;$/;"	m	struct:Operation_sim
+amp	SimParser.h	/^    double amp;$/;"	m	struct:SimParser::AC
+amp	SimParser.h	/^    double amp;$/;"	m	struct:SimParser::AWB
+amp	SimParser.h	/^    double amp;$/;"	m	struct:SimParser::AWW
+amp	SimParser.h	/^    double amp;$/;"	m	struct:SimParser::DEB
+amp	SimParser.h	/^    double amp;$/;"	m	struct:SimParser::DEW
+amp	SimParser.h	/^    double amp;$/;"	m	struct:SimParser::OEB
+amp	SimParser.h	/^    double amp;$/;"	m	struct:SimParser::OEW
+amp	SimParser.h	/^    double amp;$/;"	m	struct:SimParser::QEB
+amp	SimParser.h	/^    double amp;$/;"	m	struct:SimParser::QEW
+amp	SimParser.h	/^    double amp;$/;"	m	struct:SimParser::RWB
+amp	SimParser.h	/^    double amp;$/;"	m	struct:SimParser::RWW
+amp1	SimParser.h	/^    double amp1;$/;"	m	struct:Operation_sim
+amp1	SimParser.h	/^    double amp1;$/;"	m	struct:SimParser::AR
+amp1	SimParser.h	/^    double amp1;$/;"	m	struct:SimParser::FB
+amp1	SimParser.h	/^    double amp1;$/;"	m	struct:SimParser::SC
+amp2	SimParser.h	/^    double amp2;$/;"	m	struct:Operation_sim
+amp2	SimParser.h	/^    double amp2;$/;"	m	struct:SimParser::SC
+amplitude	Operation.h	/^  double amplitude;$/;"	m	class:Operation
+amplitude2	Operation.h	/^  double amplitude2;$/;"	m	class:Operation
+amu	globals.h	/^const double amu = 1.6605402E-27;\/\/massa van een ion in kg$/;"	v
+ap	Potmap.h	/^    vector<double > ap;$/;"	m	class:PotMap
+asynchro	force.cpp	/^bool asynchro = true;$/;"	v
+atomic_radii_Ar35_m	globals.h	/^const double atomic_radii_Ar35_m = 0.88E-10; \/\/is not ionic radius but the atomic$/;"	v
+atomic_radii_Ar40	globals.h	/^const double atomic_radii_Ar40 = 0.71E-10;  \/\/is not ionic radius but the atomic$/;"	v
+atomic_radii_Cl35_m	globals.h	/^const double atomic_radii_Cl35_m = 0.97E-10; \/\/is not ionic radius but the atomic$/;"	v
+atomic_radii_Eu144_m	globals.h	/^const double atomic_radii_Eu144_m = 1.85E-10;$/;"	v
+atomic_radii_Gd144_m	globals.h	/^const double atomic_radii_Gd144_m = 1.80E-10;$/;"	v
+atomic_radii_H2O	globals.h	/^const double atomic_radii_H2O=3.7E-10;$/;"	v
+atomic_radii_He4	globals.h	/^const double atomic_radii_He4 = 0.31E-10;$/;"	v
+atomic_radii_K39_m	globals.h	/^const double atomic_radii_K39_m = 2.27E-10;$/;"	v
+b	ode.h	/^    vector< vector<double> > bn,cn,dn,en,fn,b,c,d,e,f;$/;"	m	class:_ode_vars
+begin	cunbody.cpp	/^void _cunbody::begin(const IonCloud &_cloud) {$/;"	f	class:_cunbody
+bn	ode.h	/^    vector< vector<double> > bn,cn,dn,en,fn,b,c,d,e,f;$/;"	m	class:_ode_vars
+buffergas	Operation.h	/^  bool buffergas;$/;"	m	class:Operation
+c	ode.h	/^    vector< vector<double> > bn,cn,dn,en,fn,b,c,d,e,f;$/;"	m	class:_ode_vars
+c2	trapparameters.h	/^    double c2; \/\/   w_z2 = 2 q U0 c2\/(d^2 m) -> c2 = 1\/(2 d^2)$/;"	m	class:_trap_param
+c4	trapparameters.h	/^    double c4;$/;"	m	class:_trap_param
+c6	trapparameters.h	/^    double c6;$/;"	m	class:_trap_param
+calcrand	fieldcalc.cpp	/^MTRand calcrand;$/;"	v
+cc	nbody.h	/^    int cc;$/;"	m	class:_nbody
+change_stepsize	ode.h	/^    bool change_stepsize;$/;"	m	class:_ode_vars
+charge	ion.h	/^  int charge; \/\/ read and stored as units of charge$/;"	m	class:Ion
+charge	ioncloud.h	/^        vector < int > charge;$/;"	m	class:IonCloud
+charge	mpi_funcs.h	/^    double *charge; \/\/ charge of ions$/;"	m	class:_mpi_vars
+clogger	ioncloud.cpp	/^LogFile clogger;$/;"	v
+closest_sup_power_of_two	Initialization.cpp	/^int closest_sup_power_of_two(int n) {$/;"	f
+cloudfracs	SimParser.h	/^     std::vector<std::pair<string, double> > cloudfracs;$/;"	m	struct:SimParser::CLOUDPARTS
+cloudsize	SimParser.h	/^    int cloudsize;$/;"	m	struct:SimParser::CREATECLOUD
+cn	ode.h	/^    vector< vector<double> > bn,cn,dn,en,fn,b,c,d,e,f;$/;"	m	class:_ode_vars
+comm1d_h	mpi_funcs.h	/^    MPI_Comm comm1d_h; \/\/ communicator_row$/;"	m	class:_mpi_vars
+comm2d	mpi_funcs.h	/^    MPI_Comm comm2d; \/\/ Cartesian 2D-topology communicator$/;"	m	class:_mpi_vars
+comm_gpu	mpi_funcs.h	/^    MPI_Comm comm_gpu;$/;"	m	class:_mpi_vars
+comments	SimParser.h	/^  std::vector < string > comments;$/;"	m	class:SimParser
+config_map	SimParser.h	/^  vector< pair < string, std::vector< string > > > config_map;$/;"	m	class:SimParser
+constituents	SimParser.h	/^    int constituents;$/;"	m	struct:SimParser::CREATECLOUD
+coords	mpi_funcs.h	/^    int * coords;$/;"	m	class:_mpi_vars
+coords0	cunbody.h	/^        int coords0;$/;"	m	class:_cunbody
+cos2wTtimeTU	ode.h	/^    double cos2wTtimeTU; \/\/ for RW\/AW$/;"	m	class:_force_vars
+coswTtimeTU	ode.h	/^    double coswTtimeTU;$/;"	m	class:_force_vars
+coswTtimeTU2	ode.h	/^    double coswTtimeTU2; \/\/ for SIMCO$/;"	m	class:_force_vars
+coswTtimeTU3	ode.h	/^    double coswTtimeTU3; \/\/ for SIMCO$/;"	m	class:_force_vars
+coswTtimeTU4	ode.h	/^    double coswTtimeTU4; \/\/ for SIMCO$/;"	m	class:_force_vars
+coulombinteraction	ionFly.cpp	/^bool coulombinteraction;$/;"	v
+coulombinteraction	ode.h	/^    bool coulombinteraction;$/;"	m	class:_force_vars
+counts	mpi_funcs.h	/^    int *counts, *disps;$/;"	m	class:_mpi_vars
+counts_3	mpi_funcs.h	/^    int *counts_3, *disps_3;$/;"	m	class:_mpi_vars
+counts_Arow	mpi_funcs.h	/^    int *counts_Arow,*disps_Arow; \/\/ counts and disps total number of part in each row dim = nb_gpu$/;"	m	class:_mpi_vars
+counts_F3	mpi_funcs.h	/^    int *counts_F3, *disps_F3;$/;"	m	class:_mpi_vars
+counts_F4	mpi_funcs.h	/^    int *counts_F4, *disps_F4;$/;"	m	class:_mpi_vars
+counts_col	mpi_funcs.h	/^    int *counts_col,*disps_col;$/;"	m	class:_mpi_vars
+counts_row	mpi_funcs.h	/^    int *counts_row,*disps_row,*disps_row_return; $/;"	m	class:_mpi_vars
+countstep	ode.h	/^    int countstep;$/;"	m	class:_ode_vars
+countword	Initialization.cpp	/^int countword(string line) {$/;"	f
+countword2	trapparameters.cpp	/^int countword2(string line)$/;"	f
+create_mpiv	ode.h	/^    inline void create_mpiv(){mpiv = new _mpi_vars;};$/;"	f	class:_ode_vars
+cunbody	ode.h	/^    _cunbody cunbody;$/;"	m	class:_ode_vars
+cunbodylib	Makefile	/^cunbodylib=..\/libraries\/cunbody\/libcunbody1.a_TI20140519_CUDA60$/;"	m
+d	fieldcalc.cpp	/^const double d=0.14\/1000.; \/\/ [mm]$/;"	v
+d	ode.h	/^    vector< vector<double> > bn,cn,dn,en,fn,b,c,d,e,f;$/;"	m	class:_ode_vars
+d2	trapparameters.h	/^    double d2; \/\/ = ((z_0^2 +r_0^2\/2)\/2)^(1\/2)$/;"	m	class:_trap_param
+data_	matrix.h	/^   T* data_;$/;"	m	class:Matrix
+delete_mpiv	ode.h	/^    inline void delete_mpiv(){delete mpiv;};$/;"	f	class:_ode_vars
+derivs	ode.h	/^    double (*derivs)[3];$/;"	m	class:_force_vars
+disps	mpi_funcs.h	/^    int *counts, *disps;$/;"	m	class:_mpi_vars
+disps_3	mpi_funcs.h	/^    int *counts_3, *disps_3;$/;"	m	class:_mpi_vars
+disps_Arow	mpi_funcs.h	/^    int *counts_Arow,*disps_Arow; \/\/ counts and disps total number of part in each row dim = nb_gpu$/;"	m	class:_mpi_vars
+disps_F3	mpi_funcs.h	/^    int *counts_F3, *disps_F3;$/;"	m	class:_mpi_vars
+disps_F4	mpi_funcs.h	/^    int *counts_F4, *disps_F4;$/;"	m	class:_mpi_vars
+disps_col	mpi_funcs.h	/^    int *counts_col,*disps_col;$/;"	m	class:_mpi_vars
+disps_row	mpi_funcs.h	/^    int *counts_row,*disps_row,*disps_row_return; $/;"	m	class:_mpi_vars
+disps_row_return	mpi_funcs.h	/^    int *counts_row,*disps_row,*disps_row_return; $/;"	m	class:_mpi_vars
+dn	ode.h	/^    vector< vector<double> > bn,cn,dn,en,fn,b,c,d,e,f;$/;"	m	class:_ode_vars
+dr	Potmap.h	/^	double dr;$/;"	m	class:PotMap
+dz	Potmap.h	/^    double dz;$/;"	m	class:PotMap
+dzr	fieldmap.h	/^	double r,dzr;$/;"	m	class:fieldmap
+e	ode.h	/^    vector< vector<double> > bn,cn,dn,en,fn,b,c,d,e,f;$/;"	m	class:_ode_vars
+eV_to_Joule	globals.h	/^const double eV_to_Joule = 1.60217646e-19;$/;"	v
+el_charge	globals.h	/^const double el_charge  = 1.60217733e-19;	\/\/el lading [C]$/;"	v
+en	ode.h	/^    vector< vector<double> > bn,cn,dn,en,fn,b,c,d,e,f;$/;"	m	class:_ode_vars
+end	cunbody.cpp	/^void _cunbody::end(const IonCloud &_cloud) {$/;"	f	class:_cunbody
+end_gpu2	nbody.h	/^    cudaEvent_t end_gpu2;$/;"	m	class:_nbody
+endmsg	SLogger.cpp	/^SLogger& SLogger::endmsg( SLogger& logger ) {$/;"	f	class:SLogger
+eps	cunbody.h	/^        float eps;$/;"	m	class:_cunbody
+eps0	globals.h	/^const double eps0 = 8.85419e-12;$/;"	v
+epsilon_0	globals.h	/^const double epsilon_0 = 8.8541878176E-12; \/\/[Farad\/m]=[C\/(V*m)]$/;"	v
+err	ode.h	/^    double sk,err;$/;"	m	class:_ode_vars
+errold	ode.h	/^    double errold; \/\/standard also defined$/;"	m	class:_ode_vars
+error_succes	ode.cpp	/^bool error_succes(const double err,_ode_vars &odev){$/;"	f
+exc_emap	ode.h	/^    fieldmap * exc_emap;$/;"	m	class:_force_vars
+excitation_type	ode.h	/^    bool excitation_type[15];$/;"	m	class:_force_vars
+f	ode.h	/^    vector< vector<double> > bn,cn,dn,en,fn,b,c,d,e,f;$/;"	m	class:_ode_vars
+f3	Operation.h	/^    double f3;$/;"	m	class:Operation
+f4	Operation.h	/^    double f4;$/;"	m	class:Operation
+f_bias	Operation.h	/^  double f_bias;$/;"	m	class:Operation
+factor	fieldmap.h	/^    double factor;$/;"	m	class:fieldmap
+fieldmap	fieldmap.cpp	/^fieldmap::fieldmap(int _nrows, int _ncols){$/;"	f	class:fieldmap
+fieldmap	fieldmap.h	/^class fieldmap{$/;"	c
+file	nbody.h	/^    bool file;$/;"	m	class:_nbody
+file_name	Operation.h	/^    string file_name;$/;"	m	class:Operation
+filename_begin	ionFly.cpp	/^const char * filename_begin;$/;"	v
+filenamebegin	ioncloud.h	/^        const char * filenamebegin;$/;"	m	class:IonCloud
+filenames	SimParser.h	/^    std::vector<string> filenames;$/;"	m	struct:SimParser::REALTRAP
+final_time	ode.h	/^    double final_time; \/\/ final time of the operation$/;"	m	class:_ode_vars
+firstoperation	ionFly.cpp	/^bool firstoperation = true;$/;"	v
+flag	SimParser.h	/^        bool flag;$/;"	m	struct:SimParser::POTTRAP
+flag	SimParser.h	/^        bool flag;$/;"	m	struct:SimParser::SWEEP
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::AC
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::AR
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::AWB
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::AWW
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::BUFFER
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::CALCTRAP
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::CLOUDCOORD
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::CLOUDPARTS
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::COULOMB
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::CREATECLOUD
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::CREATEPARTICLES
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::DEB
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::DEW
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::FB
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::IDEALTRAP
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::IMPORTDATA
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::NE
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::NONIDEALTRAP
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::ODE
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::OEB
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::OEW
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::OUTPUT
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::PARTICLES
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::QEB
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::QEW
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::REALTRAP
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::RWB
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::RWW
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::SC
+flag	SimParser.h	/^    bool flag;$/;"	m	struct:SimParser::TEMP
+flogger	force.cpp	/^LogFile flogger;$/;"	v
+fn	ode.h	/^    vector< vector<double> > bn,cn,dn,en,fn,b,c,d,e,f;$/;"	m	class:_ode_vars
+force	force.cpp	/^void force(const IonCloud &_cloud,_ode_vars &odev){$/;"	f
+force_begin	nbody.cpp	/^void _nbody::force_begin(const IonCloud &_cloud)$/;"	f	class:_nbody
+force_end	nbody.cpp	/^void _nbody::force_end(const IonCloud &_cloud) {$/;"	f	class:_nbody
+forcev	ode.h	/^    _force_vars forcev;$/;"	m	class:_ode_vars
+fp	Potmap.h	/^    vector<double > fp;$/;"	m	class:PotMap
+freq1	SimParser.h	/^    double freq1;  $/;"	m	struct:SimParser::AR
+freq1	SimParser.h	/^    double freq1;  $/;"	m	struct:SimParser::FB
+freq1	SimParser.h	/^    double freq1;$/;"	m	struct:Operation_sim
+freq1	SimParser.h	/^    double freq1;$/;"	m	struct:SimParser::SC
+freq2	SimParser.h	/^    double freq2;$/;"	m	struct:Operation_sim
+freq2	SimParser.h	/^    double freq2;$/;"	m	struct:SimParser::AR
+freq2	SimParser.h	/^    double freq2;$/;"	m	struct:SimParser::FB
+freq2	SimParser.h	/^    double freq2;$/;"	m	struct:SimParser::SC
+freq_bias	SimParser.h	/^    double freq_bias;$/;"	m	struct:Operation_sim
+freq_bias	SimParser.h	/^    double freq_bias;$/;"	m	struct:SimParser::DEB
+freq_bias	SimParser.h	/^    double freq_bias;$/;"	m	struct:SimParser::DEW
+freq_bias	SimParser.h	/^    double freq_bias;$/;"	m	struct:SimParser::OEB
+freq_bias	SimParser.h	/^    double freq_bias;$/;"	m	struct:SimParser::OEW
+freq_bias	SimParser.h	/^    double freq_bias;$/;"	m	struct:SimParser::QEB
+freq_bias	SimParser.h	/^    double freq_bias;$/;"	m	struct:SimParser::QEW
+freqtype	Operation.h	/^  string freqtype;$/;"	m	class:Operation
+frequency	Operation.h	/^  double frequency;$/;"	m	class:Operation
+frequency	SimParser.h	/^    double frequency;$/;"	m	struct:Operation_sim
+frequency	SimParser.h	/^    double frequency;$/;"	m	struct:SimParser::AWB
+frequency	SimParser.h	/^    double frequency;$/;"	m	struct:SimParser::AWW
+frequency	SimParser.h	/^    double frequency;$/;"	m	struct:SimParser::RWB
+frequency	SimParser.h	/^    double frequency;$/;"	m	struct:SimParser::RWW
+frequency2	Operation.h	/^  double frequency2;$/;"	m	class:Operation
+gen_state	mtrand.cpp	/^void MTRand_int32::gen_state() { \/\/ generate new state vector$/;"	f	class:MTRand_int32
+getElectrCalc	fieldcalc.cpp	/^vector<double> getElectrCalc(double _x,double _y,double _z){$/;"	f
+getField	fieldmap.cpp	/^vector<double> fieldmap::getField(const double& _x,const double& _y,const double& _z){$/;"	f	class:fieldmap
+getFieldXY	fieldmap.cpp	/^vector<double> fieldmap::getFieldXY(const double& _x,const double& _y){$/;"	f	class:fieldmap
+getMagnCalc	fieldcalc.cpp	/^vector<double> getMagnCalc(const double& _x,const double& _y,const double& _z){$/;"	f
+globalstream	ioncloud.h	/^        std::ofstream* globalstream;$/;"	m	class:IonCloud
+gpu_name	nbody.h	/^    int gpu_name;$/;"	m	class:_nbody
+gravity	globals.h	/^const double gravity=6.67428e-11; \/\/ [m^3\/(kg*s^2)]$/;"	v
+h	ode.h	/^    double h;$/;"	m	class:_ode_vars
+h2f	ode.h	/^    double h2f,h3f,h4f,h5f,h6f;	 $/;"	m	class:_ode_vars
+h3f	ode.h	/^    double h2f,h3f,h4f,h5f,h6f;	 $/;"	m	class:_ode_vars
+h4f	ode.h	/^    double h2f,h3f,h4f,h5f,h6f;	 $/;"	m	class:_ode_vars
+h5f	ode.h	/^    double h2f,h3f,h4f,h5f,h6f;	 $/;"	m	class:_ode_vars
+h6f	ode.h	/^    double h2f,h3f,h4f,h5f,h6f;	 $/;"	m	class:_ode_vars
+hnext	ode.h	/^    double hnext; \/\/pay attenion for hnext (well and for h, where it iss changed...)    $/;"	m	class:_ode_vars
+host_acc	nbody.h	/^    float3 *host_acc;$/;"	m	class:_nbody
+host_acc_sub	nbody.h	/^    float3 *host_acc_sub;$/;"	m	class:_nbody
+host_pos	nbody.h	/^    float4 *host_pos;$/;"	m	class:_nbody
+host_pos_sub	nbody.h	/^    float4 *host_pos_sub;$/;"	m	class:_nbody
+httry	ode.h	/^       double httry;$/;"	m	class:_ode_vars
+i	ode.h	/^    unsigned i,j;$/;"	m	class:_ode_vars
+ilogger	ionFly.cpp	/^LogFile ilogger;$/;"	v
+im_i	ionFly.cpp	/^vector<double> im_i;$/;"	v
+im_i_sum	ionFly.cpp	/^double im_i_sum = 0.0;$/;"	v
+im_q	ionFly.cpp	/^vector<double> im_q;$/;"	v
+images	ioncloud.h	/^        vector< pair<double,double> > images; \/\/Images with x: time(s) and y: induced current(A)$/;"	m	class:IonCloud
+include_boundaries	ionFly.cpp	/^bool include_boundaries = true;$/;"	v
+index	SimParser.h	/^    int index;$/;"	m	struct:SimParser::BUFFER
+index	SimParser.h	/^    int index;\/\/ 0 - no, 1 - yes$/;"	m	struct:SimParser::COULOMB
+infile	SimParser.h	/^  ifstream infile;$/;"	m	class:SimParser
+init	mtrand.cpp	/^bool MTRand_int32::init = false;$/;"	m	class:MTRand_int32	file:
+init	mtrand.h	/^  static bool init; \/\/ true if init function is called$/;"	m	class:MTRand_int32
+initial_nrparticles	ioncloud.h	/^        int initial_nrparticles;$/;"	m	class:IonCloud
+initial_time	ode.h	/^    double initial_time; \/\/ initial time of the simu$/;"	m	class:_ode_vars
+initialvalues	ioncloud.h	/^        vector<Particle> initialvalues; \/\/to be able to reset the cloud p.e. for quadrupolescans!$/;"	m	class:IonCloud
+interpolatepoints	fieldmap.h	/^	bool interpolatepoints;$/;"	m	class:fieldmap
+ionA	IonTable.h	/^    vector<int > ionA; \/\/ atomic A$/;"	m	class:IonTable
+ionEl	IonTable.h	/^    vector<string > ionEl; \/\/ name of the element ex: Li for Lithium$/;"	m	class:IonTable
+ionMass	IonTable.h	/^    vector<double> ionMass; \/\/ mass (amu)$/;"	m	class:IonTable
+ionMass_error	IonTable.h	/^    vector<double> ionMass_error; \/\/ mass error (micro amu)$/;"	m	class:IonTable
+ionN	IonTable.h	/^    vector<int > ionN; \/\/ atomic N$/;"	m	class:IonTable
+ionName	IonTable.h	/^    vector<string > ionName; \/\/ full name of the element ex 7Li$/;"	m	class:IonTable
+ionZ	IonTable.h	/^    vector<int > ionZ; \/\/ atomic Z$/;"	m	class:IonTable
+ion_name	Operation.h	/^  string ion_name;$/;"	m	class:Operation
+ions	ioncloud.h	/^        vector<Ion> * ions; $/;"	m	class:IonCloud
+is_power_of_two	Initialization.cpp	29;"	d	file:
+is_power_of_two	nbody.cpp	4;"	d	file:
+j	ode.h	/^    unsigned i,j;$/;"	m	class:_ode_vars
+jj_	force.cpp	/^int jj_;$/;"	v
+k1	ode.h	/^    double (*k1)[6],(*k2)[6],(*k3)[6],(*k4)[6],(*k5)[6],(*k6)[6],(*k7)[6];$/;"	m	class:_ode_vars
+k2	ode.h	/^    double (*k1)[6],(*k2)[6],(*k3)[6],(*k4)[6],(*k5)[6],(*k6)[6],(*k7)[6];$/;"	m	class:_ode_vars
+k3	ode.h	/^    double (*k1)[6],(*k2)[6],(*k3)[6],(*k4)[6],(*k5)[6],(*k6)[6],(*k7)[6];$/;"	m	class:_ode_vars
+k4	ode.h	/^    double (*k1)[6],(*k2)[6],(*k3)[6],(*k4)[6],(*k5)[6],(*k6)[6],(*k7)[6];$/;"	m	class:_ode_vars
+k5	ode.h	/^    double (*k1)[6],(*k2)[6],(*k3)[6],(*k4)[6],(*k5)[6],(*k6)[6],(*k7)[6];$/;"	m	class:_ode_vars
+k6	ode.h	/^    double (*k1)[6],(*k2)[6],(*k3)[6],(*k4)[6],(*k5)[6],(*k6)[6],(*k7)[6];$/;"	m	class:_ode_vars
+k7	ode.h	/^    double (*k1)[6],(*k2)[6],(*k3)[6],(*k4)[6],(*k5)[6],(*k6)[6],(*k7)[6];$/;"	m	class:_ode_vars
+kb	globals.h	/^const double kb = 1.3806504E-23;\/\/Boltzmann constant  [J\/K]$/;"	v
+ke	globals.h	/^const double ke=8.987551787E9; \/\/=1\/(4*pi*eps0) [N*(m\/C)^2]$/;"	v
+l1	fieldcalc.cpp	/^const double l1=20.\/1000.; \/\/ [mm]$/;"	v
+l2	fieldcalc.cpp	/^const double l2=1.33094\/1000.; \/\/ [mm]$/;"	v
+l3	fieldcalc.cpp	/^const double l3=0.440187\/1000.; \/\/ [mm]$/;"	v
+label_map	SimParser.h	/^  std::map<string, const int> label_map;$/;"	m	class:SimParser
+label_operation_map	SimParser.h	/^  std::map<string, const int> label_operation_map;$/;"	m	class:SimParser
+labels	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	g	class:SimParser
+lambda	fieldcalc.cpp	/^const double lambda = z[9]; \/\/=43.6621 [mm]$/;"	v
+lambdainv	fieldcalc.cpp	/^const double lambdainv=1.\/lambda;$/;"	v
+lifetime	ioncloud.h	/^        double lifetime;$/;"	m	class:IonCloud
+line	ioncloud.cpp	/^char line[256];$/;"	v
+loadbar	ionFly.cpp	/^static inline void loadbar(unsigned int x, unsigned int n, unsigned int w = 50)$/;"	f	file:
+logfile	logfile.cpp	/^ofstream LogFile::logfile; $/;"	m	class:LogFile	file:
+logfile	logfile.h	/^   static ofstream logfile; $/;"	m	class:LogFile
+m	cunbody.h	/^        double (*m);$/;"	m	class:_cunbody
+m	mtrand.h	/^  static const int n = 624, m = 397; \/\/ compile time constants$/;"	m	class:MTRand_int32
+m11	fieldmap.h	/^	pair<double, double> m12,m22,m11,m21, mzr;$/;"	m	class:fieldmap
+m12	fieldmap.h	/^	pair<double, double> m12,m22,m11,m21, mzr;$/;"	m	class:fieldmap
+m21	fieldmap.h	/^	pair<double, double> m12,m22,m11,m21, mzr;$/;"	m	class:fieldmap
+m22	fieldmap.h	/^	pair<double, double> m12,m22,m11,m21, mzr;$/;"	m	class:fieldmap
+m_activeType	SLogger.h	/^   SMsgType       m_activeType; \/\/\/< Currently active message type$/;"	m	class:SLogger
+m_colorMap	SLogWriter.h	/^   std::map< SMsgType, std::string > m_colorMap;$/;"	m	class:SLogWriter
+m_instance	SLogWriter.cpp	/^SLogWriter* SLogWriter::m_instance = 0;$/;"	m	class:SLogWriter	file:
+m_instance	SLogWriter.h	/^   static SLogWriter* m_instance;$/;"	m	class:SLogWriter
+m_logWriter	SLogger.h	/^   SLogWriter*    m_logWriter; \/\/\/< Pointer to the log writer object$/;"	m	class:SLogger
+m_minType	SLogWriter.h	/^   SMsgType                          m_minType;$/;"	m	class:SLogWriter
+m_strSource	SLogger.h	/^   std::string    m_strSource; \/\/\/< Name of the object sending the messages$/;"	m	class:SLogger
+m_typeMap	SLogWriter.h	/^   std::map< SMsgType, std::string > m_typeMap;$/;"	m	class:SLogWriter
+main	main.cpp	/^int main(int argc,  char* argv[] )$/;"	f
+mass	ion.h	/^  long double mass; \/\/ reads in amu, stored in kg$/;"	m	class:Ion
+mass	ioncloud.h	/^        vector < double > mass;$/;"	m	class:IonCloud
+mass_Mev	globals.h	/^const double mass_Mev = 931.494;$/;"	v
+massa_144_Eu	globals.h	/^const double massa_144_Eu = 143.918816823;  \/\/(30000)$/;"	v
+massa_144_Gd	globals.h	/^const double massa_144_Gd = 143.922963000;  \/\/(30000)$/;"	v
+massa_Ar35_amu	globals.h	/^const double massa_Ar35_amu = 34.9752576;   \/\/34.9752576(8)$/;"	v
+massa_Ar40_amu	globals.h	/^const double massa_Ar40_amu = 39.9623831225;$/;"	v
+massa_Cl35_amu	globals.h	/^const double massa_Cl35_amu = 34.96885268;  \/\/34.96885268(4)$/;"	v
+massa_Cs133_amu	globals.h	/^const double massa_Cs133_amu = 132.905451932; \/\/132.905451(932)$/;"	v
+massa_H2O_amu	globals.h	/^const double massa_H2O_amu=18.0106;$/;"	v
+massa_He4_amu	globals.h	/^const double massa_He4_amu = 4.00260325415;$/;"	v
+massa_K39_amu	globals.h	/^const double massa_K39_amu = 38.96370668;   \/\/38.96370668(20) $/;"	v
+massa_electron_amu	globals.h	/^const double massa_electron_amu = 0.000548579867 ;$/;"	v
+massa_proton_amu	globals.h	/^const double massa_proton_amu= 1.00727638 ;$/;"	v
+matrix	fieldmap.h	/^	Matrix<std::pair<double,double> > * matrix;     \/\/(Ez,Er)$/;"	m	class:fieldmap
+maxIndex	Potmap.h	/^    int maxIndex;$/;"	m	class:PotMap
+mkpath	Initialization.cpp	/^void mkpath(std::string s,mode_t mode) {$/;"	f
+mpiv	cunbody.h	/^        _mpi_vars * mpiv;$/;"	m	class:_cunbody
+mpiv	nbody.h	/^    _mpi_vars * mpiv;$/;"	m	class:_nbody
+mpiv	ode.h	/^    _mpi_vars  * mpiv;$/;"	m	class:_ode_vars
+myac	SimParser.h	/^  AC myac;  $/;"	m	class:SimParser
+myar	SimParser.h	/^  AR myar; $/;"	m	class:SimParser
+myawb	SimParser.h	/^  AWB myawb;  $/;"	m	class:SimParser
+myaww	SimParser.h	/^  AWW myaww;$/;"	m	class:SimParser
+mybuffer	SimParser.h	/^  BUFFER mybuffer;$/;"	m	class:SimParser
+mycalctrap	SimParser.h	/^  CALCTRAP mycalctrap;$/;"	m	class:SimParser
+mycloudcoord	SimParser.h	/^  CLOUDCOORD mycloudcoord;$/;"	m	class:SimParser
+mycloudparts	SimParser.h	/^  CLOUDPARTS mycloudparts;$/;"	m	class:SimParser
+mycoulomb	SimParser.h	/^  COULOMB mycoulomb;$/;"	m	class:SimParser
+mycreatecloud	SimParser.h	/^  CREATECLOUD mycreatecloud;$/;"	m	class:SimParser
+mycreateparticles	SimParser.h	/^  CREATEPARTICLES mycreateparticles;$/;"	m	class:SimParser
+mydeb	SimParser.h	/^  DEB mydeb;$/;"	m	class:SimParser
+mydew	SimParser.h	/^  DEW mydew;$/;"	m	class:SimParser
+myfb	SimParser.h	/^  FB myfb; $/;"	m	class:SimParser
+myid	force.cpp	/^int myid; \/\/ id of the node$/;"	v
+myidealtrap	SimParser.h	/^  IDEALTRAP myidealtrap;$/;"	m	class:SimParser
+myimportdata	SimParser.h	/^  IMPORTDATA myimportdata;$/;"	m	class:SimParser
+myne	SimParser.h	/^  NE myne;$/;"	m	class:SimParser
+mynonitrap	SimParser.h	/^  NONIDEALTRAP mynonitrap;$/;"	m	class:SimParser
+myode	SimParser.h	/^  ODE myode;$/;"	m	class:SimParser
+myoeb	SimParser.h	/^  OEB myoeb;$/;"	m	class:SimParser
+myoew	SimParser.h	/^  OEW myoew;$/;"	m	class:SimParser
+myoutput	SimParser.h	/^  OUTPUT myoutput;$/;"	m	class:SimParser
+myparticles	SimParser.h	/^  PARTICLES myparticles;$/;"	m	class:SimParser
+mypottrap	SimParser.h	/^    POTTRAP mypottrap;$/;"	m	class:SimParser
+myqeb	SimParser.h	/^  QEB myqeb;$/;"	m	class:SimParser
+myqew	SimParser.h	/^  DEW myqew;$/;"	m	class:SimParser
+myrealtrap	SimParser.h	/^  REALTRAP myrealtrap;$/;"	m	class:SimParser
+myrwb	SimParser.h	/^  RWB myrwb;  $/;"	m	class:SimParser
+myrww	SimParser.h	/^  RWW myrww;$/;"	m	class:SimParser
+mysc	SimParser.h	/^  SC mysc;  $/;"	m	class:SimParser
+mysweep	SimParser.h	/^    SWEEP mysweep;$/;"	m	class:SimParser
+mytemp	SimParser.h	/^  TEMP mytemp;$/;"	m	class:SimParser
+mzr	fieldmap.h	/^	pair<double, double> m12,m22,m11,m21, mzr;$/;"	m	class:fieldmap
+n	mtrand.h	/^  static const int n = 624, m = 397; \/\/ compile time constants$/;"	m	class:MTRand_int32
+n_cpu	nbody.h	/^    int n_cpu;$/;"	m	class:_nbody
+n_gpu	nbody.h	/^    int n_gpu;$/;"	m	class:_nbody
+n_max_alloc	nbody.h	/^    int n_max_alloc;$/;"	m	class:_nbody
+n_max_file	nbody.h	/^    int n_max_file;$/;"	m	class:_nbody
+n_part_tot	mpi_funcs.h	/^    int n_part_tot;$/;"	m	class:_mpi_vars
+name	Operation.h	/^  string name; \/\/ "NE" "DE" "QE" "OE" "RW" "DT"$/;"	m	class:Operation
+name	SimParser.h	/^    string name;$/;"	m	struct:Operation_sim
+name	ion.h	/^  string name;$/;"	m	class:Ion
+name	nbody.h	/^    string name;$/;"	m	class:_nbody
+name_file	SimParser.h	/^    string name_file;$/;"	m	struct:Operation_sim
+nb_gpu	mpi_funcs.h	/^    int nb_gpu;   \/\/ number of GPUs;$/;"	m	class:_mpi_vars
+nb_node_per_gpu	mpi_funcs.h	/^    int nb_node_per_gpu; \/\/ number of node per GPU;$/;"	m	class:_mpi_vars
+nb_procs	mpi_funcs.h	/^    int nb_procs; \/\/ Number of processes$/;"	m	class:_mpi_vars
+nbody	ode.h	/^    _nbody nbody;$/;"	m	class:_ode_vars
+ncols	fieldmap.h	/^	double ncols;$/;"	m	class:fieldmap
+ncols_	matrix.h	/^   unsigned nrows_, ncols_;$/;"	m	class:Matrix
+nfiles	SimParser.h	/^    int nfiles;$/;"	m	struct:SimParser::REALTRAP
+noise_sigma	fieldcalc.cpp	/^double noise_sigma;$/;"	v
+npart	force.cpp	/^int npart; \/\/  number of particles in the sub cloud at the beginning$/;"	v
+npart_tot	force.cpp	/^int npart_tot; \/\/ total number of particle in the cloud at the beginning$/;"	v
+nparts	SimParser.h	/^    int nparts;$/;"	m	struct:SimParser::CREATEPARTICLES
+nr_interval	ionFly.cpp	/^int nr_interval = 0;$/;"	v
+nrcoll	ioncloud.h	/^        vector<int> nrcoll;$/;"	m	class:IonCloud
+nrows	fieldmap.h	/^	double nrows;$/;"	m	class:fieldmap
+nrows_	matrix.h	/^   unsigned nrows_, ncols_;$/;"	m	class:Matrix
+nrparticles	ioncloud.h	/^        int nrparticles;$/;"	m	class:IonCloud
+numprocs	force.cpp	/^int numprocs; \/\/ number of nodes$/;"	v
+numr	Potmap.h	/^    int numr;$/;"	m	class:PotMap
+numz	Potmap.h	/^    int numz;$/;"	m	class:PotMap
+offset_cloud	SimParser.h	/^    double offset_cloud[3];$/;"	m	struct:SimParser::CLOUDCOORD
+old_z	ioncloud.h	/^        vector<double > old_z; \/\/ old z for Zpos print option$/;"	m	class:IonCloud
+ologger	ode.cpp	/^LogFile ologger;$/;"	v
+ope_N	Operation.h	/^    int ope_N; \/\/ Number of operations;$/;"	m	class:Operations
+ope_total_time	Operation.h	/^    double ope_total_time; \/\/ Time of all the operations$/;"	m	class:Operations
+open	logfile.cpp	/^void LogFile::open(char* filename){ $/;"	f	class:LogFile
+operation_map	SimParser.h	/^  vector< vector < string > > operation_map;$/;"	m	class:SimParser
+operation_vec	SimParser.h	/^  vector < Operation_sim > operation_vec;$/;"	m	class:SimParser
+operator ()	matrix.h	/^ inline T& Matrix<T>::operator() (unsigned row, unsigned col)$/;"	f	class:Matrix
+operator ()	matrix.h	/^ inline const T& Matrix<T>::operator() (unsigned row, unsigned col) const$/;"	f	class:Matrix
+operator ()	mtrand.h	/^  double operator()() {$/;"	f	class:MTRand
+operator ()	mtrand.h	/^  double operator()() {$/;"	f	class:MTRand53
+operator ()	mtrand.h	/^  double operator()() {$/;"	f	class:MTRand_closed
+operator ()	mtrand.h	/^  double operator()() {$/;"	f	class:MTRand_open
+operator ()	mtrand.h	/^  unsigned long operator()() { return rand_int32(); }$/;"	f	class:MTRand_int32
+operator <<	SLogger.h	/^   template < class T > SLogger& operator<< ( T arg ) {$/;"	f	class:SLogger
+operator <<	SLogger.h	/^inline SLogger& SLogger::operator<< ( SMsgType type ) {$/;"	f	class:SLogger
+operator <<	ion.cpp	/^ostream& operator<<(ostream& os,Ion _ion) {$/;"	f
+operator <<	ion.cpp	/^void operator<<(LogFile& lf, Ion _ion) {$/;"	f
+operator <<	ioncloud.cpp	/^ostream& operator<<(ostream& os,IonCloud _cloud) {$/;"	f
+operator <<	logfile.cpp	/^void LogFile::operator <<(char* is){$/;"	f	class:LogFile
+operator <<	logfile.cpp	/^void LogFile::operator <<(double d){$/;"	f	class:LogFile
+operator <<	logfile.cpp	/^void LogFile::operator <<(string s){$/;"	f	class:LogFile
+operator <<	particle.cpp	/^ostream& operator<<(ostream& os,Particle& _p) {$/;"	f
+operator =	SLogger.cpp	/^SLogger& SLogger::operator= ( const SLogger& parent ) {$/;"	f	class:SLogger
+order	Operation.h	/^  int order;$/;"	m	class:Operation
+order	SimParser.h	/^    int order;$/;"	m	struct:Operation_sim
+order	SimParser.h	/^    int order;$/;"	m	struct:SimParser::AC
+order	SimParser.h	/^    int order;$/;"	m	struct:SimParser::AWB
+order	SimParser.h	/^    int order;$/;"	m	struct:SimParser::AWW
+order	SimParser.h	/^    int order;$/;"	m	struct:SimParser::ODE
+order	SimParser.h	/^    int order;$/;"	m	struct:SimParser::RWB
+order	SimParser.h	/^    int order;$/;"	m	struct:SimParser::RWW
+order	SimParser.h	/^    int order;$/;"	m	struct:SimParser::SC
+outfile	SimParser.h	/^    string outfile;$/;"	m	struct:SimParser::OUTPUT
+outfile	ionFly.cpp	/^ofstream outfile;$/;"	v
+p	mtrand.cpp	/^int MTRand_int32::p = 0;$/;"	m	class:MTRand_int32	file:
+p	mtrand.h	/^  static int p; \/\/ position in state array$/;"	m	class:MTRand_int32
+pCharge	PDGTable.h	/^  vector<double> pCharge;$/;"	m	class:PDGTable
+pId	PDGTable.h	/^  vector<int> pId;$/;"	m	class:PDGTable
+pMass	PDGTable.h	/^  vector<double> pMass;$/;"	m	class:PDGTable
+pName	PDGTable.h	/^  vector<string> pName;$/;"	m	class:PDGTable
+pVerbose	PDGTable.h	/^  bool pVerbose;$/;"	m	class:PDGTable
+p_buff_mbar	Operation.h	/^  double p_buff_mbar;$/;"	m	class:Operation
+p_gpu	nbody.h	/^    int p_gpu;$/;"	m	class:_nbody
+par	SimParser.h	/^        double par;$/;"	m	struct:SimParser::SWEEP
+param1	SimParser.h	/^    double param1;$/;"	m	struct:SimParser::CALCTRAP
+param2	SimParser.h	/^    double param2;$/;"	m	struct:SimParser::CALCTRAP
+particles	SimParser.h	/^    std::vector<std::pair<string, std::vector<double> > > particles; \/\/a vector with each element being a map of a string with a vector. The string holds the particle name, the vector holds the particle positions.$/;"	m	struct:SimParser::PARTICLES
+particles	ioncloud.h	/^        vector<Particle*> particles;$/;"	m	class:IonCloud
+particles_files	ioncloud.h	/^        bool particles_files; \/\/standard true$/;"	m	class:IonCloud
+percentage	ionFly.cpp	/^Counter *percentage = new Counter;$/;"	v
+pi	globals.h	/^const double pi = 3.14159265358979323;$/;"	v
+pool_force	force.cpp	/^vector< vector<double> > pool_force;$/;"	v
+poolvectorsInitialized	ode.h	/^    bool poolvectorsInitialized;      \/\/standard false he    $/;"	m	class:_ode_vars
+poolvectorsinitialized	force.cpp	/^bool poolvectorsinitialized = false;$/;"	v
+pos	ioncloud.h	/^        double (*pos)[3];$/;"	m	class:IonCloud
+pos2	ioncloud.h	/^        double (*pos2)[3];$/;"	m	class:IonCloud
+pos_tmp	cunbody.h	/^        double (*pos_tmp)[3];$/;"	m	class:_cunbody
+pos_tot	cunbody.h	/^        double (*pos_tot)[3];$/;"	m	class:_cunbody
+pos_tot	mpi_funcs.h	/^    double (*pos_tot)[3]; \/\/ whole cloud$/;"	m	class:_mpi_vars
+potential	Potmap.h	/^    vector<double > potential;$/;"	m	class:PotMap
+potmap_filename	SimParser.h	/^        string potmap_filename;$/;"	m	struct:SimParser::POTTRAP
+pressure	SimParser.h	/^    double pressure;$/;"	m	struct:SimParser::BUFFER
+prev_simu_file	SimParser.h	/^    string prev_simu_file;$/;"	m	struct:SimParser::IMPORTDATA
+print_interval	ionFly.cpp	/^double print_interval=0.01e-3; \/\/in sec$/;"	v
+printme	SimParser.h	/^        void printme(){$/;"	f	struct:SimParser::POTTRAP
+printme	SimParser.h	/^        void printme(){$/;"	f	struct:SimParser::SWEEP
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::AC
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::AR
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::AWB
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::AWW
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::BUFFER
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::CALCTRAP
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::CLOUDCOORD
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::CLOUDPARTS
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::COULOMB
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::CREATEPARTICLES
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::DEB
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::DEW
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::FB
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::IDEALTRAP
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::IMPORTDATA
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::NE
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::NONIDEALTRAP
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::ODE
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::OEB
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::OEW
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::OUTPUT
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::PARTICLES
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::QEB
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::QEW
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::REALTRAP
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::RWB
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::RWW
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::SC
+printme	SimParser.h	/^    void printme(){$/;"	f	struct:SimParser::TEMP
+printme	SimParser.h	/^    void printme(){cout << "cloudsize: " << cloudsize << ", Nconstituents: " <<  constituents << endl;};$/;"	f	struct:SimParser::CREATECLOUD
+pvx	particle.h	/^      double px,py,pz,pvx,pvy,pvz;$/;"	m	class:Particle
+pvy	particle.h	/^      double px,py,pz,pvx,pvy,pvz;$/;"	m	class:Particle
+pvz	particle.h	/^      double px,py,pz,pvx,pvy,pvz;$/;"	m	class:Particle
+px	particle.h	/^      double px,py,pz,pvx,pvy,pvz;$/;"	m	class:Particle
+py	particle.h	/^      double px,py,pz,pvx,pvy,pvz;$/;"	m	class:Particle
+pz	particle.h	/^      double px,py,pz,pvx,pvy,pvz;$/;"	m	class:Particle
+q_gpu	nbody.h	/^    int q_gpu;$/;"	m	class:_nbody
+r	fieldmap.h	/^	double r,dzr;$/;"	m	class:fieldmap
+r1	fieldmap.h	/^	double z1,z2,r1,r2;$/;"	m	class:fieldmap
+r1_index	fieldmap.h	/^	int z1_index,z2_index,r1_index,r2_index;$/;"	m	class:fieldmap
+r2	fieldmap.h	/^	double z1,z2,r1,r2;$/;"	m	class:fieldmap
+r2_index	fieldmap.h	/^	int z1_index,z2_index,r1_index,r2_index;$/;"	m	class:fieldmap
+r_0	trapparameters.h	/^    double r_0;$/;"	m	class:_trap_param
+r_electrode	SimParser.h	/^    double r_electrode;$/;"	m	struct:SimParser::IDEALTRAP
+r_index	fieldmap.h	/^	double z_index,r_index;$/;"	m	class:fieldmap
+r_max	fieldmap.h	/^	double r_min,r_max,r_step,z_min,z_max,z_step;$/;"	m	class:fieldmap
+r_min	fieldmap.h	/^	double r_min,r_max,r_step,z_min,z_max,z_step;$/;"	m	class:fieldmap
+r_step	fieldmap.h	/^	double r_min,r_max,r_step,z_min,z_max,z_step;$/;"	m	class:fieldmap
+rand_int32	mtrand.h	/^inline unsigned long MTRand_int32::rand_int32() { \/\/ generate 32 bit random int$/;"	f	class:MTRand_int32
+rank	mpi_funcs.h	/^    int rank;     \/\/ Rank of the process in the comm2d communicator$/;"	m	class:_mpi_vars
+reject	ode.h	/^    bool reject; \/\/standard false!$/;"	m	class:_ode_vars
+reset_timestep	ode.h	/^    double reset_timestep;        $/;"	m	class:_ode_vars
+rk_atol	ode.h	/^    double rk_atol;$/;"	m	class:_ode_vars
+rk_rtol	ode.h	/^    double rk_rtol;$/;"	m	class:_ode_vars
+rmax	Potmap.h	/^    double rmax;$/;"	m	class:PotMap
+rmin	Potmap.h	/^    double rmin;$/;"	m	class:PotMap
+round	fieldmap.cpp	/^inline double fieldmap::round(double d){$/;"	f	class:fieldmap
+rp	Potmap.h	/^    vector<double > rp;$/;"	m	class:PotMap
+sample_time	SimParser.h	/^    double sample_time;$/;"	m	struct:SimParser::OUTPUT
+scaledCoulombFactor	ionFly.cpp	/^double scaledCoulombFactor;$/;"	v
+scaledCoulombFactor	ode.h	/^    double scaledCoulombFactor ;$/;"	m	class:_force_vars
+seed	mtrand.cpp	/^void MTRand_int32::seed(const unsigned long* array, int size) { \/\/ init by array$/;"	f	class:MTRand_int32
+seed	mtrand.cpp	/^void MTRand_int32::seed(unsigned long s) {  \/\/ init by 32 bit seed$/;"	f	class:MTRand_int32
+semiaxis_cloud	SimParser.h	/^    double semiaxis_cloud[3];$/;"	m	struct:SimParser::CLOUDCOORD
+separate	SimParser.h	/^    int separate; \/\/ 0 - no, 1 -yes$/;"	m	struct:SimParser::OUTPUT
+sim_time_start	ioncloud.h	/^        double sim_time_start;$/;"	m	class:IonCloud
+sin2wTtimeTU	ode.h	/^    double sin2wTtimeTU; \/\/ for RW\/AW$/;"	m	class:_force_vars
+sinwTtimeTU	ode.h	/^    double sinwTtimeTU;$/;"	m	class:_force_vars
+size	SimParser.h	/^    int size;$/;"	m	struct:Operation_sim
+size	SimParser.h	/^    int size;$/;"	m	struct:SimParser::DEB
+size	SimParser.h	/^    int size;$/;"	m	struct:SimParser::DEW
+size	SimParser.h	/^    int size;$/;"	m	struct:SimParser::OEB
+size	SimParser.h	/^    int size;$/;"	m	struct:SimParser::OEW
+size	SimParser.h	/^    int size;$/;"	m	struct:SimParser::QEB
+size	SimParser.h	/^    int size;$/;"	m	struct:SimParser::QEW
+sk	ode.h	/^    double sk,err;$/;"	m	class:_ode_vars
+sm	nbody.h	/^    int sm;$/;"	m	class:_nbody
+state	mtrand.cpp	/^unsigned long MTRand_int32::state[n] = {0x0UL};$/;"	m	class:MTRand_int32	file:
+state	mtrand.h	/^  static unsigned long state[n]; \/\/ state vector array$/;"	m	class:MTRand_int32
+step	nbody.h	/^    int step;$/;"	m	class:_nbody
+step	ode.cpp	/^void step(IonCloud &_cloud,_ode_vars &odev){$/;"	f
+stepsize	SimParser.h	/^    double stepsize;$/;"	m	struct:SimParser::ODE
+streamvector	ioncloud.h	/^        std::vector<std::ofstream*> streamvector; \/\/so #streams = #particles$/;"	m	class:IonCloud
+sweep_flag	ode.h	/^    bool sweep_flag; \/\/ flag for linear sweep$/;"	m	class:_ode_vars
+sweep_par	ode.h	/^    double sweep_par;$/;"	m	class:_ode_vars
+sweep_wf	ode.h	/^    double sweep_wf; \/\/ final pulsation for sweep$/;"	m	class:_ode_vars
+sweep_wi	ode.h	/^    double sweep_wi; \/\/ initial pulsation for sweep$/;"	m	class:_ode_vars
+swift_RW	ode.h	/^    bool swift_RW;$/;"	m	class:_ode_vars
+swift_amp	ode.h	/^    vector< double > swift_amp;$/;"	m	class:_ode_vars
+swift_amp_cos	ode.h	/^    vector< double > swift_amp_cos;$/;"	m	class:_ode_vars
+swift_amp_sin	ode.h	/^    vector< double > swift_amp_sin;$/;"	m	class:_ode_vars
+swift_dt	ode.h	/^    double swift_dt;$/;"	m	class:_ode_vars
+swift_file_name	ode.h	/^    string swift_file_name;$/;"	m	class:_ode_vars
+swift_flag	ode.h	/^    bool swift_flag;$/;"	m	class:_ode_vars
+swift_nsample	ode.h	/^    int swift_nsample;$/;"	m	class:_ode_vars
+swift_time	ode.h	/^    vector< double > swift_time;$/;"	m	class:_ode_vars
+t_gpu	nbody.h	/^    int t_gpu;$/;"	m	class:_nbody
+t_prev	ionFly.cpp	/^double t_prev = 0.0;$/;"	v
+temp	SimParser.h	/^    vector<double> temp;$/;"	m	struct:SimParser::TEMP
+time	SimParser.h	/^    double time;$/;"	m	struct:Operation_sim
+time	SimParser.h	/^    double time;$/;"	m	struct:SimParser::AC
+time	SimParser.h	/^    double time;$/;"	m	struct:SimParser::AR
+time	SimParser.h	/^    double time;$/;"	m	struct:SimParser::AWB
+time	SimParser.h	/^    double time;$/;"	m	struct:SimParser::AWW
+time	SimParser.h	/^    double time;$/;"	m	struct:SimParser::DEB
+time	SimParser.h	/^    double time;$/;"	m	struct:SimParser::DEW
+time	SimParser.h	/^    double time;$/;"	m	struct:SimParser::FB
+time	SimParser.h	/^    double time;$/;"	m	struct:SimParser::NE
+time	SimParser.h	/^    double time;$/;"	m	struct:SimParser::OEB
+time	SimParser.h	/^    double time;$/;"	m	struct:SimParser::OEW
+time	SimParser.h	/^    double time;$/;"	m	struct:SimParser::QEB
+time	SimParser.h	/^    double time;$/;"	m	struct:SimParser::QEW
+time	SimParser.h	/^    double time;$/;"	m	struct:SimParser::RWB
+time	SimParser.h	/^    double time;$/;"	m	struct:SimParser::RWW
+time	SimParser.h	/^    double time;$/;"	m	struct:SimParser::SC
+time_ini_ope	ode.h	/^    double time_ini_ope;$/;"	m	class:_ode_vars
+time_operation	Operation.h	/^  double time_operation;$/;"	m	class:Operation
+tmpinterval	force.cpp	/^double tmpinterval;$/;"	v
+tmplogger	Initialization.cpp	/^LogFile tmplogger;$/;"	v
+tmpstream	force.cpp	/^ofstream tmpstream;$/;"	v
+total_time	ode.h	/^    double total_time; \/\/ final time of the simulations$/;"	m	class:_ode_vars
+totalfrac	SimParser.h	/^    double totalfrac;$/;"	m	struct:SimParser::CLOUDPARTS
+trap_config	trapparameters.h	/^    int trap_config;$/;"	m	class:_trap_param
+trap_param	ode.h	/^    _trap_param trap_param;$/;"	m	class:_force_vars
+trapconfigfile	SimParser.h	/^    string trapconfigfile;$/;"	m	struct:SimParser::NONIDEALTRAP
+tree	force.cpp	/^static octgrav tree;$/;"	v	file:
+twiddle	mtrand.h	/^inline unsigned long MTRand_int32::twiddle(unsigned long u, unsigned long v) {$/;"	f	class:MTRand_int32
+useTree	force.cpp	/^const bool useTree = false;$/;"	v
+use_particle_file	ionFly.cpp	/^void use_particle_file(bool _bool,IonCloud &_cloud){$/;"	f
+use_particles_files	ioncloud.cpp	/^void IonCloud::use_particles_files(bool _bool) {$/;"	f	class:IonCloud
+values	fieldmap.cpp	/^ vector<double> values;$/;"	v
+vel	ioncloud.h	/^        double (*vel)[3];$/;"	m	class:IonCloud
+vel2	ioncloud.h	/^        double (*vel2)[3];$/;"	m	class:IonCloud
+verbose	Potmap.h	/^    bool verbose;$/;"	m	class:PotMap
+vx_	Initialization.cpp	/^vector< double > vx_;$/;"	v
+vy_	Initialization.cpp	/^vector< double > vy_;$/;"	v
+vz_	Initialization.cpp	/^vector< double > vz_;$/;"	v
+w_exc	ode.h	/^    double w_exc, w_exc2,w_exc3, w_exc4;$/;"	m	class:_ode_vars
+w_exc2	ode.h	/^    double w_exc, w_exc2,w_exc3, w_exc4;$/;"	m	class:_ode_vars
+w_exc3	ode.h	/^    double w_exc, w_exc2,w_exc3, w_exc4;$/;"	m	class:_ode_vars
+w_exc4	ode.h	/^    double w_exc, w_exc2,w_exc3, w_exc4;$/;"	m	class:_ode_vars
+wc	ioncloud.h	/^        vector < double > wc;$/;"	m	class:IonCloud
+weight	SimParser.h	/^    double weight; $/;"	m	struct:SimParser::COULOMB
+wf	SimParser.h	/^        double wf;$/;"	m	struct:SimParser::SWEEP
+wi	SimParser.h	/^        double wi;$/;"	m	struct:SimParser::SWEEP
+withCharge	nbody.h	/^    bool withCharge;$/;"	m	class:_nbody
+withCharge	ode.h	/^    bool withCharge;$/;"	m	class:_ode_vars
+wz2	ioncloud.h	/^        vector < double > wz2;$/;"	m	class:IonCloud
+x_	Initialization.cpp	/^vector< double > x_;$/;"	v
+y_	Initialization.cpp	/^vector< double > y_;$/;"	v
+yerr	ode.h	/^    vector< double > yerr;$/;"	m	class:_ode_vars
+z	fieldcalc.cpp	/^const double z[10]={0. , l1 , l1+d , l1+d+l2 , l1+d+l2+d , l1+d+l2+d+l3 , l1+d+l2+d+l3+d , l1+d+l2+d+l3+d+l2 , l1+d+l2+d+l3+d+l2+d , l1+d+l2+d+l3+d+l2+d+l1};$/;"	v
+z1	fieldmap.h	/^	double z1,z2,r1,r2;$/;"	m	class:fieldmap
+z1_index	fieldmap.h	/^	int z1_index,z2_index,r1_index,r2_index;$/;"	m	class:fieldmap
+z2	fieldmap.h	/^	double z1,z2,r1,r2;$/;"	m	class:fieldmap
+z2_index	fieldmap.h	/^	int z1_index,z2_index,r1_index,r2_index;$/;"	m	class:fieldmap
+z_	Initialization.cpp	/^vector< double > z_;$/;"	v
+z_index	fieldmap.h	/^	double z_index,r_index;$/;"	m	class:fieldmap
+z_max	fieldmap.h	/^	double r_min,r_max,r_step,z_min,z_max,z_step;$/;"	m	class:fieldmap
+z_min	fieldmap.h	/^	double r_min,r_max,r_step,z_min,z_max,z_step;$/;"	m	class:fieldmap
+z_step	fieldmap.h	/^	double r_min,r_max,r_step,z_min,z_max,z_step;$/;"	m	class:fieldmap
+zmax	Potmap.h	/^    double zmax;$/;"	m	class:PotMap
+zmin	Potmap.h	/^    double zmin;$/;"	m	class:PotMap
+zp	Potmap.h	/^    vector<double > zp;$/;"	m	class:PotMap
+~IonCloud	ioncloud.cpp	/^IonCloud::~IonCloud() {$/;"	f	class:IonCloud
+~IonTable	IonTable.cpp	/^IonTable::~IonTable()$/;"	f	class:IonTable
+~LogFile	logfile.cpp	/^LogFile::~LogFile(){$/;"	f	class:LogFile
+~MTRand	mtrand.h	/^  ~MTRand() {}$/;"	f	class:MTRand
+~MTRand53	mtrand.h	/^  ~MTRand53() {}$/;"	f	class:MTRand53
+~MTRand_closed	mtrand.h	/^  ~MTRand_closed() {}$/;"	f	class:MTRand_closed
+~MTRand_int32	mtrand.h	/^  ~MTRand_int32() {} \/\/ destructor$/;"	f	class:MTRand_int32
+~MTRand_open	mtrand.h	/^  ~MTRand_open() {}$/;"	f	class:MTRand_open
+~Matrix	matrix.h	/^ inline Matrix<T>::~Matrix()$/;"	f	class:Matrix
+~Operation	Operation.cpp	/^Operation::~Operation(){};$/;"	f	class:Operation
+~Operations	Operation.cpp	/^Operations::~Operations(){};$/;"	f	class:Operations
+~PDGTable	PDGTable.cpp	/^PDGTable::~PDGTable()$/;"	f	class:PDGTable
+~PotMap	Potmap.cpp	/^PotMap::~PotMap()$/;"	f	class:PotMap
+~SLogWriter	SLogWriter.cpp	/^SLogWriter::~SLogWriter() {$/;"	f	class:SLogWriter
+~SimParser	SimParser.cpp	/^SimParser::~SimParser(){}$/;"	f	class:SimParser
+~_cunbody	cunbody.cpp	/^_cunbody::~_cunbody() {$/;"	f	class:_cunbody
+~_force_vars	ode.cpp	/^_force_vars::~_force_vars()$/;"	f	class:_force_vars
+~_mpi_vars	mpi_funcs.cpp	/^_mpi_vars::~_mpi_vars()$/;"	f	class:_mpi_vars
+~_nbody	nbody.cpp	/^_nbody::~_nbody(){}$/;"	f	class:_nbody
+~_ode_vars	ode.cpp	/^_ode_vars::~_ode_vars()$/;"	f	class:_ode_vars
+~_trap_param	trapparameters.cpp	/^_trap_param::~_trap_param()$/;"	f	class:_trap_param
+~fieldmap	fieldmap.cpp	/^fieldmap::~fieldmap(){$/;"	f	class:fieldmap
