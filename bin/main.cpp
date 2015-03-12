@@ -15,16 +15,14 @@
 
 int main(int argc,  char* argv[] )
 {
-    if(argc>1)
+    if(argc==2)
     {
-        string filename = argv[1];
-        Run(filename)
-        // string simFile = argv[1];
-        // if(simFile.rfind(".sim")!=string::npos)
-        // {
-        //     SimParser sparser(simFile.c_str());
-        //     Run(argc,argv,sparser);
-        // }
+        string simFile = argv[1];
+        if(simFile.rfind(".sim")!=string::npos)
+        {
+            SimParser sparser(simFile.c_str());
+            Run(argc,argv,sparser);
+        }
     }
     else
     {
