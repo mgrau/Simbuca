@@ -43,8 +43,6 @@ void ChangeEfieldmap(char * _trapErz);
 void SetCoulomb(bool _coulombinteraction);
 void UseScaledCoulomb(double _ScaledCoulombFactor);
 
-void IncludeElectrodeBoundaries(bool _bool);
-
 void SetPrintInterval(double _print_interval);
 
 void SetTotalTime_of_Simu(double t_,_ode_vars & odev);

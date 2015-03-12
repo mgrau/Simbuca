@@ -2,7 +2,6 @@
 #include "ionFly.h"
 #include "MPI_simbuca.h"
 #include "force.h"
-bool include_boundaries = true;
 bool firstoperation = true;
 LogFile ilogger;
 double print_interval=0.01e-3; //in sec
@@ -21,13 +20,6 @@ const char * filename_begin;
 #ifdef __GUI_ON__
 Counter *percentage = new Counter;
 #endif
-
-void IncludeElectrodeBoundaries(bool _bool){
-    include_boundaries = _bool;
-    if(_bool){
-        ilogger<<"With Electrode Boundaries\n";}
-    else{ilogger<<"Without Electrode Boundaries\n";}
-}
 
 void InitIonFly(const char * _filenamebegin, int _ode_order, double _timestep, bool _adaptive_stepsize,IonCloud &_cloud, _ode_vars & odev){ //IonFly stands above Ode and Coll...
     ilogger<<"In case of ideal trap: B = ";ilogger<<odev.forcev.trap_param.B0;ilogger<<" T.U0/d2 = ";ilogger<< odev.forcev.trap_param.Ud2;ilogger<<"\n";
@@ -154,43 +146,6 @@ void MoveParticles(double _time_movement,IonCloud &_cloud,_ode_vars &odev){
                 }
             }
         }
-
-        if(include_boundaries){
-            //check if particles are out of boundary
-            // WARNING THE LOOP HAS TO BE DECREMENTAL
-
-            int n_temp = _cloud.nrparticles-1;
-            for(int j= n_temp; j >=0 ;j--){   //check if radial size is ok,
-                if((_cloud.pos[j][2] > 0.094) && (_cloud.pos[j][2] < 0.147) && (sqrt(_cloud.pos[j][0]*_cloud.pos[j][0]+_cloud.pos[j][1]*_cloud.pos[j][1]) > 0.001)){
-                    cout<<"Particle hit pumping diaphragm with:\nindex = "<<j<<"\nx = "<<_cloud.pos[j][0]<<"\ny = "<<_cloud.pos[j][1]<<"\nz = "<<_cloud.pos[j][2]<<endl;
-                    _cloud.DelParticle(j,"particle hit Pumping diaphragm");
-                    if(j!=_cloud.nrparticles) j++;
-                }
-                else if (fabs(_cloud.pos[j][0]) > 0.039 || fabs(_cloud.pos[j][1]) > 0.039 || sqrt(_cloud.pos[j][0]*_cloud.pos[j][0]+_cloud.pos[j][1]*_cloud.pos[j][1]) > 0.039) {
-                    cout<<"Particle hit electrode walls with:\nindex = "<<j<<"\nx = "<<_cloud.pos[j][0]<<"\ny = "<<_cloud.pos[j][1]<<"\nz = "<<_cloud.pos[j][2]<<endl;
-                    _cloud.DelParticle(j,"particle hit electrode walls");
-                    if(j!=_cloud.nrparticles) j++;
-                }
-                else if (_cloud.pos[j][2] < -0.29) {
-                    cout<<"Particle hit bottom of the trap with:\nindex = "<<j<<"\nx = "<<_cloud.pos[j][0]<<"\ny = "<<_cloud.pos[j][1]<<"\nz = "<<_cloud.pos[j][2]<<endl;
-                    _cloud.DelParticle(j,"particle at bottom of the trap.");
-                    if(j!=_cloud.nrparticles) j++;
-                }
-                else if (_cloud.pos[j][2] > -0.001) {
-                    cout<<"Particle hit top of the trap with:\nindex = "<<j<<"\nx = "<<_cloud.pos[j][0]<<"\ny = "<<_cloud.pos[j][1]<<"\nz = "<<_cloud.pos[j][2]<<endl;
-                    _cloud.DelParticle(j,"particle at top of trap");
-                    if(j!=_cloud.nrparticles) j++;
-                }
-            }
-#ifdef __MPI_ON__
-            // MPI variables must be re calculated if particles can be deleted
-            odev.mpiv->ComputeCounts_Disps(_cloud.nrparticles);
-#ifndef __CPUNBODY_ON__
-            odev.mpiv->LoadCharge(_cloud.charge);
-#endif
-#endif // __MPI_ON__
-        }
-
     }
     //printf("number of step : %d\n", GetCountStep() );
     if(odev.PrintAfterOperation)

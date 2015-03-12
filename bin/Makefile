@@ -164,23 +164,23 @@ export:
 	../tools/movie/draw_movie.C
 
 ifeq ($(PU)$(NBODY_ALGO),gpuNBODY)
-$(EXECUTABLE) : main.o parser.o ionFly.o ode.o force.o fieldcalc.o fieldmap.o matrix.o ioncloud.o particle.o ion.o mtrand.o logfile.o IonTable.o PDGTable.o Operation.o nbody_kernel.o trapparameters.h SimParser.o Initialization.o mpi_funcs.o nbody.o trapparameters.o numrec.o Potmap.o SLogger.o SLogWriter.o
+$(EXECUTABLE) : main.o parser.o ionFly.o ode.o force.o fieldcalc.o fieldmap.o matrix.o ioncloud.o particle.o ion.o mtrand.o logfile.o IonTable.o PDGTable.o Operation.o nbody_kernel.o trapparameters.h SimParser.o Initialization.o mpi_funcs.o nbody.o trapparameters.o numrec.o Potmap.o SLogger.o SLogWriter.o inireader.o ini.o
 else
-$(EXECUTABLE) : main.o parser.o ionFly.o ode.o force.o fieldcalc.o fieldmap.o matrix.o ioncloud.o particle.o ion.o mtrand.o logfile.o IonTable.o PDGTable.o Operation.o trapparameters.h SimParser.o Initialization.o mpi_funcs.o cunbody.o trapparameters.o numrec.o Potmap.o SLogger.o SLogWriter.o
+$(EXECUTABLE) : main.o parser.o ionFly.o ode.o force.o fieldcalc.o fieldmap.o matrix.o ioncloud.o particle.o ion.o mtrand.o logfile.o IonTable.o PDGTable.o Operation.o trapparameters.h SimParser.o Initialization.o mpi_funcs.o cunbody.o trapparameters.o numrec.o Potmap.o SLogger.o SLogWriter.o inireader.o ini.o
 endif
 	mkdir -p $(SIMULATION_DIR)
 ifeq ($(PU),cpu)
-	$(LINK) $(EXECUTABLE) main.o parser.o ionFly.o ode.o force.o fieldcalc.o fieldmap.o matrix.o ioncloud.o particle.o ion.o mtrand.o logfile.o IonTable.o PDGTable.o Operation.o SimParser.o Initialization.o mpi_funcs.o trapparameters.o numrec.o Potmap.o SLogger.o SLogWriter.o
+	$(LINK) $(EXECUTABLE) main.o parser.o ionFly.o ode.o force.o fieldcalc.o fieldmap.o matrix.o ioncloud.o particle.o ion.o mtrand.o logfile.o IonTable.o PDGTable.o Operation.o SimParser.o Initialization.o mpi_funcs.o trapparameters.o numrec.o Potmap.o SLogger.o SLogWriter.o inireader.o ini.o
 endif
 ifeq ($(PU),gpu)
   ifeq ($(NBODY_ALGO),NBODY)
 	$(LINK) $(EXECUTABLE)  main.o parser.o ionFly.o ode.o force.o \
 	-L $(CUDASYS)/lib64 -lcuda -lcudart -lGL -lGLU \
 -L $(CUDASYS)/lib -L /usr/local/NVIDIA_GPU_Computing_SDK-v40/C/lib -lcuda -lcudart -lGL -lGLU  \
-    fieldcalc.o fieldmap.o matrix.o  ioncloud.o particle.o ion.o mtrand.o logfile.o IonTable.o PDGTable.o nbody_kernel.o Operation.o SimParser.o Initialization.o mpi_funcs.o nbody.o trapparameters.o numrec.o Potmap.o SLogger.o SLogWriter.o
+    fieldcalc.o fieldmap.o matrix.o  ioncloud.o particle.o ion.o mtrand.o logfile.o IonTable.o PDGTable.o nbody_kernel.o Operation.o SimParser.o Initialization.o mpi_funcs.o nbody.o trapparameters.o numrec.o Potmap.o SLogger.o SLogWriter.o inireader.o ini.o
   else
 	$(LINK) $(EXECUTABLE)  main.o parser.o ionFly.o ode.o force.o \
-    fieldcalc.o fieldmap.o matrix.o  ioncloud.o particle.o ion.o mtrand.o logfile.o IonTable.o PDGTable.o Operation.o SimParser.o Initialization.o mpi_funcs.o cunbody.o trapparameters.o numrec.o  Potmap.o SLogger.o SLogWriter.o $(cunbodylib) -lm -L $(CUDASYS)/lib64 -lcudart -lcuda -lGL -lGLU
+    fieldcalc.o fieldmap.o matrix.o  ioncloud.o particle.o ion.o mtrand.o logfile.o IonTable.o PDGTable.o Operation.o SimParser.o Initialization.o mpi_funcs.o cunbody.o trapparameters.o numrec.o  Potmap.o SLogger.o SLogWriter.o inireader.o ini.o $(cunbodylib) -lm -L $(CUDASYS)/lib64 -lcudart -lcuda -lGL -lGLU
 endif
     
 endif	
@@ -238,7 +238,7 @@ cunbody.o: cunbody.cpp cunbody.h
 	$(CC) cunbody.cpp
 SimParser.o: SimParser.cpp SimParser.h
 	$(CC) SimParser.cpp
-Initialization.o: Initialization.cpp parser.h ionFly.h ode.h force.h fieldcalc.h fieldmap.h matrix.h ioncloud.h particle.h ion.h mtrand.h logfile.h MPI_simbuca.h IonTable.h PDGTable.h Operation.h SimParser.h Initialization.h trapparameters.h numrec.h Potmap.h
+Initialization.o: Initialization.cpp parser.h ionFly.h ode.h force.h fieldcalc.h fieldmap.h matrix.h ioncloud.h particle.h ion.h mtrand.h logfile.h MPI_simbuca.h IonTable.h PDGTable.h Operation.h SimParser.h Initialization.h trapparameters.h numrec.h Potmap.h inireader.h ini.h
 	$(CC) Initialization.cpp
 trapparameters.o: trapparameters.cpp trapparameters.h
 	$(CC) trapparameters.cpp   
@@ -250,8 +250,10 @@ SLogger.o: SLogger.cpp SLogger.h
 	$(CC) SLogger.cpp
 SLogWriter.o: SLogWriter.cpp SLogWriter.h
 	$(CC) SLogWriter.cpp
-
-
+ini.o: ini.c ini.h
+	$(CC) ini.c
+inireader.o: inireader.cpp inireader.h
+	$(CC) inireader.cpp
 
 #****************#
 #compilation is done with the intell compiler, for more info see:

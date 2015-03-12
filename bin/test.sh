@@ -1,4 +1,6 @@
 #!/bin/bash
+echo compiling
+make -j 8
 echo testing Simbuca with benchmark 2
 ../simulations/simbuca ../simulations/bench2.sim
 echo removing any output files

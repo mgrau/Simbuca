@@ -14,6 +14,7 @@
 #include "fieldcalc.h"
 #include "mtrand.h"
 #include "logfile.h"
+#include "inireader.h"
 #include "parser.h"
 #include "IonTable.h"
 #include "PDGTable.h"
@@ -276,24 +277,14 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
     myid = MPI::COMM_WORLD.Get_rank();
     int numprocs = MPI::COMM_WORLD.Get_size();
 #endif    
-    //file
     ifstream gui_file;
     string comment;
 
-    //logger:
     SLogger slogger("Initialization");
     SMsgType type = INFO;
     SLogWriter::Instance()->SetMinType( type );
-    // use e.g. : (see SMsgType.h for output levels)
-
-    //  Try reading the inputfile, if this doesn`t work then catch the error, trow it and clean any "loose ends"
-    //
 
     try{
-
-
-        // PARAMETERS
-        // PARTICLES
         int NRPARTICLES=0;
         int NSPARTICLES=0;
         int npart_test =0;
@@ -364,15 +355,25 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
         double relec_tmp=0;
         double Ud2_tmp=0;
         double B_tmp=0;
-        //double tmp_frequency;
         string tmp_string;
         string orig_name;
         double time_operation=0;
         Operation Ope_tmp;
         Operations Ope;
 
+        INIReader parser("inih/rf.ini");
+        cout<<"Found sections and fields:"<<endl;
+        set<string> sections = parser.GetSections();
+        for(set<string>::iterator sectionsIt = sections.begin(); sectionsIt!=sections.end(); sectionsIt++) {
+            cout << "  [" << *sectionsIt << "]: " << endl;
+            set<string> fields = parser.GetFields(*sectionsIt);
+            for(set<string>::iterator fieldsIt = fields.begin(); fieldsIt!=fields.end(); fieldsIt++) {
+                cout << "    >" << *sectionsIt << "." << *fieldsIt << ":  ";
+                cout << parser.Get(*sectionsIt,*fieldsIt,"UNKNOWN") << endl;
+            }
+            cout << endl;
+        }
 
-        //IonTable Table("../libraries/ame/mass.mas12");
         if(myid == 0){
             cout << endl;
             cout << "\t*****************" << endl;
@@ -383,10 +384,6 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
             cout << "\nInitialization with Simbuca file" << endl;
             cout << "*********************************************" << endl;
         }
-        //   sparser.PrintParams();
-
-        //
-        //----------------------------------------------
         // CLOUD
         if(sparser.mycreatecloud.flag){
             NRPARTICLES = sparser.mycreatecloud.cloudsize;
@@ -502,7 +499,6 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
             }
         }
 
-        //----------------------------------------------
         // IMPORTDATA
         if(sparser.myimportdata.flag){
             odev.SetwithCharge(false);
@@ -526,7 +522,6 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
             }
         }
 
-        //----------------------------------------------
         // PARTICLES
         if(sparser.mycreateparticles.flag){
             NSPARTICLES = sparser.mycreateparticles.nparts;
@@ -611,14 +606,6 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
             }
         }
 
-        //----------------------------------------------
-        // BUFFER GAS
-        if(sparser.mybuffer.flag){
-            int_buffer_gas = sparser.mybuffer.index;
-            p_buff_mbar = sparser.mybuffer.pressure;
-        }
-
-        //----------------------------------------------
         //ODE
         if(sparser.myode.flag){
             ODEORDER = sparser.myode.order;
@@ -629,12 +616,11 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
                 adaptative_stepsize = true;
 
             timestep = sparser.myode.stepsize;
-        }else{
+        }
+        else
             if(myid == 0)
                 throw("no ODE configuration provided");
-        }
 
-        //----------------------------------------------
         // Coulomb
         if(sparser.mycoulomb.flag){
             Coulomb = sparser.mycoulomb.index;
@@ -645,12 +631,11 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
             }
             else
                 Coulomb_enable = false;
-        }else{
+        }
+        else
             if(myid == 0)
                 throw("no Coulomb configuration provided");
-        }
 
-        //----------------------------------------------
         //OUTPUT FILE
         if(sparser.myoutput.flag){
             filename_prefix_ = sparser.myoutput.outfile;
@@ -672,119 +657,21 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
                 odev.SetPrintZpos(sparser.myoutput.sample_time);
             }
 
-        }else{
+        }
+        else
             if(myid ==0)
                 throw("no Output file configuration provided");
-        } 
 
-
-
-        if((sparser.mycreatecloud.flag == false)&&(sparser.myimportdata.flag == false)&&(sparser.mycreateparticles.flag == false)){
-            if(myid==0)
-                throw("Wrong cloud initialisation config");
-        }
-
-        //----------------------------------------------
         // IDEAL TRAP
-
         if(sparser.myidealtrap.flag){
             odev.forcev.trap_param.r_0 = sparser.myidealtrap.r_electrode;
             odev.forcev.trap_param.Ud2 = sparser.myidealtrap.Ud2;
             odev.forcev.trap_param.B0 = sparser.myidealtrap.B;
         }       
 
-        //----------------------------------------------
-        // NONIDEAL TRAP
-        if(sparser.mynonitrap.flag){
-            // printf("balise trap param\n");
-            sstring_tmp.str(sparser.mynonitrap.trapconfigfile);
-            if (FileExists(sparser.mynonitrap.trapconfigfile)){
-                tmp_int = odev.forcev.trap_param.ReadFile(sstring_tmp.str());
-            } else{
-                throw("trap config file doesn`t exist!");
-            }
-            if(myid==0)
-                odev.forcev.trap_param.Print();
-        }
-
-        //----------------------------------------------
-        // REAL TRAP
-        if(sparser.myrealtrap.flag){
-
-            odev.forcev.trap_param.trap_config = 3;
-            n_file_map = sparser.myrealtrap.nfiles;
-            if(sparser.myrealtrap.filenames.size() != n_file_map){
-                if(myid == 0)
-                    throw("n of trap config files and actual listed files are not consistent!");
-            }
-            if(n_file_map==2){	
-                file_mapEz = sparser.myrealtrap.filenames[0];
-                file_mapB = sparser.myrealtrap.filenames[1];	
-                file_map.open(file_mapEz.c_str(),ios::in);
-                if(!file_map){
-                    if(myid == 0)
-                        throw("Erz map file doesn`t exist ");// << file_mapEz << " doesn't not exist" << SLogger::endmsg;
-                }
-                file_map.close();	
-                file_map.open(file_mapB.c_str(),ios::in);
-                if(!file_map){
-                    if(myid == 0)
-                        throw( "B map file : doesn`t exist");// << file_mapB << " doesn't not exist" << SLogger::endmsg;
-                }
-                file_map.close();						
-            }
-
-            if(n_file_map==3){
-                file_mapEr = sparser.myrealtrap.filenames[0];
-                file_mapEz = sparser.myrealtrap.filenames[1];
-                file_mapB = sparser.myrealtrap.filenames[2];
-                file_map.open(file_mapEr.c_str(),ios::in);
-                if(!file_map){
-                    if(myid == 0)
-                        throw( "Er map file : doesn`t exist");// << file_mapEr << "doesn't not exist" << SLogger::endmsg;
-                }
-                file_map.close();	
-                file_map.open(file_mapEz.c_str(),ios::in);
-                if(!file_map){
-                    if(myid == 0)
-                        throw( "Ez map file : doesn`t exist");// << file_mapEz << "doesn't not exist" << SLogger::endmsg;
-                }
-                file_map.close();	
-                file_map.open(file_mapB.c_str(),ios::in);
-                if(!file_map){
-                    if(myid == 0)
-                        throw( "B map file : doesn`t exist");// file_mapB << "doesn't not exist" << SLogger::endmsg;
-                }
-                file_map.close();
-            }
-            if((n_file_map!=2)&(n_file_map!=3)){
-                if(myid == 0)
-                    throw( "Wrong number of EM map files");
-            }
-        }
-
-        //----------------------------------------------
-        // CALC TRAP
-        if(sparser.mycalctrap.flag){
-            odev.forcev.trap_param.trap_config = 2;	
-            parameter1 = sparser.mycalctrap.param1;
-            parameter2 = sparser.mycalctrap.param2;
-            InitFieldCalc(parameter1,parameter2);
-            CalcElectricField();
-            CalcMagneticField();
-        }
-        //----------------------------------------------
-        // POT TRAP
-        if(sparser.mypottrap.flag){
-            odev.forcev.trap_param.trap_config = 4;
-            odev.forcev.Potential_map.ReadEPotential(sparser.mypottrap.potmap_filename);
-            odev.forcev.trap_param.B0 = sparser.mypottrap.Bz;
-            NoIdealTrap();
-        }
 
         // OUTPUT
-        if(myid==0)
-        {
+        if(myid==0) {
             cout << "   Simulation Parameters:" << endl;
             if(sparser.mycreateparticles.flag){
                 cout << NSPARTICLES << " particles created"<< endl;
@@ -828,8 +715,7 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
         if(sparser.myimportdata.flag)
             if(myid==0)
                 cout << "DATA imported from: " << filename_prefix_importdata << endl;
-        if(myid==0)
-        {       
+        if(myid==0) {       
             if( int_buffer_gas == 1) {
                 cout << "with buffer gas, pressure: " << p_buff_mbar << " mbar" << endl;}
             else{
@@ -860,7 +746,6 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
                 cout << "without Coulomb force calculation" << endl;
             cout << "filename prefix: " << filename_prefix_ << endl;
             cout << "data saved every " << printinterval_timestep << " s" << endl;
-
         }    
 
 
@@ -882,9 +767,6 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
         ssltemp2>>filename_prefix;
 #else // __MPI_ON__
         const  char * filename_prefix = filename_prefix_.c_str();
-        //stringstream ssltemp2;
-        //ssltemp2<< filename_prefix_;
-        //ssltemp2>>filename_prefix;
 #endif // __MPI_ON__
 
         //initialize the random seed
@@ -911,7 +793,6 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
         //false: print out all information in one .._pAll.txt
         use_particle_file(seperateparticlefile_bool,_cloud);
 
-
         //Initialize the ODE. First the filename_prefix, then the Order of the ODE can be 1,4 or 5, next is the initial timestep (should be around 1e-9), next is a boulean
         //true= with adaptive stepsize, false is without adaptive stepsize.
         InitIonFly(filename_prefix,ODEORDER,timestep,adaptative_stepsize,_cloud,odev);
@@ -928,45 +809,15 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
         //scaled Coulomb Factor, if used
         UseScaledCoulomb(Coulomb_scale_factor);
 
-        //with or without including the electrode Boundaries. I.e. an ion is lost if it hits the electrode walls
-        // electrode Boundaries not tested with MPI + GPU !
-        IncludeElectrodeBoundaries(false);
-
-        //In case you want to include external fieldmaps
-        if(sparser.myrealtrap.flag)
-        {
-            if(n_file_map==2)
-                NoIdealTrap(&file_mapEz[0],&file_mapB[0]);
-            if(n_file_map==3)
-                NoIdealTrap(&file_mapEr[0],&file_mapEz[0],&file_mapB[0]);
-        }
-        if(sparser.mycalctrap.flag)
-        {
-            NoIdealTrap();
-        }
-
-        //Import the data from previous simulations
-        //Or create the ions according to a maxwell boltzmann distribution with the maxima around 1.5eV 
-        //MPI_ImportData("Rb512-dip");	
-
-
-        //log the input charges and fractions.
-        //for(unsigned int i=0; i<ion_name.size();i++){
-        //  tmplogger<<Ions_cloud[i].GetName();tmplogger<<" ";tmplogger<<Ions_cloud[i].Getmass()/amu;tmplogger<<" ";			
-        //  if (Ions_cloud[i].Getcharge() > 0) {tmplogger<<Ions_cloud[i].Getcharge();tmplogger<<"+";}
-        //  else {tmplogger<<Ions_cloud[i].Getcharge()*-1;tmplogger<<"-";}
-        //  tmplogger<< " ";tmplogger<<fraction_of_ion[i] ;tmplogger<<" %\n";
-        //}
-
-        if(sparser.mycreateparticles.flag){
+        if(sparser.mycreateparticles.flag) {
             CreateCloud(NSPARTICLES,Ions_particles,_cloud,odev.forcev.trap_param);
         }
 
-        if(sparser.mycreatecloud.flag){
+        if(sparser.mycreatecloud.flag) {
             InitCloud(NRPARTICLES,energy,seed,semiaxis_cloud,offset_cloud, Ions_cloud,_cloud,odev.forcev.trap_param);      
         }
 
-        if(sparser.myimportdata.flag){
+        if(sparser.myimportdata.flag) {
             if(sparser.mycreateparticles.flag && !sparser.mycreatecloud.flag){
                 npart_test = ImportData(filename_prefix_importdata.c_str(),Table,pdgTable, _cloud,odev.forcev.trap_param);
                 NRPARTICLES = npart_test;
@@ -981,27 +832,11 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
 
         }
 
-
 #ifdef __MPI_ON__ 
         MPI::COMM_WORLD.Barrier();
 #endif // __MPI_ON__
-
-        if(sparser.mysweep.flag){
-            odev.sweep_wi = sparser.mysweep.wi;
-            odev.sweep_wf = sparser.mysweep.wf;
-            odev.sweep_par = sparser.mysweep.par;
-            odev.sweep_flag = true;
-            if(myid==0)
-            {
-
-                sparser.mysweep.printme();
-                cout << "ode" << odev.sweep_flag << endl;
-            }
-        }
-        //cout << sparser.operation_vec.size()<<endl;
         for(int i=0;i<sparser.operation_vec.size();i++)
         {
-            // cout << i << " " << sparser.operation_vec[i].name << " " << sparser.operation_vec[i].time << endl;
             string ope_name = sparser.operation_vec[i].name;
             if(ope_name=="NE"){
                 time_operation = sparser.operation_vec[i].time;
@@ -1080,14 +915,12 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
 #endif // __MPI_ON__	
 
         Ope.Launch(_cloud,odev);	
-        /* close all outputfiles */
+
         ExitIonFly(_cloud);
 
-        /* PostProces the data */
         if(seperateparticlefile_bool)
             BundleData(filename_prefix,NRPARTICLES+NSPARTICLES);
-        //email_it("G100_bundled.txt" , "blabla@blablab.com");
-        //see http://cc.byexamples.com/20070120/print-color-string-without-ncurses/
+
         if(myid==0){
 #ifdef __linux
             printf("%c[%d;%dmProgram Ended%c[%dm\n",27,4,31,27,0);
@@ -1095,47 +928,20 @@ void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(
             cout<<"Program ended"<<endl;
 #endif
         }
-        /* clear GPU memory */
-
 #ifdef __MPI_ON__ 
         MPI::COMM_WORLD.Barrier();
-#endif // __MPI_ON__		 
-
-
-
-
-
-        /***************  finalize  MPI ****************/
-#ifdef __MPI_ON__
-        MPI::COMM_WORLD.Barrier();
-
-
 
         // Concatenate data	
         if(!seperateparticlefile_bool)
-        {        
-            // MPI_Concatenate_Data(NRPARTICLES,filename_prefix);
             MPI_Concatenate_Data(NRPARTICLES+NSPARTICLES,filename_prefix);
-        }
 
         MPI::COMM_WORLD.Barrier();	
 #endif // __MPI_ON__
-
-
     } //
-    //end of try statement
-    //
-    //catch errors that are strings(!)
-    catch(const char * error){
+    catch(const char * error) {
         cout<<"Error: "<<error<<endl;
         slogger << ERROR << error << SLogger::endmsg;
     }
-
-
-
-
-
-    return;
 }
 
 int closest_sup_power_of_two(int n) {
@@ -1148,37 +954,30 @@ int closest_sup_power_of_two(int n) {
 }
 
 
-void Run(int argc, char * argv[],SimParser & sparser) {
-    /*************** initialize MPI ****************/
+// void Run(int argc, char * argv[],SimParser & sparser) {
+void Run(SimParser & sparser) {
 #ifdef __MPI_ON__
     //cout << "MPI ON "<< endl;
     double startwtime = 0.0, endwtime;
     int    namelen;
     char   processor_name[MPI_MAX_PROCESSOR_NAME];
     MPI::Status status;
-    MPI::Init(argc,argv);
+    MPI::Init(0,"");
     int myid = MPI::COMM_WORLD.Get_rank();
     int numprocs = MPI::COMM_WORLD.Get_size();
     MPI::Get_processor_name(processor_name,namelen);
-    //std::cout << "Process "<< myid<< " of "<< numprocs << " is on " << processor_name <<std::endl;
     MPI::COMM_WORLD.Barrier();
     if (myid == 0)
         startwtime = MPI_Wtime();
 #endif // __MPI_ON__
-    /******************************************/
-
 
     IonCloud Cloud;
     _ode_vars Ode_vars;
 
-
 #ifdef __MPI_ON__
     Ode_vars.create_mpiv();
 #endif // _MPI_ON__
-
-    // DOSIMULATION!
     DoSimulation(sparser, Cloud, Ode_vars);
-    /*************** close MPI ****************/
 #ifdef __MPI_ON__
     MPI::COMM_WORLD.Barrier();
     if (myid == 0){
@@ -1187,12 +986,11 @@ void Run(int argc, char * argv[],SimParser & sparser) {
     }
     MPI::Finalize();
 #endif // __MPI_ON__
-    /******************************************/
 }
 
-
-void Run(SimParser & sparser) {
-    int argc = 0;
-    char * argv[]= {""};
-    Run(argc,argv,sparser);
-}
+//
+// void Run(SimParser & sparser) {
+//     int argc = 0;
+//     char * argv[]= {""};
+//     Run(argc,argv,sparser);
+// }
