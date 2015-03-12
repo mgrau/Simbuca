@@ -192,7 +192,6 @@ ifeq ($(NBODY_ALGO),NBODY)
 	$(NVCC) $(NVCCFLAGS) -c $< -o $@
 endif
 
-
 main.o : main.cpp parser.h ionFly.h ode.h force.h fieldmap.h matrix.h ioncloud.h particle.h ion.h mtrand.h logfile.h MPI_simbuca.h IonTable.h PDGTable.h Operation.h  SimParser.h Initialization.h SMsgType.h SLogger.h SLogWriter.h
 	$(CC) main.cpp
 parser.o : parser.cpp parser.h ionFly.h ode.h force.h fieldmap.h matrix.h ioncloud.h particle.h ion.h mtrand.h logfile.h SMsgType.h SLogger.h SLogWriter.h
@@ -208,6 +207,7 @@ endif
 ifeq ($(PU),gpu)
 	$(CC) -I$(TREE_LIB) -I/usr/local/cuda/include  force.cpp
 endif	
+
 fieldcalc.o : fieldcalc.cpp fieldcalc.h mtrand.h logfile.h
 	$(CC) fieldcalc.cpp
 fieldmap.o : fieldmap.cpp fieldmap.h matrix.h ioncloud.h particle.h ion.h mtrand.h logfile.h
@@ -250,7 +250,10 @@ SLogger.o: SLogger.cpp SLogger.h
 	$(CC) SLogger.cpp
 SLogWriter.o: SLogWriter.cpp SLogWriter.h
 	$(CC) SLogWriter.cpp
-
+ini.o: ini.c ini.h
+	$(CC) ini.c
+inireader.o: inireader.cpp inireader.h
+	$(CC) inireader.cpp
 
 
 #****************#
