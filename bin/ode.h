@@ -25,7 +25,6 @@
 #include "mpi_funcs.h"
 #include "trapparameters.h"
 #include "Potmap.h"
-#include "fieldmap.h"
 #include "SLogger.h"
 
 #ifdef __NBODY_ON__
@@ -43,9 +42,7 @@
 #include <iostream>
 using namespace std;
 
-
-class _force_vars{
-public:
+struct _force_vars {
     _force_vars();
     ~_force_vars();
     //vector<vector<double> > derivs;
@@ -75,20 +72,16 @@ public:
     bool coulombinteraction;
     // trapparamaeters
     _trap_param trap_param;
-    PotMap Potential_map;
-    fieldmap * exc_emap;
     
     void Reset_excitation_type();
     inline void Set_excitation_type(int _exc){excitation_type[_exc]=true;};
     void Load_EXC_EMAP(string _file_name,double _factor);
     void Reset_EXC_EMAP();
-private:
 };
 
 
 
-class _ode_vars {
-public:
+struct _ode_vars {
     _ode_vars();
     ~_ode_vars();
     // ode function
@@ -172,16 +165,8 @@ public:
     vector< double > swift_amp_sin;
     bool swift_flag;
     bool swift_RW;
-    inline void SetSWIFT(bool b_){swift_flag = b_;};
-    inline void SetSWIFT_RW(bool b_){swift_RW = b_;};
     double swift_dt;
     int swift_nsample;
-    double SetSWIFT_function(string nf); // return t_end
-    double SetSWIFT_function_RW(string nf); // return t_end
-    double Interpolate_SWIFT(double t_);
-    double Interpolate_SWIFT(double t_,int sc);
-    void UnsetSWIFT();
-    
     
     // mpi funcs
 #ifdef __MPI_ON__
@@ -200,22 +185,11 @@ public:
 #ifdef __NBODY_ON__
     _nbody nbody;
 #endif //__NBODY_ON__
-    
-private:
-    
 };
 
 
-
 void step(IonCloud &_cloud,_ode_vars &odev);
-//tis should be followed by
-//            particles_time +=h;
-//            h= Gethnext(); //hnext is calculated in error stuff  
-
-//void InitOde(int _ode_order, double _timestep, bool _adaptive_stepsize);
 double GetTimeStep(_ode_vars &odev);
-//int GetCountStep();
-//make sure the stepsize h stays always minimum this size... can be removed
 void SetMinStepsize(double _h_min);
 void ResetOde();
 

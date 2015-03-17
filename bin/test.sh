@@ -1,8 +1,10 @@
 #!/bin/bash
 echo compiling
 make -j 8
+echo moving to simulation directoy
+cd ../simulations
 echo testing Simbuca with benchmark 2
-../simulations/simbuca ../simulations/bench2.sim
+# ../simulations/simbuca ../simulation/rf.ini
+./simbuca rf.ini
 echo removing any output files
-rm out_bench2_logfile.txt
-rm out_bench2_pAll.txt
+rm out_rf_*

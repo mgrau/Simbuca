@@ -22,8 +22,12 @@ Counter *percentage = new Counter;
 #endif
 
 void InitIonFly(const char * _filenamebegin, int _ode_order, double _timestep, bool _adaptive_stepsize,IonCloud &_cloud, _ode_vars & odev){ //IonFly stands above Ode and Coll...
-    ilogger<<"In case of ideal trap: B = ";ilogger<<odev.forcev.trap_param.B0;ilogger<<" T.U0/d2 = ";ilogger<< odev.forcev.trap_param.Ud2;ilogger<<"\n";
-    //InitOde(_ode_order, _timestep, _adaptive_stepsize);
+    // ilogger<<"In case of ideal trap: B = ";ilogger<<odev.forcev.trap_param.B0;ilogger<<" T.U0/d2 = ";ilogger<< odev.forcev.trap_param.Ud2;ilogger<<"\n";
+    ilogger << "Ideal Trap: Vrf = ";
+    ilogger << odev.forcev.trap_param.Vrf;
+    ilogger << ", Vdc = ";
+    ilogger << odev.forcev.trap_param.Vdc;
+    ilogger << "\n";
     odev.Init_ode( _ode_order,  _timestep,  _adaptive_stepsize);
     _cloud.Create(_filenamebegin);
     filename_begin=_filenamebegin;
@@ -121,12 +125,6 @@ void MoveParticles(double _time_movement,IonCloud &_cloud,_ode_vars &odev){
 
         step(_cloud,odev);
 
-
-        //if CALCPOTENTIAL
-        if(odev.forcev.trap_param.trap_config == 2){
-            ChangePotential(_cloud.lifetime);
-        }
-
         // PRINT PARTICLES
         if(!odev.PrintAfterOperation&&!odev.PrintatZpos_bool)
         {
@@ -192,10 +190,6 @@ void DoNoExcitation(double _time_movement, bool _buffergas, double _p_buffergas,
     ilogger<<"No excitation for ";ilogger<<_time_movement;ilogger<<" sec,\n";
 
     MoveParticles(_time_movement,_cloud,odev);
-}
-void ChangeEfieldmap(char * _trapErz){
-    ilogger<<"Read new electric fieldmap: ";ilogger<<_trapErz;ilogger<<"\n";
-    ChangeEfield(_trapErz);
 }
 
 void SetPrintInterval(double _print_interval){

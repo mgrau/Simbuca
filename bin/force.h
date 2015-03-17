@@ -9,8 +9,6 @@
 #include "particle.h"
 #include "ion.h"
 #include "ioncloud.h"
-#include "fieldmap.h"
-#include "fieldcalc.h"
 #include "logfile.h"
 #include "ode.h"
 #include <iostream>
@@ -21,11 +19,6 @@ using namespace std;
 
 void force(const IonCloud &_cloud,_ode_vars &odev);
 //returns the acceleration, not the force Pay attention!!
-
-void NoIdealTrap();
-void NoIdealTrap(char *_Erz_filename, char *_B_filename);
-void NoIdealTrap(char *_Er_filename, char *_Ez_filename, char *_B_filename);
-void ChangeEfield(char *_Erz_filename);
 
 void TmpSetVars(double _wcm,double _wz2m,double _kq,double _kd);
 
