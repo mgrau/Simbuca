@@ -2,7 +2,6 @@
 #ifndef ION_H
 #define ION_H
 #include "globals.h"
-#include "trapparameters.h"
 #include <math.h>
 #include "logfile.h"
 #include <iostream>
@@ -10,13 +9,13 @@ using namespace std;
 
 
 
-class Ion
+struct Ion
 {
   long double mass; // reads in amu, stored in kg
   int charge; // read and stored as units of charge
   //double fraction;
   string name;
-public:
+
   Ion();
   Ion(long double _mass_amu); //by default the charge is positive
   Ion(long double _mass_amu, int _charge);

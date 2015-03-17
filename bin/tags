@@ -13,7 +13,7 @@ AWW	SimParser.h	/^  struct AWW{$/;"	s	class:SimParser
 AddOperation	Operation.cpp	/^void Operations::AddOperation(Operation _Ope)$/;"	f	class:Operations
 AddParticle	ionFly.cpp	/^void AddParticle(double _x, double _y, double _z, double _vx, double _vy, double _vz, Ion& _Ion, IonCloud &_cloud){$/;"	f
 AddParticle	ioncloud.cpp	/^void IonCloud::AddParticle(Particle _p, Ion _i) {$/;"	f	class:IonCloud
-AllocArrays	cunbody.cpp	/^void _cunbody::AllocArrays(int nrparticles) {$/;"	f	class:_cunbody
+AllocArrays	cunbody.cpp	/^void _cunbody::AllocArrays(int nrparticles)$/;"	f	class:_cunbody
 B	SimParser.h	/^    double B;$/;"	m	struct:SimParser::IDEALTRAP
 B0	fieldcalc.cpp	/^const double B0=1.20156; \/\/ [T]$/;"	v
 B0	trapparameters.h	/^    double B0;$/;"	m	class:_trap_param
@@ -53,7 +53,7 @@ ComputeCounts_Disps	mpi_funcs.cpp	/^void _mpi_vars::ComputeCounts_Disps(int nrpa
 CopyParticlesToVectors	ioncloud.cpp	/^void IonCloud::CopyParticlesToVectors() {$/;"	f	class:IonCloud
 CopyVectorsToParticles	ioncloud.cpp	/^void IonCloud::CopyVectorsToParticles() {$/;"	f	class:IonCloud
 Create	ioncloud.cpp	/^void IonCloud::Create(const char* _filename) {$/;"	f	class:IonCloud
-CreateCloud	Initialization.cpp	/^void CreateCloud(int nparticles, vector<Ion> Ions,IonCloud &_cloud, _trap_param & trap_param) {$/;"	f
+CreateCloud	initialization.cpp	/^void CreateCloud(int nparticles, vector<Ion> Ions,IonCloud &_cloud, _trap_param & trap_param) {$/;"	f
 CreateFile	ioncloud.cpp	/^void IonCloud::CreateFile() {$/;"	f	class:IonCloud
 DEB	SimParser.h	/^  struct DEB{$/;"	s	class:SimParser
 DEBUG	SMsgType.h	/^   DEBUG = 2,   \/**< Type for debugging messages. A few messages per event allowed. *\/$/;"	e	enum:SMsgType
@@ -63,7 +63,7 @@ DelParticle	ionFly.cpp	/^void DelParticle(int _index,IonCloud &_cloud ){$/;"	f
 DelParticle	ioncloud.cpp	/^void IonCloud::DelParticle(int _index, char* _reason) {$/;"	f	class:IonCloud
 Delete	ioncloud.cpp	/^void IonCloud::Delete() {$/;"	f	class:IonCloud
 DoNoExcitation	ionFly.cpp	/^void DoNoExcitation(double _time_movement, bool _buffergas, double _p_buffergas, IonCloud &_cloud, _ode_vars & odev){$/;"	f
-DoSimulation	Initialization.cpp	/^void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(const char *) {$/;"	f
+DoSimulation	initialization.cpp	/^void DoSimulation(SimParser & sparser, IonCloud & _cloud,_ode_vars &odev) throw(const char *) {$/;"	f
 Dormand_Prince_5	ode.cpp	/^double Dormand_Prince_5(IonCloud &_cloud,_ode_vars &odev){$/;"	f
 EPS	ode.h	/^    double EPS;        $/;"	m	class:_ode_vars
 ERROR	SMsgType.h	/^   ERROR = 5,   \/**< Type for "real" problems. *\/$/;"	e	enum:SMsgType
@@ -90,23 +90,31 @@ FB	SimParser.h	/^  struct FB{$/;"	s	class:SimParser
 FIELDCALC_H	fieldcalc.h	3;"	d
 FIELDMAP_H	fieldmap.h	3;"	d
 FORCE_H	force.h	2;"	d
-FileExists	Initialization.cpp	/^inline bool FileExists(const std::string& name) {$/;"	f
-Finalize	nbody.cpp	/^void _nbody::Finalize() {$/;"	f	class:_nbody
-FindSupN	nbody.cpp	/^int _nbody::FindSupN(int n_) {$/;"	f	class:_nbody
+FileExists	initialization.cpp	/^inline bool FileExists(const std::string& name) {$/;"	f
+Finalize	nbody.cpp	/^void _nbody::Finalize()$/;"	f	class:_nbody
+FindSupN	nbody.cpp	/^int _nbody::FindSupN(int n_)$/;"	f	class:_nbody
 GLOBAL_H	globals.h	3;"	d
 GPUfile	nbody.h	/^    ifstream GPUfile;$/;"	m	class:_nbody
 Gdt	ode.h	/^    double Gdt;$/;"	m	class:_ode_vars
 GearMethod	ode.cpp	/^void GearMethod(IonCloud &_cloud,_ode_vars &odev){$/;"	f
 Gear_initialized	ode.h	/^    bool Gear_initialized;$/;"	m	class:_ode_vars
+Get	inih/inireader.cpp	/^string INIReader::Get(string section, string name, string default_value)$/;"	f	class:INIReader
+Get	inireader.cpp	/^string INIReader::Get(string section, string name, string default_value)$/;"	f	class:INIReader
 GetAmplitude	Operation.h	/^  inline double GetAmplitude(){return amplitude;};$/;"	f	class:Operation
 GetAmplitude2	Operation.h	/^  inline double GetAmplitude2(){return amplitude2;};$/;"	f	class:Operation
+GetBoolean	inih/inireader.cpp	/^bool INIReader::GetBoolean(string section, string name, bool default_value)$/;"	f	class:INIReader
+GetBoolean	inireader.cpp	/^bool INIReader::GetBoolean(string section, string name, bool default_value)$/;"	f	class:INIReader
 GetE	Potmap.cpp	/^pair<double,double > PotMap::GetE(const double &x,const double & y, const double & z)$/;"	f	class:PotMap
 GetEField_from_Pot	Potmap.cpp	/^vector<double > PotMap::GetEField_from_Pot(const double &x,const double & y, const double & z)$/;"	f	class:PotMap
 GetEr	Potmap.cpp	/^double PotMap::GetEr(const double &x,const double & y, const double & z)$/;"	f	class:PotMap
 GetEz	Potmap.cpp	/^double PotMap::GetEz(const double &x,const double & y, const double & z)$/;"	f	class:PotMap
+GetFields	inih/inireader.cpp	/^std::set<std::string> INIReader::GetFields(std::string section) const$/;"	f	class:INIReader
+GetFields	inireader.cpp	/^std::set<std::string> INIReader::GetFields(std::string section) const$/;"	f	class:INIReader
 GetFrequency	Operation.h	/^  inline double GetFrequency(){return frequency;};$/;"	f	class:Operation
 GetFrequency2	Operation.h	/^  inline double GetFrequency2(){return frequency2;};$/;"	f	class:Operation
 GetIndex	Potmap.cpp	/^int PotMap::GetIndex(const double &r,const double &z)$/;"	f	class:PotMap
+GetInteger	inih/inireader.cpp	/^long INIReader::GetInteger(string section, string name, long default_value)$/;"	f	class:INIReader
+GetInteger	inireader.cpp	/^long INIReader::GetInteger(string section, string name, long default_value)$/;"	f	class:INIReader
 GetIonName	Operation.h	/^  inline string GetIonName(){return ion_name;};$/;"	f	class:Operation
 GetMinType	SLogWriter.cpp	/^SMsgType SLogWriter::GetMinType() const {$/;"	f	class:SLogWriter
 GetName	ion.h	/^  inline string GetName(){return name;};$/;"	f	class:Ion
@@ -117,6 +125,10 @@ GetPDGId	PDGTable.cpp	/^int PDGTable::GetPDGId(string name){$/;"	f	class:PDGTabl
 GetPDGMass	PDGTable.cpp	/^double PDGTable::GetPDGMass(int pdgid){$/;"	f	class:PDGTable
 GetPDGName	PDGTable.cpp	/^string PDGTable::GetPDGName(int pdgid){$/;"	f	class:PDGTable
 GetPotential	Potmap.cpp	/^double PotMap::GetPotential(const double &x,const double & y, const double & z)$/;"	f	class:PotMap
+GetReal	inih/inireader.cpp	/^double INIReader::GetReal(string section, string name, double default_value)$/;"	f	class:INIReader
+GetReal	inireader.cpp	/^double INIReader::GetReal(string section, string name, double default_value)$/;"	f	class:INIReader
+GetSections	inih/inireader.cpp	/^std::set<std::string> INIReader::GetSections() const$/;"	f	class:INIReader
+GetSections	inireader.cpp	/^std::set<std::string> INIReader::GetSections() const$/;"	f	class:INIReader
 GetSource	SLogger.cpp	/^const char* SLogger::GetSource() const {$/;"	f	class:SLogger
 GetTime	Operation.h	/^    inline double GetTime(){return time_operation;};$/;"	f	class:Operation
 GetTimeStep	ode.cpp	/^double GetTimeStep(_ode_vars &odev) {$/;"	f
@@ -135,21 +147,34 @@ ID_node_GPU	mpi_funcs.h	/^    int * ID_node_GPU ; \/\/ MPI rank of node using GP
 IDs	ioncloud.h	/^        vector<int> IDs;$/;"	m	class:IonCloud
 IMPORTDATA	SimParser.h	/^  struct IMPORTDATA{$/;"	s	class:SimParser
 INFO	SMsgType.h	/^   INFO = 3,    \/**< Type for normal information messages. No messages in event processing! *\/$/;"	e	enum:SMsgType
-INITIALIZATION_H	Initialization.h	2;"	d
+INIReader	inih/inireader.cpp	/^INIReader::INIReader(string filename)$/;"	f	class:INIReader
+INIReader	inih/inireader.h	/^class INIReader$/;"	c
+INIReader	inireader.cpp	/^INIReader::INIReader(string filename)$/;"	f	class:INIReader
+INIReader	inireader.h	/^class INIReader$/;"	c
+INITIALIZATION_H	initialization.h	2;"	d
+INI_ALLOW_BOM	ini.h	55;"	d
+INI_ALLOW_BOM	inih/ini.h	55;"	d
+INI_ALLOW_MULTILINE	ini.h	49;"	d
+INI_ALLOW_MULTILINE	inih/ini.h	49;"	d
+INI_MAX_LINE	ini.h	70;"	d
+INI_MAX_LINE	inih/ini.h	70;"	d
+INI_STOP_ON_FIRST_ERROR	ini.h	65;"	d
+INI_STOP_ON_FIRST_ERROR	inih/ini.h	65;"	d
+INI_USE_STACK	ini.h	60;"	d
+INI_USE_STACK	inih/ini.h	60;"	d
 IONCLOUD_H	ioncloud.h	2;"	d
 IONFLY_H	ionFly.h	2;"	d
 ION_H	ion.h	3;"	d
 ImportData	parser.cpp	/^int ImportData(const char * filename_prefix,IonTable Table,PDGTable pdgTable, IonCloud &cloud, _trap_param & trap_param) {$/;"	f
-IncludeElectrodeBoundaries	ionFly.cpp	/^void IncludeElectrodeBoundaries(bool _bool){$/;"	f
 InitAcceleraction	ode.cpp	/^void InitAcceleraction(int nrParticles,IonCloud &_cloud,_ode_vars &odev){$/;"	f
-InitCloud	Initialization.cpp	/^void InitCloud(int nparticles, vector<double > eV_max_boltz,int seed,double semiaxis[3], double offset[3], vector<Ion> Ions, IonCloud &_cloud, _trap_param & trap_param) {$/;"	f
+InitCloud	initialization.cpp	/^void InitCloud(int nparticles, vector<double > eV_max_boltz,int seed,double semiaxis[3], double offset[3], vector<Ion> Ions, IonCloud &_cloud, _trap_param & trap_param) {$/;"	f
 InitFieldCalc	fieldcalc.cpp	/^void InitFieldCalc(double parameter1, double parameter2){$/;"	f
 InitIonFly	ionFly.cpp	/^void InitIonFly(const char * _filenamebegin, int _ode_order, double _timestep, bool _adaptive_stepsize,IonCloud &_cloud, _ode_vars & odev){ \/\/IonFly stands above Ode and Coll...$/;"	f
-InitMPI	cunbody.cpp	/^void _cunbody::InitMPI(_mpi_vars * _mpiv) {$/;"	f	class:_cunbody
-InitMPI	nbody.cpp	/^void _nbody::InitMPI(_mpi_vars * _mpiv) {$/;"	f	class:_nbody
+InitMPI	cunbody.cpp	/^void _cunbody::InitMPI(_mpi_vars * _mpiv)$/;"	f	class:_cunbody
+InitMPI	nbody.cpp	/^void _nbody::InitMPI(_mpi_vars * _mpiv)$/;"	f	class:_nbody
 Init_GlobalPos	mpi_funcs.cpp	/^void _mpi_vars::Init_GlobalPos(int nrparticles)$/;"	f	class:_mpi_vars
 Init_ode	ode.cpp	/^void _ode_vars::Init_ode(int _ode_order, double _timestep, bool _adaptive_stepsize)$/;"	f	class:_ode_vars
-Initialization	nbody.cpp	/^void _nbody::Initialization(const IonCloud & _cloud, bool _withCharge) {$/;"	f	class:_nbody
+Initialization	nbody.cpp	/^void _nbody::Initialization(const IonCloud & _cloud, bool _withCharge)$/;"	f	class:_nbody
 InitializePoolVectors	ioncloud.cpp	/^void IonCloud::InitializePoolVectors() {$/;"	f	class:IonCloud
 Initpoolvector	force.cpp	/^void Initpoolvector(int nrParticles,const IonCloud &_cloud,_force_vars &forcev){$/;"	f
 Initpoolvectors	ode.cpp	/^void _ode_vars::Initpoolvectors(int nrParticles){$/;"	f	class:_ode_vars
@@ -165,7 +190,7 @@ IonCloud	ioncloud.h	/^class IonCloud$/;"	c
 IonTable	IonTable.cpp	/^IonTable::IonTable(string filename_table_mass)$/;"	f	class:IonTable
 IonTable	IonTable.h	/^class IonTable {$/;"	c
 IsElement	fieldmap.cpp	/^bool fieldmap::IsElement(double _value){$/;"	f	class:fieldmap
-IsInteger	Initialization.cpp	/^inline bool IsInteger(std::string & s) {$/;"	f
+IsInteger	initialization.cpp	/^inline bool IsInteger(std::string & s) {$/;"	f
 Joule_to_eV	globals.h	/^const double Joule_to_eV = 6.24150e18; \/\/1J = 6.24150e18 eV$/;"	v
 LAC	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
 LAR	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOORD = 3, LTEMP = 4, LCREATEPARTICLES = 5, LPARTICLES = 6, LBUFFER = 7, LODE = 8, LCOULOMB = 9, LOUTPUT = 10, LREALTRAP = 11, LNE = 12, LIMPORTDATA = 13, LDEW = 14, LDEB = 15, LQEW = 16, LQEB = 17, LOEW = 18, LOEB = 19, LRWB = 20, LRWW = 21, LAWB = 22, LAWW = 23, LIDEALTRAP = 24, LNONIDEALTRAP = 25, LCALCTRAP = 26, LAC = 27, LSC = 28, LPOTTRAP = 29, LAR=30, LFB=31, LSWEEP=32,LSWIFT=33,LEXC_EMAP=34,LPI_PULSE=35,LASYM_ARW=36};$/;"	e	enum:SimParser::labels
@@ -215,13 +240,17 @@ LTEMP	SimParser.h	/^    enum labels{LCREATECLOUD = 1, LCLOUDPARTS = 2, LCLOUDCOO
 Launch	Operation.cpp	/^void Operation::Launch(IonCloud &_cloud, _ode_vars & odev)$/;"	f	class:Operation
 Launch	Operation.cpp	/^void Operations::Launch(IonCloud &_cloud, _ode_vars & odev)$/;"	f	class:Operations
 LoadCharge	mpi_funcs.cpp	/^void _mpi_vars::LoadCharge( vector<int > ion_charge)$/;"	f	class:_mpi_vars
-LoadFile	nbody.cpp	/^void _nbody::LoadFile() {$/;"	f	class:_nbody
-LoadPosition	nbody.cpp	/^void _nbody::LoadPosition(const IonCloud &_cloud) {$/;"	f	class:_nbody
+LoadFile	nbody.cpp	/^void _nbody::LoadFile()$/;"	f	class:_nbody
+LoadPosition	nbody.cpp	/^void _nbody::LoadPosition(const IonCloud &_cloud)$/;"	f	class:_nbody
 Load_EXC_EMAP	ode.cpp	/^void _force_vars::Load_EXC_EMAP(string _file_name,double _factor){$/;"	f	class:_force_vars
 LogFile	logfile.cpp	/^LogFile::LogFile(){$/;"	f	class:LogFile
 LogFile	logfile.h	/^ class LogFile {$/;"	c
 MATRIX_H	matrix.h	5;"	d
 MAXIMUM_SOURCE_NAME_LENGTH	SLogger.cpp	/^static const std::string::size_type MAXIMUM_SOURCE_NAME_LENGTH = 18;$/;"	v	file:
+MAX_NAME	ini.c	21;"	d	file:
+MAX_NAME	inih/ini.c	21;"	d	file:
+MAX_SECTION	ini.c	20;"	d	file:
+MAX_SECTION	inih/ini.c	20;"	d	file:
 MPI_Concatenate_Data	parser.cpp	/^void MPI_Concatenate_Data(int NRPARTICLES, char * filename_prefix) {$/;"	f
 MPI_FLOAT3	mpi_funcs.h	/^    MPI_Datatype MPI_FLOAT3;$/;"	m	class:_mpi_vars
 MPI_FLOAT4	mpi_funcs.h	/^    MPI_Datatype MPI_FLOAT4;$/;"	m	class:_mpi_vars
@@ -248,6 +277,8 @@ MTRand_open	mtrand.h	/^  MTRand_open() : MTRand_int32() {}$/;"	f	class:MTRand_op
 MTRand_open	mtrand.h	/^  MTRand_open(const unsigned long* seed, int size) : MTRand_int32(seed, size) {}$/;"	f	class:MTRand_open
 MTRand_open	mtrand.h	/^  MTRand_open(unsigned long seed) : MTRand_int32(seed) {}$/;"	f	class:MTRand_open
 MTRand_open	mtrand.h	/^class MTRand_open : public MTRand_int32 {$/;"	c
+MakeKey	inih/inireader.cpp	/^string INIReader::MakeKey(string section, string name)$/;"	f	class:INIReader
+MakeKey	inireader.cpp	/^string INIReader::MakeKey(string section, string name)$/;"	f	class:INIReader
 MakeVerbose	PDGTable.cpp	/^void PDGTable::MakeVerbose(bool verbose){$/;"	f	class:PDGTable
 Matrix	matrix.h	/^ class Matrix {$/;"	c
 Matrix	matrix.h	/^ inline Matrix<T>::Matrix(unsigned nrows, unsigned ncols)$/;"	f	class:Matrix
@@ -287,8 +318,10 @@ PDGTable	PDGTable.cpp	/^PDGTable::PDGTable(string filename_table_pdg)$/;"	f	clas
 PDGTable	PDGTable.h	/^class PDGTable {$/;"	c
 POTMAP_h	Potmap.h	13;"	d
 POTTRAP	SimParser.h	/^    struct POTTRAP{$/;"	s	class:SimParser
-PU	Makefile	/^PU=gpu$/;"	m
+PU	Makefile	/^PU=cpu$/;"	m
 PUMPING_DIAPRHAGM_RADIUS	trapparameters.h	/^    double PUMPING_DIAPRHAGM_RADIUS;$/;"	m	class:_trap_param
+ParseError	inih/inireader.cpp	/^int INIReader::ParseError()$/;"	f	class:INIReader
+ParseError	inireader.cpp	/^int INIReader::ParseError()$/;"	f	class:INIReader
 Particle	particle.cpp	/^Particle::Particle() {$/;"	f	class:Particle
 Particle	particle.cpp	/^Particle::Particle(double _x, double _y, double _z, double _vx, double _vy, double _vz) {$/;"	f	class:Particle
 Particle	particle.h	/^class Particle$/;"	c
@@ -326,7 +359,7 @@ RK4	ode.h	/^    bool RK4;$/;"	m	class:_ode_vars
 RWB	SimParser.h	/^  struct RWB{$/;"	s	class:SimParser
 RWW	SimParser.h	/^  struct RWW{$/;"	s	class:SimParser
 RandGauss	fieldcalc.cpp	/^double RandGauss(double mean,double stddev){\/\/ create randoms with gaussian$/;"	f
-RandomGaussian	Initialization.cpp	/^double RandomGaussian(double mean,double stddev) {$/;"	f
+RandomGaussian	initialization.cpp	/^double RandomGaussian(double mean,double stddev) {$/;"	f
 ReadEPotential	Potmap.cpp	/^void PotMap::ReadEPotential(string Potmap_name)$/;"	f	class:PotMap
 ReadField	fieldmap.cpp	/^void fieldmap::ReadField(char * _Frz_filename){$/;"	f	class:fieldmap
 ReadField	fieldmap.cpp	/^void fieldmap::ReadField(char *_Fr_filename,char *_Fz_filename){$/;"	f	class:fieldmap
@@ -339,8 +372,7 @@ Reset	ioncloud.cpp	/^void IonCloud::Reset() {$/;"	f	class:IonCloud
 Reset_EXC_EMAP	ode.cpp	/^void _force_vars::Reset_EXC_EMAP(){$/;"	f	class:_force_vars
 Reset_excitation_type	ode.cpp	/^void _force_vars::Reset_excitation_type(){$/;"	f	class:_force_vars
 Reset_ode	ode.cpp	/^void _ode_vars::Reset_ode(){$/;"	f	class:_ode_vars
-Run	Initialization.cpp	/^void Run(SimParser & sparser) {$/;"	f
-Run	Initialization.cpp	/^void Run(int argc, char * argv[],SimParser & sparser) {$/;"	f
+Run	initialization.cpp	/^void Run(SimParser & sparser) {$/;"	f
 RungaKutta4	ode.cpp	/^double RungaKutta4(IonCloud &_cloud,_ode_vars &odev){$/;"	f
 SC	SimParser.h	/^  struct SC{$/;"	s	class:SimParser
 SIMPARSER_H	SimParser.h	2;"	d
@@ -383,11 +415,11 @@ SetMinType	SLogWriter.cpp	/^void SLogWriter::SetMinType( SMsgType type ) {$/;"	f
 SetName	Operation.h	/^  inline void SetName(string name_){name=name_;};$/;"	f	class:Operation
 SetName	ion.h	/^  inline void SetName(string name_){name= name_;};$/;"	f	class:Ion
 SetOrder	Operation.h	/^  inline void SetOrder(double o_){order = o_;};$/;"	f	class:Operation
-SetParameterWithFile	nbody.cpp	/^void _nbody::SetParameterWithFile() {$/;"	f	class:_nbody
-SetParameterWithoutFile	nbody.cpp	/^void _nbody::SetParameterWithoutFile() {$/;"	f	class:_nbody
+SetParameterWithFile	nbody.cpp	/^void _nbody::SetParameterWithFile()$/;"	f	class:_nbody
+SetParameterWithoutFile	nbody.cpp	/^void _nbody::SetParameterWithoutFile()$/;"	f	class:_nbody
 SetParameters	ion.cpp	/^void Ion::SetParameters(double _mass_amu) {$/;"	f	class:Ion
 SetParameters	ion.cpp	/^void Ion::SetParameters(double _mass_amu, double _charge) {$/;"	f	class:Ion
-SetParameters	nbody.cpp	/^void _nbody::SetParameters() {$/;"	f	class:_nbody
+SetParameters	nbody.cpp	/^void _nbody::SetParameters()$/;"	f	class:_nbody
 SetPercentagePointer	ionFly.cpp	/^void SetPercentagePointer(Counter *c){$/;"	f
 SetPrintAfterOperation	ode.h	/^    inline void SetPrintAfterOperation(bool b_){PrintAfterOperation=true;}$/;"	f	class:_ode_vars
 SetPrintInterval	ionFly.cpp	/^void SetPrintInterval(double _print_interval){$/;"	f
@@ -430,6 +462,8 @@ VERBOSE	SMsgType.h	/^   VERBOSE = 1, \/**< Type for the most detailed messages. 
 VERSION	Makefile	/^VERSION=3.4$/;"	m
 VV	ode.h	/^    bool VV;$/;"	m	class:_ode_vars
 VV_initialized	ode.h	/^    bool VV_initialized;$/;"	m	class:_ode_vars
+ValueHandler	inih/inireader.cpp	/^int INIReader::ValueHandler(void* user, const char* section, const char* name,$/;"	f	class:INIReader
+ValueHandler	inireader.cpp	/^int INIReader::ValueHandler(void* user, const char* section, const char* name,$/;"	f	class:INIReader
 Vgpu_n	nbody.h	/^    std::vector< int > Vgpu_n;$/;"	m	class:_nbody
 Vgpu_ntiles	nbody.h	/^    std::vector< int > Vgpu_ntiles;$/;"	m	class:_nbody
 Vgpu_p	nbody.h	/^    std::vector< int > Vgpu_p;$/;"	m	class:_nbody
@@ -441,11 +475,19 @@ Write	SLogWriter.cpp	/^void SLogWriter::Write( SMsgType type, const std::string&
 _IonTable_h	IonTable.h	10;"	d
 _OPERATION_h	Operation.h	2;"	d
 _PDGTable_h	PDGTable.h	22;"	d
-_cunbody	cunbody.cpp	/^_cunbody::_cunbody() {$/;"	f	class:_cunbody
+__INIREADER_H__	inih/inireader.h	9;"	d
+__INIREADER_H__	inireader.h	9;"	d
+__INI_H__	ini.h	11;"	d
+__INI_H__	inih/ini.h	11;"	d
+_cunbody	cunbody.cpp	/^_cunbody::_cunbody()$/;"	f	class:_cunbody
 _cunbody	cunbody.h	/^class _cunbody{$/;"	c
+_error	inih/inireader.h	/^    int _error;$/;"	m	class:INIReader
+_error	inireader.h	/^    int _error;$/;"	m	class:INIReader
 _f	SLogger.h	/^inline SLogger& SLogger::operator<< ( SLogger& ( *_f )( SLogger& ) ) {$/;"	f	class:SLogger
 _f	SLogger.h	/^inline SLogger& SLogger::operator<< ( std::ios& ( *_f )( std::ios& ) ) {$/;"	f	class:SLogger
 _f	SLogger.h	/^inline SLogger& SLogger::operator<< ( std::ostream& ( *_f )( std::ostream& ) ) {$/;"	f	class:SLogger
+_fields	inih/inireader.h	/^    std::map<std::string, std::set<std::string>*> _fields;$/;"	m	class:INIReader
+_fields	inireader.h	/^    std::map<std::string, std::set<std::string>*> _fields;$/;"	m	class:INIReader
 _force_vars	ode.cpp	/^_force_vars::_force_vars() {$/;"	f	class:_force_vars
 _force_vars	ode.h	/^class _force_vars{$/;"	c
 _mpi_vars	mpi_funcs.cpp	/^_mpi_vars::_mpi_vars()$/;"	f	class:_mpi_vars
@@ -454,8 +496,12 @@ _nbody	nbody.cpp	/^_nbody::_nbody(){}$/;"	f	class:_nbody
 _nbody	nbody.h	/^class _nbody{$/;"	c
 _ode_vars	ode.cpp	/^_ode_vars::_ode_vars()$/;"	f	class:_ode_vars
 _ode_vars	ode.h	/^class _ode_vars {$/;"	c
+_sections	inih/inireader.h	/^    std::set<std::string> _sections;$/;"	m	class:INIReader
+_sections	inireader.h	/^    std::set<std::string> _sections;$/;"	m	class:INIReader
 _trap_param	trapparameters.cpp	/^_trap_param::_trap_param()$/;"	f	class:_trap_param
 _trap_param	trapparameters.h	/^class _trap_param{$/;"	c
+_values	inih/inireader.h	/^    std::map<std::string, std::string> _values;$/;"	m	class:INIReader
+_values	inireader.h	/^    std::map<std::string, std::string> _values;$/;"	m	class:INIReader
 a	fieldcalc.cpp	/^const double a=1.8\/1000.; \/\/ [mm]$/;"	v
 a	trapparameters.h	/^    double a;$/;"	m	class:_trap_param
 a3	Operation.h	/^    double a3;$/;"	m	class:Operation
@@ -464,9 +510,9 @@ a_diff	ode.h	/^    vector<vector<double> >  accel_new_suggestion, a_diff;$/;"	m	
 abs	Potmap.cpp	/^double abs(double _x)$/;"	f
 accel_new_suggestion	ode.h	/^    vector<vector<double> >  accel_new_suggestion, a_diff;$/;"	m	class:_ode_vars
 adaptive	SimParser.h	/^    int adaptive;\/\/ 0 - no, 1 - yes$/;"	m	struct:SimParser::ODE
-ai	cunbody.h	/^        double (*ai)[3];$/;"	m	class:_cunbody
-ai_temp	cunbody.h	/^        double (*ai_temp)[3];$/;"	m	class:_cunbody
-algrand	Initialization.cpp	/^MTRand algrand;$/;"	v
+ai	cunbody.h	/^    double (*ai)[3];$/;"	m	class:_cunbody
+ai_temp	cunbody.h	/^    double (*ai_temp)[3];$/;"	m	class:_cunbody
+algrand	initialization.cpp	/^MTRand algrand;$/;"	v
 amp	SimParser.h	/^    double amp;$/;"	m	struct:Operation_sim
 amp	SimParser.h	/^    double amp;$/;"	m	struct:SimParser::AC
 amp	SimParser.h	/^    double amp;$/;"	m	struct:SimParser::AWB
@@ -499,7 +545,7 @@ atomic_radii_H2O	globals.h	/^const double atomic_radii_H2O=3.7E-10;$/;"	v
 atomic_radii_He4	globals.h	/^const double atomic_radii_He4 = 0.31E-10;$/;"	v
 atomic_radii_K39_m	globals.h	/^const double atomic_radii_K39_m = 2.27E-10;$/;"	v
 b	ode.h	/^    vector< vector<double> > bn,cn,dn,en,fn,b,c,d,e,f;$/;"	m	class:_ode_vars
-begin	cunbody.cpp	/^void _cunbody::begin(const IonCloud &_cloud) {$/;"	f	class:_cunbody
+begin	cunbody.cpp	/^void _cunbody::begin(const IonCloud &_cloud)$/;"	f	class:_cunbody
 bn	ode.h	/^    vector< vector<double> > bn,cn,dn,en,fn,b,c,d,e,f;$/;"	m	class:_ode_vars
 buffergas	Operation.h	/^  bool buffergas;$/;"	m	class:Operation
 c	ode.h	/^    vector< vector<double> > bn,cn,dn,en,fn,b,c,d,e,f;$/;"	m	class:_ode_vars
@@ -513,7 +559,7 @@ charge	ion.h	/^  int charge; \/\/ read and stored as units of charge$/;"	m	class
 charge	ioncloud.h	/^        vector < int > charge;$/;"	m	class:IonCloud
 charge	mpi_funcs.h	/^    double *charge; \/\/ charge of ions$/;"	m	class:_mpi_vars
 clogger	ioncloud.cpp	/^LogFile clogger;$/;"	v
-closest_sup_power_of_two	Initialization.cpp	/^int closest_sup_power_of_two(int n) {$/;"	f
+closest_sup_power_of_two	initialization.cpp	/^int closest_sup_power_of_two(int n) {$/;"	f
 cloudfracs	SimParser.h	/^     std::vector<std::pair<string, double> > cloudfracs;$/;"	m	struct:SimParser::CLOUDPARTS
 cloudsize	SimParser.h	/^    int cloudsize;$/;"	m	struct:SimParser::CREATECLOUD
 cn	ode.h	/^    vector< vector<double> > bn,cn,dn,en,fn,b,c,d,e,f;$/;"	m	class:_ode_vars
@@ -524,7 +570,7 @@ comments	SimParser.h	/^  std::vector < string > comments;$/;"	m	class:SimParser
 config_map	SimParser.h	/^  vector< pair < string, std::vector< string > > > config_map;$/;"	m	class:SimParser
 constituents	SimParser.h	/^    int constituents;$/;"	m	struct:SimParser::CREATECLOUD
 coords	mpi_funcs.h	/^    int * coords;$/;"	m	class:_mpi_vars
-coords0	cunbody.h	/^        int coords0;$/;"	m	class:_cunbody
+coords0	cunbody.h	/^    int coords0;$/;"	m	class:_cunbody
 cos2wTtimeTU	ode.h	/^    double cos2wTtimeTU; \/\/ for RW\/AW$/;"	m	class:_force_vars
 coswTtimeTU	ode.h	/^    double coswTtimeTU;$/;"	m	class:_force_vars
 coswTtimeTU2	ode.h	/^    double coswTtimeTU2; \/\/ for SIMCO$/;"	m	class:_force_vars
@@ -540,7 +586,7 @@ counts_F4	mpi_funcs.h	/^    int *counts_F4, *disps_F4;$/;"	m	class:_mpi_vars
 counts_col	mpi_funcs.h	/^    int *counts_col,*disps_col;$/;"	m	class:_mpi_vars
 counts_row	mpi_funcs.h	/^    int *counts_row,*disps_row,*disps_row_return; $/;"	m	class:_mpi_vars
 countstep	ode.h	/^    int countstep;$/;"	m	class:_ode_vars
-countword	Initialization.cpp	/^int countword(string line) {$/;"	f
+countword	initialization.cpp	/^int countword(string line) {$/;"	f
 countword2	trapparameters.cpp	/^int countword2(string line)$/;"	f
 create_mpiv	ode.h	/^    inline void create_mpiv(){mpiv = new _mpi_vars;};$/;"	f	class:_ode_vars
 cunbody	ode.h	/^    _cunbody cunbody;$/;"	m	class:_ode_vars
@@ -567,10 +613,10 @@ e	ode.h	/^    vector< vector<double> > bn,cn,dn,en,fn,b,c,d,e,f;$/;"	m	class:_od
 eV_to_Joule	globals.h	/^const double eV_to_Joule = 1.60217646e-19;$/;"	v
 el_charge	globals.h	/^const double el_charge  = 1.60217733e-19;	\/\/el lading [C]$/;"	v
 en	ode.h	/^    vector< vector<double> > bn,cn,dn,en,fn,b,c,d,e,f;$/;"	m	class:_ode_vars
-end	cunbody.cpp	/^void _cunbody::end(const IonCloud &_cloud) {$/;"	f	class:_cunbody
+end	cunbody.cpp	/^void _cunbody::end(const IonCloud &_cloud)$/;"	f	class:_cunbody
 end_gpu2	nbody.h	/^    cudaEvent_t end_gpu2;$/;"	m	class:_nbody
 endmsg	SLogger.cpp	/^SLogger& SLogger::endmsg( SLogger& logger ) {$/;"	f	class:SLogger
-eps	cunbody.h	/^        float eps;$/;"	m	class:_cunbody
+eps	cunbody.h	/^    float eps;$/;"	m	class:_cunbody
 eps0	globals.h	/^const double eps0 = 8.85419e-12;$/;"	v
 epsilon_0	globals.h	/^const double epsilon_0 = 8.8541878176E-12; \/\/[Farad\/m]=[C\/(V*m)]$/;"	v
 err	ode.h	/^    double sk,err;$/;"	m	class:_ode_vars
@@ -591,6 +637,8 @@ filename_begin	ionFly.cpp	/^const char * filename_begin;$/;"	v
 filenamebegin	ioncloud.h	/^        const char * filenamebegin;$/;"	m	class:IonCloud
 filenames	SimParser.h	/^    std::vector<string> filenames;$/;"	m	struct:SimParser::REALTRAP
 final_time	ode.h	/^    double final_time; \/\/ final time of the operation$/;"	m	class:_ode_vars
+find_char_or_comment	ini.c	/^static char* find_char_or_comment(const char* s, char c)$/;"	f	file:
+find_char_or_comment	inih/ini.c	/^static char* find_char_or_comment(const char* s, char c)$/;"	f	file:
 firstoperation	ionFly.cpp	/^bool firstoperation = true;$/;"	v
 flag	SimParser.h	/^        bool flag;$/;"	m	struct:SimParser::POTTRAP
 flag	SimParser.h	/^        bool flag;$/;"	m	struct:SimParser::SWEEP
@@ -628,7 +676,7 @@ flogger	force.cpp	/^LogFile flogger;$/;"	v
 fn	ode.h	/^    vector< vector<double> > bn,cn,dn,en,fn,b,c,d,e,f;$/;"	m	class:_ode_vars
 force	force.cpp	/^void force(const IonCloud &_cloud,_ode_vars &odev){$/;"	f
 force_begin	nbody.cpp	/^void _nbody::force_begin(const IonCloud &_cloud)$/;"	f	class:_nbody
-force_end	nbody.cpp	/^void _nbody::force_end(const IonCloud &_cloud) {$/;"	f	class:_nbody
+force_end	nbody.cpp	/^void _nbody::force_end(const IonCloud &_cloud)$/;"	f	class:_nbody
 forcev	ode.h	/^    _force_vars forcev;$/;"	m	class:_ode_vars
 fp	Potmap.h	/^    vector<double > fp;$/;"	m	class:PotMap
 freq1	SimParser.h	/^    double freq1;  $/;"	m	struct:SimParser::AR
@@ -680,10 +728,13 @@ im_i	ionFly.cpp	/^vector<double> im_i;$/;"	v
 im_i_sum	ionFly.cpp	/^double im_i_sum = 0.0;$/;"	v
 im_q	ionFly.cpp	/^vector<double> im_q;$/;"	v
 images	ioncloud.h	/^        vector< pair<double,double> > images; \/\/Images with x: time(s) and y: induced current(A)$/;"	m	class:IonCloud
-include_boundaries	ionFly.cpp	/^bool include_boundaries = true;$/;"	v
 index	SimParser.h	/^    int index;$/;"	m	struct:SimParser::BUFFER
 index	SimParser.h	/^    int index;\/\/ 0 - no, 1 - yes$/;"	m	struct:SimParser::COULOMB
 infile	SimParser.h	/^  ifstream infile;$/;"	m	class:SimParser
+ini_parse	ini.c	/^int ini_parse(const char* filename,$/;"	f
+ini_parse	inih/ini.c	/^int ini_parse(const char* filename,$/;"	f
+ini_parse_file	ini.c	/^int ini_parse_file(FILE* file,$/;"	f
+ini_parse_file	inih/ini.c	/^int ini_parse_file(FILE* file,$/;"	f
 init	mtrand.cpp	/^bool MTRand_int32::init = false;$/;"	m	class:MTRand_int32	file:
 init	mtrand.h	/^  static bool init; \/\/ true if init function is called$/;"	m	class:MTRand_int32
 initial_nrparticles	ioncloud.h	/^        int initial_nrparticles;$/;"	m	class:IonCloud
@@ -699,8 +750,8 @@ ionName	IonTable.h	/^    vector<string > ionName; \/\/ full name of the element 
 ionZ	IonTable.h	/^    vector<int > ionZ; \/\/ atomic Z$/;"	m	class:IonTable
 ion_name	Operation.h	/^  string ion_name;$/;"	m	class:Operation
 ions	ioncloud.h	/^        vector<Ion> * ions; $/;"	m	class:IonCloud
-is_power_of_two	Initialization.cpp	29;"	d	file:
-is_power_of_two	nbody.cpp	4;"	d	file:
+is_power_of_two	initialization.cpp	30;"	d	file:
+is_power_of_two	nbody.cpp	5;"	d	file:
 j	ode.h	/^    unsigned i,j;$/;"	m	class:_ode_vars
 jj_	force.cpp	/^int jj_;$/;"	v
 k1	ode.h	/^    double (*k1)[6],(*k2)[6],(*k3)[6],(*k4)[6],(*k5)[6],(*k6)[6],(*k7)[6];$/;"	m	class:_ode_vars
@@ -725,7 +776,9 @@ line	ioncloud.cpp	/^char line[256];$/;"	v
 loadbar	ionFly.cpp	/^static inline void loadbar(unsigned int x, unsigned int n, unsigned int w = 50)$/;"	f	file:
 logfile	logfile.cpp	/^ofstream LogFile::logfile; $/;"	m	class:LogFile	file:
 logfile	logfile.h	/^   static ofstream logfile; $/;"	m	class:LogFile
-m	cunbody.h	/^        double (*m);$/;"	m	class:_cunbody
+lskip	ini.c	/^static char* lskip(const char* s)$/;"	f	file:
+lskip	inih/ini.c	/^static char* lskip(const char* s)$/;"	f	file:
+m	cunbody.h	/^    double (*m);$/;"	m	class:_cunbody
 m	mtrand.h	/^  static const int n = 624, m = 397; \/\/ compile time constants$/;"	m	class:MTRand_int32
 m11	fieldmap.h	/^	pair<double, double> m12,m22,m11,m21, mzr;$/;"	m	class:fieldmap
 m12	fieldmap.h	/^	pair<double, double> m12,m22,m11,m21, mzr;$/;"	m	class:fieldmap
@@ -739,6 +792,7 @@ m_logWriter	SLogger.h	/^   SLogWriter*    m_logWriter; \/\/\/< Pointer to the lo
 m_minType	SLogWriter.h	/^   SMsgType                          m_minType;$/;"	m	class:SLogWriter
 m_strSource	SLogger.h	/^   std::string    m_strSource; \/\/\/< Name of the object sending the messages$/;"	m	class:SLogger
 m_typeMap	SLogWriter.h	/^   std::map< SMsgType, std::string > m_typeMap;$/;"	m	class:SLogWriter
+main	inih/test.cpp	/^int main(int argc, char* argv[])$/;"	f
 main	main.cpp	/^int main(int argc,  char* argv[] )$/;"	f
 mass	ion.h	/^  long double mass; \/\/ reads in amu, stored in kg$/;"	m	class:Ion
 mass	ioncloud.h	/^        vector < double > mass;$/;"	m	class:IonCloud
@@ -756,8 +810,8 @@ massa_electron_amu	globals.h	/^const double massa_electron_amu = 0.000548579867 
 massa_proton_amu	globals.h	/^const double massa_proton_amu= 1.00727638 ;$/;"	v
 matrix	fieldmap.h	/^	Matrix<std::pair<double,double> > * matrix;     \/\/(Ez,Er)$/;"	m	class:fieldmap
 maxIndex	Potmap.h	/^    int maxIndex;$/;"	m	class:PotMap
-mkpath	Initialization.cpp	/^void mkpath(std::string s,mode_t mode) {$/;"	f
-mpiv	cunbody.h	/^        _mpi_vars * mpiv;$/;"	m	class:_cunbody
+mkpath	initialization.cpp	/^void mkpath(std::string s,mode_t mode) {$/;"	f
+mpiv	cunbody.h	/^    _mpi_vars * mpiv;$/;"	m	class:_cunbody
 mpiv	nbody.h	/^    _mpi_vars * mpiv;$/;"	m	class:_nbody
 mpiv	ode.h	/^    _mpi_vars  * mpiv;$/;"	m	class:_ode_vars
 myac	SimParser.h	/^  AC myac;  $/;"	m	class:SimParser
@@ -882,8 +936,8 @@ poolvectorsInitialized	ode.h	/^    bool poolvectorsInitialized;      \/\/standar
 poolvectorsinitialized	force.cpp	/^bool poolvectorsinitialized = false;$/;"	v
 pos	ioncloud.h	/^        double (*pos)[3];$/;"	m	class:IonCloud
 pos2	ioncloud.h	/^        double (*pos2)[3];$/;"	m	class:IonCloud
-pos_tmp	cunbody.h	/^        double (*pos_tmp)[3];$/;"	m	class:_cunbody
-pos_tot	cunbody.h	/^        double (*pos_tot)[3];$/;"	m	class:_cunbody
+pos_tmp	cunbody.h	/^    double (*pos_tmp)[3];$/;"	m	class:_cunbody
+pos_tot	cunbody.h	/^    double (*pos_tot)[3];$/;"	m	class:_cunbody
 pos_tot	mpi_funcs.h	/^    double (*pos_tot)[3]; \/\/ whole cloud$/;"	m	class:_mpi_vars
 potential	Potmap.h	/^    vector<double > potential;$/;"	m	class:PotMap
 potmap_filename	SimParser.h	/^        string potmap_filename;$/;"	m	struct:SimParser::POTTRAP
@@ -950,6 +1004,8 @@ rmax	Potmap.h	/^    double rmax;$/;"	m	class:PotMap
 rmin	Potmap.h	/^    double rmin;$/;"	m	class:PotMap
 round	fieldmap.cpp	/^inline double fieldmap::round(double d){$/;"	f	class:fieldmap
 rp	Potmap.h	/^    vector<double > rp;$/;"	m	class:PotMap
+rstrip	ini.c	/^static char* rstrip(char* s)$/;"	f	file:
+rstrip	inih/ini.c	/^static char* rstrip(char* s)$/;"	f	file:
 sample_time	SimParser.h	/^    double sample_time;$/;"	m	struct:SimParser::OUTPUT
 scaledCoulombFactor	ionFly.cpp	/^double scaledCoulombFactor;$/;"	v
 scaledCoulombFactor	ode.h	/^    double scaledCoulombFactor ;$/;"	m	class:_force_vars
@@ -975,6 +1031,8 @@ step	nbody.h	/^    int step;$/;"	m	class:_nbody
 step	ode.cpp	/^void step(IonCloud &_cloud,_ode_vars &odev){$/;"	f
 stepsize	SimParser.h	/^    double stepsize;$/;"	m	struct:SimParser::ODE
 streamvector	ioncloud.h	/^        std::vector<std::ofstream*> streamvector; \/\/so #streams = #particles$/;"	m	class:IonCloud
+strncpy0	ini.c	/^static char* strncpy0(char* dest, const char* src, size_t size)$/;"	f	file:
+strncpy0	inih/ini.c	/^static char* strncpy0(char* dest, const char* src, size_t size)$/;"	f	file:
 sweep_flag	ode.h	/^    bool sweep_flag; \/\/ flag for linear sweep$/;"	m	class:_ode_vars
 sweep_par	ode.h	/^    double sweep_par;$/;"	m	class:_ode_vars
 sweep_wf	ode.h	/^    double sweep_wf; \/\/ final pulsation for sweep$/;"	m	class:_ode_vars
@@ -1010,7 +1068,7 @@ time	SimParser.h	/^    double time;$/;"	m	struct:SimParser::SC
 time_ini_ope	ode.h	/^    double time_ini_ope;$/;"	m	class:_ode_vars
 time_operation	Operation.h	/^  double time_operation;$/;"	m	class:Operation
 tmpinterval	force.cpp	/^double tmpinterval;$/;"	v
-tmplogger	Initialization.cpp	/^LogFile tmplogger;$/;"	v
+tmplogger	initialization.cpp	/^LogFile tmplogger;$/;"	v
 tmpstream	force.cpp	/^ofstream tmpstream;$/;"	v
 total_time	ode.h	/^    double total_time; \/\/ final time of the simulations$/;"	m	class:_ode_vars
 totalfrac	SimParser.h	/^    double totalfrac;$/;"	m	struct:SimParser::CLOUDPARTS
@@ -1026,9 +1084,9 @@ values	fieldmap.cpp	/^ vector<double> values;$/;"	v
 vel	ioncloud.h	/^        double (*vel)[3];$/;"	m	class:IonCloud
 vel2	ioncloud.h	/^        double (*vel2)[3];$/;"	m	class:IonCloud
 verbose	Potmap.h	/^    bool verbose;$/;"	m	class:PotMap
-vx_	Initialization.cpp	/^vector< double > vx_;$/;"	v
-vy_	Initialization.cpp	/^vector< double > vy_;$/;"	v
-vz_	Initialization.cpp	/^vector< double > vz_;$/;"	v
+vx_	initialization.cpp	/^vector< double > vx_;$/;"	v
+vy_	initialization.cpp	/^vector< double > vy_;$/;"	v
+vz_	initialization.cpp	/^vector< double > vz_;$/;"	v
 w_exc	ode.h	/^    double w_exc, w_exc2,w_exc3, w_exc4;$/;"	m	class:_ode_vars
 w_exc2	ode.h	/^    double w_exc, w_exc2,w_exc3, w_exc4;$/;"	m	class:_ode_vars
 w_exc3	ode.h	/^    double w_exc, w_exc2,w_exc3, w_exc4;$/;"	m	class:_ode_vars
@@ -1040,15 +1098,15 @@ wi	SimParser.h	/^        double wi;$/;"	m	struct:SimParser::SWEEP
 withCharge	nbody.h	/^    bool withCharge;$/;"	m	class:_nbody
 withCharge	ode.h	/^    bool withCharge;$/;"	m	class:_ode_vars
 wz2	ioncloud.h	/^        vector < double > wz2;$/;"	m	class:IonCloud
-x_	Initialization.cpp	/^vector< double > x_;$/;"	v
-y_	Initialization.cpp	/^vector< double > y_;$/;"	v
+x_	initialization.cpp	/^vector< double > x_;$/;"	v
+y_	initialization.cpp	/^vector< double > y_;$/;"	v
 yerr	ode.h	/^    vector< double > yerr;$/;"	m	class:_ode_vars
 z	fieldcalc.cpp	/^const double z[10]={0. , l1 , l1+d , l1+d+l2 , l1+d+l2+d , l1+d+l2+d+l3 , l1+d+l2+d+l3+d , l1+d+l2+d+l3+d+l2 , l1+d+l2+d+l3+d+l2+d , l1+d+l2+d+l3+d+l2+d+l1};$/;"	v
 z1	fieldmap.h	/^	double z1,z2,r1,r2;$/;"	m	class:fieldmap
 z1_index	fieldmap.h	/^	int z1_index,z2_index,r1_index,r2_index;$/;"	m	class:fieldmap
 z2	fieldmap.h	/^	double z1,z2,r1,r2;$/;"	m	class:fieldmap
 z2_index	fieldmap.h	/^	int z1_index,z2_index,r1_index,r2_index;$/;"	m	class:fieldmap
-z_	Initialization.cpp	/^vector< double > z_;$/;"	v
+z_	initialization.cpp	/^vector< double > z_;$/;"	v
 z_index	fieldmap.h	/^	double z_index,r_index;$/;"	m	class:fieldmap
 z_max	fieldmap.h	/^	double r_min,r_max,r_step,z_min,z_max,z_step;$/;"	m	class:fieldmap
 z_min	fieldmap.h	/^	double r_min,r_max,r_step,z_min,z_max,z_step;$/;"	m	class:fieldmap
@@ -1056,6 +1114,8 @@ z_step	fieldmap.h	/^	double r_min,r_max,r_step,z_min,z_max,z_step;$/;"	m	class:f
 zmax	Potmap.h	/^    double zmax;$/;"	m	class:PotMap
 zmin	Potmap.h	/^    double zmin;$/;"	m	class:PotMap
 zp	Potmap.h	/^    vector<double > zp;$/;"	m	class:PotMap
+~INIReader	inih/inireader.cpp	/^INIReader::~INIReader()$/;"	f	class:INIReader
+~INIReader	inireader.cpp	/^INIReader::~INIReader()$/;"	f	class:INIReader
 ~IonCloud	ioncloud.cpp	/^IonCloud::~IonCloud() {$/;"	f	class:IonCloud
 ~IonTable	IonTable.cpp	/^IonTable::~IonTable()$/;"	f	class:IonTable
 ~LogFile	logfile.cpp	/^LogFile::~LogFile(){$/;"	f	class:LogFile
@@ -1071,7 +1131,7 @@ zp	Potmap.h	/^    vector<double > zp;$/;"	m	class:PotMap
 ~PotMap	Potmap.cpp	/^PotMap::~PotMap()$/;"	f	class:PotMap
 ~SLogWriter	SLogWriter.cpp	/^SLogWriter::~SLogWriter() {$/;"	f	class:SLogWriter
 ~SimParser	SimParser.cpp	/^SimParser::~SimParser(){}$/;"	f	class:SimParser
-~_cunbody	cunbody.cpp	/^_cunbody::~_cunbody() {$/;"	f	class:_cunbody
+~_cunbody	cunbody.cpp	/^_cunbody::~_cunbody()$/;"	f	class:_cunbody
 ~_force_vars	ode.cpp	/^_force_vars::~_force_vars()$/;"	f	class:_force_vars
 ~_mpi_vars	mpi_funcs.cpp	/^_mpi_vars::~_mpi_vars()$/;"	f	class:_mpi_vars
 ~_nbody	nbody.cpp	/^_nbody::~_nbody(){}$/;"	f	class:_nbody
