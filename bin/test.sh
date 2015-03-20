@@ -7,4 +7,4 @@ echo testing Simbuca with benchmark 2
 # ../simulations/simbuca ../simulation/rf.ini
 ./simbuca rf.ini
 echo removing any output files
-rm out_rf_*
+# rm out_rf_*

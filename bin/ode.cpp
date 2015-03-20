@@ -457,91 +457,47 @@ bool error_succes(const double err,_ode_vars &odev){
 }      
 
 void step(IonCloud &_cloud,_ode_vars &odev){
-    /* 
-       Attempts a step with stepsize htry. On output, positions (x) and velocities (y) are replaced by their new values, hdid
-       is the stepsize that was actually accomplished, and hnext is the estimated next stepsize.
-       Doub h=htry; Set stepsize to the initial trial value.
-       */
+    // Attempts a step with stepsize htry. On output, positions (x) and velocities (y) are replaced by their new values, hdid
+    // is the stepsize that was actually accomplished, and hnext is the estimated next stepsize.
+    // Doub h=htry; Set stepsize to the initial trial value.
 
     int nrparticles = _cloud.nrparticles;
 
     double error;
-    //if(!poolvectorsInitialized){Initpoolvectors(_cloud.nrparticles);poolvectorsInitialized = true;}
 
     double particletime = _cloud.lifetime - odev.time_ini_ope;
-    if(odev.sweep_flag)
-    {
-        odev.w_exc = odev.sweep_wi + (odev.sweep_wf-odev.sweep_wi)*(_cloud.lifetime - odev.initial_time)/(odev.final_time-odev.initial_time);
-        if(odev.sweep_par!=0)
-        {
-            odev.w_exc = odev.sweep_wi + odev.sweep_par*(_cloud.lifetime - odev.initial_time) + odev.sweep_wf*pow(_cloud.lifetime - odev.initial_time,2);
-        }
-    }
-
-    // if(odev.swift_flag)
-    // {
-    //     if(odev.swift_RW)
-    //     {
-    //         odev.forcev.coswTtimeTU = odev.Interpolate_SWIFT(particletime,0);
-    //         odev.forcev.sinwTtimeTU = odev.Interpolate_SWIFT(particletime,1);
-    //     }
-    //     else
-    //     {
-    //         odev.forcev.coswTtimeTU = odev.Interpolate_SWIFT(particletime);
-    //     }
-    // }
-    // else
-    // {
-    //     odev.forcev.coswTtimeTU=cos(odev.w_exc*particletime)*odev.U_exc;
-    //     odev.forcev.sinwTtimeTU=sin(odev.w_exc*particletime)*odev.U_exc;
-    //     odev.forcev.coswTtimeTU2=cos(odev.w_exc2*particletime)*odev.U_exc2;
-    //     odev.forcev.coswTtimeTU3=cos(odev.w_exc3*particletime)*odev.U_exc3;
-    //     odev.forcev.coswTtimeTU4=cos(odev.w_exc4*particletime)*odev.U_exc4;
-    //     odev.forcev.cos2wTtimeTU=cos(2.*odev.w_exc*particletime)*odev.U_exc;
-    //     odev.forcev.sin2wTtimeTU=sin(2.*odev.w_exc*particletime)*odev.U_exc;
-    // }
-
 
     for (;;) {   
-
-        if(odev.RK4 == false && odev.DP5 == true && odev.VV == false) error = Dormand_Prince_5(_cloud,odev);
-        if(odev.RK4 == true  && odev.DP5 == false && odev.VV == false) error = RungaKutta4(_cloud,odev);
-        if(odev.RK4 == false && odev.DP5 == false && odev.VV == false) { // in the case of the Gear Method!
+        if(odev.RK4 == false && odev.DP5 == true) error = Dormand_Prince_5(_cloud,odev);
+        if(odev.RK4 == true  && odev.DP5 == false) error = RungaKutta4(_cloud,odev);
+        if(odev.RK4 == false && odev.DP5 == false) { // in the case of the Gear Method!
             GearMethod(_cloud,odev);
-            //VerletMethod();
             odev.change_stepsize = false;
         }
 
-        if(odev.change_stepsize == true){
+        if(odev.change_stepsize == true) {
             odev.countstep++;
             if (error_succes(error,odev))
                 break; //Step odev.rejected. Try again with reduced h set		 
             if (fabs(odev.h) <= fabs(_cloud.pos[0][0])*odev.EPS) //It was...fabs(h) <= fabs(particles[0].px)*EPS XXX this [0][0] should be different for all
                 throw("stepsize underflow created");
-        }else{
-            break;//don`t change stepsize, go out off loop.
-            //hnext stays the same, as initialized in InitOde.
         }
-
+        else
+            break;//don`t change stepsize, go out off loop.
     }
     memcpy(_cloud.pos,_cloud.pos2,sizeof(double)*3*nrparticles);
     memcpy(_cloud.vel,_cloud.vel2,sizeof(double)*3*nrparticles);
 
-
-
     //update particles time he.
     _cloud.lifetime = _cloud.lifetime+odev.h;        
     odev.h=odev.hnext; //hnext is calculated in error stuff
-
-    //printf("step =%e\n",h);
 }
 
 double GetTimeStep(_ode_vars &odev) {
     return odev.h;
 }
 
-_ode_vars::_ode_vars()
-{
+_ode_vars::_ode_vars() {
     //init the vectors for 1 particle:
     k1 = new double[1][6];
     k2 = new double[1][6];
@@ -556,7 +512,6 @@ _ode_vars::_ode_vars()
     DP5 = false;
     change_stepsize = true;
     Gear_initialized = false;
-    VV_initialized=false;
     rk_atol=1e-7;
     rk_rtol=1e-7;
 
@@ -569,17 +524,9 @@ _ode_vars::_ode_vars()
     PrintatZpos_bool =false;
     PrintZpos = 0;
     yerr.resize(6);
-    // force
-
-
-    // sweep
-    sweep_flag = false;
-    swift_flag = false;
-    swift_RW = false;
 }
 
-_ode_vars::~_ode_vars()
-{
+_ode_vars::~_ode_vars() {
     delete [] k1;
     delete [] k2;
     delete [] k3;
@@ -589,8 +536,7 @@ _ode_vars::~_ode_vars()
     delete [] k7;
 }
 
-void _ode_vars::Init_ode(int _ode_order, double _timestep, bool _adaptive_stepsize)
-{
+void _ode_vars::Init_ode(int _ode_order, double _timestep, bool _adaptive_stepsize) {
     errold=1.0e-4;
     reject = false;
     httry = _timestep;
@@ -608,20 +554,10 @@ void _ode_vars::Init_ode(int _ode_order, double _timestep, bool _adaptive_stepsi
     change_stepsize = _adaptive_stepsize;
 
     switch (_ode_order) {
-        case 0: {
-                    ologger<<"Choose Velocity Verlet integration method.";
-                    RK4 = false;
-                    DP5 = false;
-                    VV = true;
-                    h=_timestep;
-                    hnext=_timestep;
-                    break;
-                }
         case 1: {
                     ologger<<"Choose Gear Method 5th order. Leapfrog";
                     RK4 = false;
                     DP5 = false;
-                    VV = false;
                     h=_timestep;
                     hnext=_timestep;
                     break;
@@ -630,14 +566,12 @@ void _ode_vars::Init_ode(int _ode_order, double _timestep, bool _adaptive_stepsi
                     ologger<<"Choose Runga Kutta 4th order.";
                     RK4 = true;
                     DP5 = false;
-                    VV = false;
                     break;
                 }
         case 5: {
                     ologger<<"Choose Dormand Prince 5th order.";
                     DP5 = true;
                     RK4 = false;
-                    VV = false;
                     break;
                 }
         default: {
@@ -652,7 +586,7 @@ void _ode_vars::Init_ode(int _ode_order, double _timestep, bool _adaptive_stepsi
     poolvectorsInitialized = false;
 }
 
-void _ode_vars::Reset_ode(){
+void _ode_vars::Reset_ode() {
     h=httry;
     hnext=reset_timestep;
     h2f=h*h/2.;
@@ -662,7 +596,7 @@ void _ode_vars::Reset_ode(){
     h6f=pow(h,6)/720.;
 }
 
-void _ode_vars::Initpoolvectors(int nrParticles){
+void _ode_vars::Initpoolvectors(int nrParticles)  {
     k1 = new double[nrParticles][6];
     k2 = new double[nrParticles][6];
     k3 = new double[nrParticles][6];
@@ -670,7 +604,6 @@ void _ode_vars::Initpoolvectors(int nrParticles){
     k5 = new double[nrParticles][6];
     k6 = new double[nrParticles][6];
     k7 = new double[nrParticles][6];
-
 
     bn.resize(nrParticles);
     cn.resize(nrParticles);
@@ -711,12 +644,10 @@ _force_vars::_force_vars() {
     coulombinteraction = false;
 }
 
-_force_vars::~_force_vars()
-{
-
+_force_vars::~_force_vars() {
 }
+
 void _force_vars::Reset_excitation_type(){
     for(int i=0;i<15;i++)
         excitation_type[i] = false;
-    return;
 }

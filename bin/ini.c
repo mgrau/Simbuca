@@ -1,7 +1,7 @@
 /* inih -- simple .INI file parser
 
-inih is released under the New BSD license (see LICENSE.txt). Go to the project
-home page for more info:
+   inih is released under the New BSD license (see LICENSE.txt). Go to the project
+   home page for more info:
 
 http://code.google.com/p/inih/
 
@@ -60,9 +60,9 @@ static char* strncpy0(char* dest, const char* src, size_t size)
 
 /* See documentation in header file. */
 int ini_parse_file(FILE* file,
-                   int (*handler)(void*, const char*, const char*,
-                                  const char*),
-                   void* user)
+        int (*handler)(void*, const char*, const char*,
+            const char*),
+        void* user)
 {
     /* Uses a fair bit of stack (use heap instead if you need to) */
 #if INI_USE_STACK
@@ -94,8 +94,8 @@ int ini_parse_file(FILE* file,
         start = line;
 #if INI_ALLOW_BOM
         if (lineno == 1 && (unsigned char)start[0] == 0xEF &&
-                           (unsigned char)start[1] == 0xBB &&
-                           (unsigned char)start[2] == 0xBF) {
+                (unsigned char)start[1] == 0xBB &&
+                (unsigned char)start[2] == 0xBF) {
             start += 3;
         }
 #endif
@@ -166,8 +166,8 @@ int ini_parse_file(FILE* file,
 
 /* See documentation in header file. */
 int ini_parse(const char* filename,
-              int (*handler)(void*, const char*, const char*, const char*),
-              void* user)
+        int (*handler)(void*, const char*, const char*, const char*),
+        void* user)
 {
     FILE* file;
     int error;

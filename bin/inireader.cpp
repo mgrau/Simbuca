@@ -87,7 +87,7 @@ string INIReader::MakeKey(string section, string name)
 }
 
 int INIReader::ValueHandler(void* user, const char* section, const char* name,
-                            const char* value)
+        const char* value)
 {
     INIReader* reader = (INIReader*)user;
 

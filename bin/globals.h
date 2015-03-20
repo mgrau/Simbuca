@@ -1,8 +1,5 @@
-//globals.h
 #ifndef GLOBAL_H // header guards
 #define GLOBAL_H
-// #include "mtrand.h"
-// #include "ion.h"
 
 const double pi = 3.14159265358979323;
 const double el_charge  = 1.60217733e-19;	//el lading [C]
@@ -39,5 +36,4 @@ const double epsilon_0 = 8.8541878176E-12; //[Farad/m]=[C/(V*m)]
 // const double atomic_radii_Eu144_m = 1.85E-10;
 // const double atomic_radii_Gd144_m = 1.80E-10;
 // const double atomic_radii_H2O=3.7E-10;
-
 #endif

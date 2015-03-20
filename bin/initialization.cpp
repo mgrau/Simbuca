@@ -17,7 +17,7 @@
 #include "IonTable.h"
 #include "PDGTable.h"
 #include "SimParser.h"
-#include "Operation.h"
+#include "operation.h"
 #include "initialization.h"
 
 #ifdef __linux
@@ -25,6 +25,7 @@
 #include "errno.h"
 #endif
 
+#define MAX_OPERATIONS 10
 #define is_power_of_two(x) ( ((x&(x-1)) == 0) && (x!=0) )
 #define is_in(sections,section) (find(sections.begin(),sections.end(),section) != sections.end())
 
@@ -273,7 +274,6 @@ void DoSimulation(INIReader & parser, IonCloud & _cloud,_ode_vars &odev) throw(c
         ifstream file_map;
         double parameter1,parameter2=0;
         // OPERATION
-        string operation;
         string tmp_name;
         string subline;
         stringstream sstring_tmp;
@@ -300,8 +300,8 @@ void DoSimulation(INIReader & parser, IonCloud & _cloud,_ode_vars &odev) throw(c
         string tmp_string;
         string orig_name;
         double time_operation=0;
-        Operation Ope_tmp;
-        Operations Ope;
+        operation Ope_tmp;
+        operations Ope;
 
         if(myid == 0){
             cout << endl;
@@ -411,32 +411,6 @@ void DoSimulation(INIReader & parser, IonCloud & _cloud,_ode_vars &odev) throw(c
             }
         }
 
-
-        SimParser sparser("bench2.sim"); 
-
-        // IMPORTDATA
-        if(sparser.myimportdata.flag) {
-            odev.SetwithCharge(false);
-            filename_prefix_importdata = sparser.myimportdata.prev_simu_file;
-#ifdef __MPI_ON__
-#else // __MPI_ON__		
-            int numprocs = 1;
-#endif
-            for(int k=0;k<numprocs;k++)
-            {
-                filename_importdata << filename_prefix_importdata  << "_pAll.txt";
-                file_importdata.open(filename_importdata.str().c_str(),ios::in);
-                if(!file_importdata)
-                {
-                    if(myid==0)
-                        throw("ImportData file doesn`t exist");// << filename_importdata.str() << " doesn't exist" << SLogger::endmsg;
-                    //return;
-                }
-                file_importdata.close();
-                filename_importdata.str("");
-            }
-        }
-
         //ODE
         if (is_in(sections,"ode")) {
             cout << "[ode]" << endl;
@@ -475,21 +449,6 @@ void DoSimulation(INIReader & parser, IonCloud & _cloud,_ode_vars &odev) throw(c
             cout << "    scale_factor = " << Coulomb_scale_factor << endl;
         }
 
-        //OUTPUT FILE
-        if (is_in(sections,"output")) {
-            cout << "[output]" << endl;
-            filename_prefix_ = parser.Get("output","prefix","out");
-            cout << "    prefix = " << filename_prefix_ << endl;
-            printinterval_timestep = parser.GetReal("output","timestep",1e-6);
-            cout << "    timestep = " << printinterval_timestep << endl;
-            separateparticlefile_bool = parser.GetBoolean("output","separate",false);
-            cout << "    separate_files = " << separateparticlefile_bool << endl;
-            // odev.SetPrintAfterOperation(true);
-        }
-        else
-            if(myid ==0)
-                throw("no Output file configuration provided");
-
         // IDEAL TRAP
         if (is_in(sections,"trap")) {
             cout << "[trap]" << endl;
@@ -512,33 +471,124 @@ void DoSimulation(INIReader & parser, IonCloud & _cloud,_ode_vars &odev) throw(c
             }
         }
 
-        // OUTPUT
-        if(myid==0) {
-            cout << "   Simulation Parameters:" << endl;
-            if(sparser.mycreateparticles.flag){
-                cout << NSPARTICLES << " particles created"<< endl;
-                for(unsigned int i=0; i<Ions_particles.size();i++){
-                    Ion_tmp=Ions_particles[i];
-                    cout << "\t"<<Ion_tmp.GetName() << " " << Ion_tmp.Getmass()/amu << " ";
-                    if (Ion_tmp.Getcharge() > 0) cout<<Ion_tmp.Getcharge()<<"+\n";
-                    else cout<<Ion_tmp.Getcharge()*-1<<"-\n";
+        // IMPORTDATA
+        if (is_in(sections,"import")) {
+            odev.SetwithCharge(false);
+            filename_prefix_importdata = parser.Get("import","prefix","out"); 
+#ifndef __MPI_ON__
+            int numprocs = 1;
+#endif
+            for(int k=0;k<numprocs;k++)
+            {
+                filename_importdata << filename_prefix_importdata  << "_pAll.txt";
+                file_importdata.open(filename_importdata.str().c_str(),ios::in);
+                if(!file_importdata)
+                {
+                    if(myid==0)
+                        throw("Import file doesn`t exist");
                 }
+                file_importdata.close();
+                filename_importdata.str("");
+            }
+            npart_test = ImportData(filename_prefix_importdata.c_str(),Table,pdgTable, _cloud,odev.forcev.trap_param);
+            NRPARTICLES = npart_test;
+        }
+
+        //OUTPUT FILE
+        if (is_in(sections,"output")) {
+            cout << "[output]" << endl;
+            filename_prefix_ = parser.Get("output","prefix","out");
+            cout << "    prefix = " << filename_prefix_ << endl;
+            printinterval_timestep = parser.GetReal("output","timestep",1e-6);
+            cout << "    timestep = " << printinterval_timestep << endl;
+            separateparticlefile_bool = parser.GetBoolean("output","separate",false);
+            cout << "    separate_files = " << separateparticlefile_bool << endl;
+            // odev.SetPrintAfterOperation(true);
+        }
+        else
+            if(myid ==0)
+                throw("no Output file configuration provided");
+
+        //OPERATIONS
+        for (int i=0; i<MAX_OPERATIONS; i++) {
+            ostringstream op_num;
+            op_num << "operation" << i;
+            if (is_in(sections,op_num.str())) {
+                cout << "[" << op_num.str() << "]" << endl;
+                string op_type = parser.Get(op_num.str(),"type","none");
+                double op_duration = parser.GetReal(op_num.str(),"duration",1e-3);
+                cout << "    type = " << op_type << endl;
+                cout << "    duration = " << op_duration << " s" << endl;
+            }
+        }
+
+        SimParser sparser("bench2.sim"); 
+        for(int i=0; i<sparser.operation_vec.size(); i++) {
+            string ope_name = sparser.operation_vec[i].name;
+            if(ope_name=="NE") {
+                time_operation = sparser.operation_vec[i].time;
+
+                Ope_tmp.name = "NE";
+                Ope_tmp.time = time_operation;
+                Ope.add(Ope_tmp);	
+
+
             }
 
+            // DEW,DEB,QEW,QEB,OEW,OEB
+            if(ope_name=="DEB" || ope_name=="DEW" || ope_name=="QEB" || ope_name=="QEW" || ope_name=="OEB" || ope_name=="OEW"){
+                time_operation = sparser.operation_vec[i].time;
+                tmp_string = sparser.operation_vec[i].EigenLett;
+                if(tmp_string == "f"||tmp_string == "Pf"){
+                    tmp_frequency = sparser.operation_vec[i].freq_bias;
+                    tmp_amplitude = sparser.operation_vec[i].amp;
+                }else{
+                    tmp_name = sparser.operation_vec[i].Element;
+                    tmp_f_bias = sparser.operation_vec[i].freq_bias;
+                    tmp_amplitude = sparser.operation_vec[i].amp;
+                    if(Table.TestIonName(tmp_name)){
+                        tmp_double = Table.ResearchMass(tmp_name);
+                    }else if(pdgTable.TestPDGName(tmp_name)){
+                        int pdgid = pdgTable.GetPDGId(orig_name);
+                        tmp_double = pdgTable.GetPDGMass(pdgid)*1000.0/mass_Mev; // PDG table: need to convert here GeV to amu
+                    }else{
+                        if(myid == 0)throw( "Can't calculate particle mass for operatation ");// << i << " !" << SLogger::endmsg;
+                    }
+                    // Ope_tmp.ion_name = tmp_name;
+                    Ion_tmp.SetParameters(tmp_double);
+                }
+                if(tmp_string!="c"&&tmp_string!="f"&&tmp_string!="m"&&tmp_string!="p"&&tmp_string!="Pc"&&tmp_string!="Pf"&&tmp_string!="Pm"&&tmp_string!="Pp"){
+                    if(myid==0)
+                        throw( "wrong operation label");
+                    return;
+                }
+                //cout << tmp_amplitude << endl;
+                Ope_tmp.name = ope_name.substr(0,2);
+                if(tmp_string[0]=='P')
+                {
+                    if(tmp_string == "Pf")tmp_double = 2.*pi/(tmp_frequency);
+                    time_operation *=tmp_double;
+                }
+                Ope_tmp.time = time_operation;
+                // Ope_tmp.amplitude = tmp_amplitude;
+                // Ope_tmp.frequency = tmp_frequency;
+                // Ope_tmp.f_bias = tmp_f_bias;
+
+                Ope.add(Ope_tmp);
+            } // end if DEW, DEB, QEW, QEB, OEW, OEB
+        }
+        if(myid==0) {
+            cout << "OPERATIONS" << endl;
+            Ope.write();
+            cout << "*********************************************" << endl;
+        }
+        // OUTPUT
+        if(myid==0) {
             if(true){
                 cout << NRPARTICLES << " particles for cloud"<< endl;
                 if(myid==0)
                     vector<int> nfractions;
                 //Print out ion name, charge and fraction
-                int index=0;
-                for(unsigned int i=0; i<sparser.mycloudparts.cloudfracs.size();i++){
-                    index +=sparser.mycloudparts.cloudfracs[i].second/100.*Ions_cloud.size();
-                    Ion_tmp=Ions_cloud[index-1];
-                    cout << "\t"<<Ion_tmp.GetName() << " " << Ion_tmp.Getmass()/amu << " ";
-                    if (Ion_tmp.Getcharge() > 0) cout<<Ion_tmp.Getcharge()<<"+";
-                    else cout<<Ion_tmp.Getcharge()*-1<<"-";
-                    cout<< " " << sparser.mycloudparts.cloudfracs[i].second << " %" << endl;
-                }
 
                 cout << "Cloud semiaxis: " << semiaxis_cloud[0] << " " << semiaxis_cloud[1] << " " << semiaxis_cloud[2] << " m" << endl;
                 cout << "Cloud center position: " << offset_cloud[0] << " " << offset_cloud[1] << " " << offset_cloud[2] << " m" << endl;
@@ -551,29 +601,10 @@ void DoSimulation(INIReader & parser, IonCloud & _cloud,_ode_vars &odev) throw(c
                     cout << "MB long. energy distribution with <E>= " << energy[0] << " eV" << endl;
                     cout << "MB tran. energy distribution with <E>= " << energy[1] << " eV" << endl;
                 }
-            }//if(myid==0)
+            }
         }
 
-        if(sparser.myimportdata.flag)
-            if(myid==0)
-                cout << "DATA imported from: " << filename_prefix_importdata << endl;
         if(myid==0) {       
-            if(sparser.myidealtrap.flag)
-            {
-                cout << "IDEAL TRAP configuration, parameters in trapparameters.h" << endl;
-            }
-            if(sparser.myrealtrap.flag)
-            {
-                cout << "REAL TRAP with EM field maps :"  << endl;
-                if(n_file_map==2)
-                    cout <<"\t " << file_mapEz << " , " <<file_mapB << endl;
-                if(n_file_map==3)
-                    cout <<"\t " << file_mapEr << " , " << file_mapEz << " , " <<file_mapB << endl;
-            }
-            if(sparser.mycalctrap.flag)
-            {
-                cout << "Trap electric and magnetic field calculated with equations defined in fieldcalc.cpp" << endl;
-            }
             cout << "ODE order : " << ODEORDER << ", timestep : " << timestep <<  " s " << endl;
             if(adaptive_timestep) 
                 cout << "with adaptive time step" << endl;
@@ -645,108 +676,18 @@ void DoSimulation(INIReader & parser, IonCloud & _cloud,_ode_vars &odev) throw(c
         //scaled Coulomb Factor, if used
         UseScaledCoulomb(Coulomb_scale_factor);
 
-        if(true) {
-            InitCloud(NRPARTICLES,energy,seed,semiaxis_cloud,offset_cloud, Ions_cloud,_cloud,odev.forcev.trap_param);      
-        }
-
-        if(sparser.myimportdata.flag) {
-            if(sparser.mycreateparticles.flag && !sparser.mycreatecloud.flag){
-                npart_test = ImportData(filename_prefix_importdata.c_str(),Table,pdgTable, _cloud,odev.forcev.trap_param);
-                NRPARTICLES = npart_test;
-                CreateCloud(NSPARTICLES,Ions_particles,_cloud,odev.forcev.trap_param);
-            }else if(!sparser.mycreateparticles.flag && sparser.mycreatecloud.flag){
-                npart_test = ImportData(filename_prefix_importdata.c_str(),Table,pdgTable, _cloud,odev.forcev.trap_param);
-                InitCloud(NRPARTICLES,energy,seed,semiaxis_cloud,offset_cloud, Ions_cloud,_cloud,odev.forcev.trap_param);            
-            }else{
-                npart_test = ImportData(filename_prefix_importdata.c_str(),Table,pdgTable, _cloud,odev.forcev.trap_param);
-                NRPARTICLES = npart_test;
-            }
-
-        }
+        InitCloud(NRPARTICLES,energy,seed,semiaxis_cloud,offset_cloud, Ions_cloud,_cloud,odev.forcev.trap_param);      
 
 #ifdef __MPI_ON__ 
         MPI::COMM_WORLD.Barrier();
 #endif // __MPI_ON__
-        for(int i=0;i<sparser.operation_vec.size();i++)
-        {
-            string ope_name = sparser.operation_vec[i].name;
-            if(ope_name=="NE"){
-                time_operation = sparser.operation_vec[i].time;
 
-                Ope_tmp.SetName("NE");
-                Ope_tmp.SetTime(time_operation);
-                Ope_tmp.SetBuff(p_buff_mbar);
-                if(int_buffer_gas == 1){Ope_tmp.SetBuffBool(true);}
-                else{ Ope_tmp.SetBuffBool(false);}
-                Ope.AddOperation(Ope_tmp);	
-
-
-            }
-
-            // DEW,DEB,QEW,QEB,OEW,OEB
-            if(ope_name=="DEB" || ope_name=="DEW" || ope_name=="QEB" || ope_name=="QEW" || ope_name=="OEB" || ope_name=="OEW"){
-                time_operation = sparser.operation_vec[i].time;
-                tmp_string = sparser.operation_vec[i].EigenLett;
-                if(tmp_string == "f"||tmp_string == "Pf"){
-                    tmp_frequency = sparser.operation_vec[i].freq_bias;
-                    tmp_amplitude = sparser.operation_vec[i].amp;
-                }else{
-                    tmp_name = sparser.operation_vec[i].Element;
-                    tmp_f_bias = sparser.operation_vec[i].freq_bias;
-                    tmp_amplitude = sparser.operation_vec[i].amp;
-                    if(Table.TestIonName(tmp_name)){
-                        tmp_double = Table.ResearchMass(tmp_name);
-                    }else if(pdgTable.TestPDGName(tmp_name)){
-                        int pdgid = pdgTable.GetPDGId(orig_name);
-                        tmp_double = pdgTable.GetPDGMass(pdgid)*1000.0/mass_Mev; // PDG table: need to convert here GeV to amu
-                    }else{
-                        if(myid == 0)throw( "Can't calculate particle mass for operatation ");// << i << " !" << SLogger::endmsg;
-                    }
-                    Ope_tmp.SetIonName(tmp_name);
-                    Ion_tmp.SetParameters(tmp_double);
-                }
-                if(tmp_string!="c"&&tmp_string!="f"&&tmp_string!="m"&&tmp_string!="p"&&tmp_string!="Pc"&&tmp_string!="Pf"&&tmp_string!="Pm"&&tmp_string!="Pp"){
-                    if(myid==0)
-                        throw( "wrong operation label");
-                    return;
-                }
-                //cout << tmp_amplitude << endl;
-                Ope_tmp.SetName(ope_name.substr(0,2));
-                if(tmp_string[0]=='P')
-                {
-                    if(tmp_string == "Pf")tmp_double = 2.*pi/(tmp_frequency);
-                    time_operation *=tmp_double;
-                }
-                Ope_tmp.SetTime(time_operation);
-                Ope_tmp.SetAmplitude(tmp_amplitude);
-                Ope_tmp.SetFrequency(tmp_frequency);
-                Ope_tmp.SetFrequencyBias(tmp_f_bias);
-                if(ope_name[2]=='W')
-                {
-                    Ope_tmp.SetBuffBool(false);
-                    Ope_tmp.SetBuff(0.);
-                }
-                else
-                {
-                    Ope_tmp.SetBuffBool(true);
-                    Ope_tmp.SetBuff(p_buff_mbar);
-                }
-
-                Ope.AddOperation(Ope_tmp);
-            } // end if DEW, DEB, QEW, QEB, OEW, OEB
-        }
-
-        if(myid==0) {
-            cout << "OPERATIONS" << endl;
-            Ope.Write();
-            cout << "*********************************************" << endl;
-        }
 
 #ifdef __MPI_ON__ 
         MPI::COMM_WORLD.Barrier();
 #endif // __MPI_ON__	
 
-        Ope.Launch(_cloud,odev);	
+        Ope.launch(_cloud,odev);	
 
         ExitIonFly(_cloud);
 

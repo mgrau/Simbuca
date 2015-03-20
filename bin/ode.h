@@ -45,41 +45,17 @@ using namespace std;
 struct _force_vars {
     _force_vars();
     ~_force_vars();
-    //vector<vector<double> > derivs;
     double (*derivs)[3];
     bool excitation_type[15];
-    /*
-    0 DIP
-    1 QUAD
-    2 OCT
-    3 AXIAL (check the equation in force.cpp)
-    4 RW
-    5 Anti RW
-    6 SIMCO
-    7 DUMM
-    8 AR
-    9 FB
-    10 EXC_EMAP 
-     */
-    double coswTtimeTU;
-    double sinwTtimeTU;
-    double coswTtimeTU2; // for SIMCO
-    double coswTtimeTU3; // for SIMCO
-    double coswTtimeTU4; // for SIMCO
-    double cos2wTtimeTU; // for RW/AW
-    double sin2wTtimeTU; // for RW/AW
+
     double scaledCoulombFactor ;
     bool coulombinteraction;
-    // trapparamaeters
+
     _trap_param trap_param;
     
     void Reset_excitation_type();
     inline void Set_excitation_type(int _exc){excitation_type[_exc]=true;};
-    void Load_EXC_EMAP(string _file_name,double _factor);
-    void Reset_EXC_EMAP();
 };
-
-
 
 struct _ode_vars {
     _ode_vars();
@@ -94,20 +70,15 @@ struct _ode_vars {
     
     bool RK4;
     bool DP5;
-    bool VV;
     bool change_stepsize;
     bool Gear_initialized;
-    bool VV_initialized;
     double hnext; //pay attenion for hnext (well and for h, where it iss changed...)    
-    /////////////////
     /////////////////
     //relative and absolute error definition
     double rk_atol;
     double rk_rtol;
     //Gear stepsize (1e-9 is precise enough. No difference with 1e-10)
     double Gdt;
-    /////////////////
-    /////////////////
     /////////////////
     double EPS;        
     double errold; //standard also defined
@@ -126,15 +97,9 @@ struct _ode_vars {
     vector< vector<double> > bn,cn,dn,en,fn,b,c,d,e,f;
     double h2f,h3f,h4f,h5f,h6f;	 
     int countstep;
-    // force function
-    void InitExcitationVars(int _order, bool _rotatingwall, bool _antirotatingwall, double _U_exc, double _w_exc);
     // force variable
-    // excitation variable
     _force_vars forcev;
-    // excitation
     double time_ini_ope;
-    double U_exc, U_exc2, U_exc3, U_exc4;
-    double w_exc, w_exc2,w_exc3, w_exc4;
     // charge
     bool withCharge;
     inline void SetwithCharge(bool b_){withCharge = b_;};
@@ -146,27 +111,11 @@ struct _ode_vars {
     double PrintZpos;
     inline void SetPrintatZpos_bool(bool b_){PrintatZpos_bool = b_;};
     inline void SetPrintZpos(double z_){PrintZpos = z_;};
-
-    // sweep
-    bool sweep_flag; // flag for linear sweep
     
-    double sweep_wi; // initial pulsation for sweep
-    double sweep_wf; // final pulsation for sweep
-    double sweep_par;
     // time of simu
     double initial_time; // initial time of the simu
     double final_time; // final time of the operation
     double total_time; // final time of the simulations
-    //swift
-    string swift_file_name;
-    vector< double > swift_time;
-    vector< double > swift_amp;
-    vector< double > swift_amp_cos;
-    vector< double > swift_amp_sin;
-    bool swift_flag;
-    bool swift_RW;
-    double swift_dt;
-    int swift_nsample;
     
     // mpi funcs
 #ifdef __MPI_ON__
@@ -187,11 +136,9 @@ struct _ode_vars {
 #endif //__NBODY_ON__
 };
 
-
 void step(IonCloud &_cloud,_ode_vars &odev);
 double GetTimeStep(_ode_vars &odev);
 void SetMinStepsize(double _h_min);
 void ResetOde();
-
 
 #endif

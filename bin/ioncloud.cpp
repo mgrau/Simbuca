@@ -22,7 +22,7 @@ IonCloud::IonCloud() {
     nrparticles= 0;
 
     streamvector.resize(0); //so #streams = #particles
-    nrcoll.resize(0);
+    // nrcoll.resize(0);
     lifetime = 0.0;
 }
 
@@ -31,7 +31,7 @@ void IonCloud::Create(const char* _filename) {
     filenamebegin = _filename;
     sim_time_start = time(0);
     ions = new vector<Ion> ;
-    images.push_back(pair< double,double> (0,0));
+    // images.push_back(pair< double,double> (0,0));
 }
 
 void IonCloud::Delete() {
@@ -45,7 +45,7 @@ void IonCloud::Delete() {
             (*streamvector[k])<< "#*******************************************************************************"<<endl;
             (*streamvector[k])<<"#simulation ended after "<<time(0)-sim_time_start<<" s\n";
             (*streamvector[k])<<"# #Particles left= "<<particles.size()<<endl;
-            (*streamvector[k])<<"#total number of collisions = "<< nrcoll[k]<<endl;
+            // (*streamvector[k])<<"#total number of collisions = "<< nrcoll[k]<<endl;
             (*streamvector[k])<<"#End time of simulation: "<<ctime(&tm);
             (*streamvector[k]).flush();
             (*streamvector[k]).close();
@@ -53,14 +53,14 @@ void IonCloud::Delete() {
         }
     }else{
 
-        double tmpdouble=0.0;
-        for(int k=0;k < particles.size(); k++) {
-            tmpdouble += nrcoll[k];
-        }
+        // double tmpdouble=0.0;
+        // for(int k=0;k < particles.size(); k++) {
+            // tmpdouble += nrcoll[k];
+        // }
         (*globalstream)<< "#*******************************************************************************"<<endl;
         (*globalstream)<<"#simulation ended after "<<time(0)-sim_time_start<<" s\n";
         (*globalstream)<<"# #Particles left= "<<particles.size()<<endl;
-        (*globalstream)<<"#total number of collisions of all particles = "<< tmpdouble<<endl;
+        // (*globalstream)<<"#total number of collisions of all particles = "<< tmpdouble<<endl;
         (*globalstream)<<"#End time of simulation: "<<ctime(&tm);
         (*globalstream).flush();
         (*globalstream).close();
@@ -124,7 +124,7 @@ void IonCloud::use_particles_files(bool _bool) {
 void IonCloud::PrintMembers() {
     for(int j=0; j< ions->size(); j++){
         cout<<"ion ";cout<<j;clogger<<" ";cout<<(*ions)[j];cout<<"\n";
-        cout<<"nrcoll = ";cout<<nrcoll[j];cout<<"\n";
+        // cout<<"nrcoll = ";cout<<nrcoll[j];cout<<"\n";
     }
     clogger<<"cloud lifetime = ";clogger<<lifetime;clogger<<"\n";
 }
@@ -193,7 +193,7 @@ void IonCloud::CloseFile(int _pindex, char* _reason) {
     time_t rawtime;struct tm * timeinfo;time ( &rawtime );timeinfo = localtime ( &rawtime );
     (*streamvector[_pindex])<<"# simulation ended after "<<time(0)-sim_time_start<<" s\n";
     (*streamvector[_pindex])<<"# #Particles= "<<particles.size()<<endl;
-    (*streamvector[_pindex])<<"#total number of collisions = "<< nrcoll[_pindex]<<endl;
+    // (*streamvector[_pindex])<<"#total number of collisions = "<< nrcoll[_pindex]<<endl;
     (*streamvector[_pindex])<<"#End time of simulation: "<<asctime (timeinfo)<<endl;
     (*streamvector[_pindex])<<"#simulation ended after "<<time(0)-sim_time_start<<" s\n";
 }
@@ -206,7 +206,7 @@ void IonCloud::AddParticle(Particle _p, Ion _i) {
 
     initialvalues.push_back(_p);
     ions->push_back(_i);
-    nrcoll.push_back(0);
+    // nrcoll.push_back(0);
     nrparticles++;
     CreateFile();
 }
@@ -221,11 +221,11 @@ void IonCloud::DelParticle(int _index, char* _reason) {
     particles.erase(particles.begin()+_index);//remove the index-1'th particle
 
     ions->erase(ions->begin()+_index);
-    nrcoll.erase(nrcoll.begin()+_index);
+    // nrcoll.erase(nrcoll.begin()+_index);
     charge.erase(charge.begin()+_index);
     mass.erase(mass.begin()+_index);
-    wc.erase(wc.begin()+_index);
-    wz2.erase(wz2.begin()+_index);
+    // wc.erase(wc.begin()+_index);
+    // wz2.erase(wz2.begin()+_index);
     streamvector.erase(streamvector.begin()+_index);
 
     // 2D arrays
@@ -332,8 +332,8 @@ void IonCloud::InitializePoolVectors() {
     int n=particles.size();
     mass.resize(n);
     charge.resize(n);
-    wc.resize(n);
-    wz2.resize(n);
+    // wc.resize(n);
+    // wz2.resize(n);
     pos = new double[n][3];
     pos2 = new double[n][3];
     vel = new double[n][3];
