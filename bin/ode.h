@@ -5,8 +5,6 @@
            Dormand Prince all over again! this is solving the equations for all the particles, AGAIN!
            see note: 
            
-           
-           
            The beta=0.08 (because 5th order rk) is the control mechanism to hold h fluently. 
            If beta is 0.04 or even 0 then your timestep(h) is altered by letting your error
            become bigger and just then (approx around every 10 cycles your err>1) h is set 
@@ -24,7 +22,6 @@
 #include "ioncloud.h"
 #include "mpi_funcs.h"
 #include "trapparameters.h"
-#include "Potmap.h"
 #include "SLogger.h"
 
 #ifdef __NBODY_ON__
@@ -48,7 +45,7 @@ struct _force_vars {
     double (*derivs)[3];
     bool excitation_type[15];
 
-    double scaledCoulombFactor ;
+    double scaledCoulombFactor;
     bool coulombinteraction;
 
     _trap_param trap_param;

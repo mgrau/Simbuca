@@ -114,9 +114,6 @@ void force(const IonCloud &_cloud,_ode_vars &odev){
         pos[j_].w=1.0;
 #endif // __OCTGRAV_ON__
 
-        // cout << "omega_rf = " << omega_rf << endl;
-        // cout << "Vrf*cos(omega_rf*t) = " << Vrf*cos(omega_rf*t) << endl;
-
         if (trap_type == 0) {
             qDmassa = _cloud.charge[j_]*el_charge/_cloud.mass[j_];
             (*forcev).derivs[j_][0] = qDmassa*(kVdc/z02 - Vrf*cos(omega_rf*t)/r02)*x;
@@ -142,25 +139,12 @@ void force(const IonCloud &_cloud,_ode_vars &odev){
 
 #ifdef __NBODY_ON__
         odev.nbody.force_end( _cloud);        
-#ifdef __MPI_ON__
-        //MPI_Barrier(odev.mpiv->comm2d);
-        for(int j_=0;j_ <_cloud.nrparticles;j_++)
-        {
-            qqDmassaXke = (*forcev).scaledCoulombFactor*el2ke/ _cloud.mass[j_];
-            (*forcev).derivs[j_][0] -= qqDmassaXke*odev.nbody.host_acc_sub[j_].x;
-            (*forcev).derivs[j_][1] -= qqDmassaXke*odev.nbody.host_acc_sub[j_].y;
-            (*forcev).derivs[j_][2] -= qqDmassaXke*odev.nbody.host_acc_sub[j_].z;
-        }
-
-#else
-        for(int j_=0;j_ <_cloud.nrparticles;j_++)
-        {
+        for(int j_=0;j_ <_cloud.nrparticles;j_++) {
             qqDmassaXke = (*forcev).scaledCoulombFactor*el2ke/ _cloud.mass[j_];
             (*forcev).derivs[j_][0] -= qqDmassaXke*odev.nbody.host_acc[j_].x;
             (*forcev).derivs[j_][1] -= qqDmassaXke*odev.nbody.host_acc[j_].y;
             (*forcev).derivs[j_][2] -= qqDmassaXke*odev.nbody.host_acc[j_].z;
         }
-#endif // __MPI_ON__
 #endif // __NBODY_ON__
 
 #ifndef __MPI_ON__

@@ -8,7 +8,7 @@
 #include <sys/stat.h>
 #include "globals.h"
 #include "trapparameters.h"
-#include "ionFly.h"
+#include "ion_fly.h"
 #include "ion.h"
 #include "mtrand.h"
 #include "logfile.h"
@@ -16,7 +16,6 @@
 #include "parser.h"
 #include "IonTable.h"
 #include "PDGTable.h"
-#include "SimParser.h"
 #include "operation.h"
 #include "initialization.h"
 
@@ -25,7 +24,7 @@
 #include "errno.h"
 #endif
 
-#define MAX_OPERATIONS 10
+#define MAX_OPERATIONS 32
 #define is_power_of_two(x) ( ((x&(x-1)) == 0) && (x!=0) )
 #define is_in(sections,section) (find(sections.begin(),sections.end(),section) != sections.end())
 
@@ -84,23 +83,19 @@ void CreateCloud(int nparticles, vector<Ion> Ions,IonCloud &_cloud, _trap_param 
     int * counts = new int[numprocs];
     int * displ = new int[numprocs];
     displ[0] = 0;
-    for(int i=0;i<numprocs;i++)
-    {
+    for(int i=0;i<numprocs;i++) {
         counts[i] = nparticles/numprocs;
         if(i<last_part)
             counts[i] += 1;
     }
 
-    for(int i=1;i<numprocs;i++)
-    {
+    for(int i=1;i<numprocs;i++) {
         displ[i] = displ[i-1] +counts[i-1];
     }
 
-    for(int i=0;i < counts[myid] ;i++)
-    {
+    for(int i=0;i < counts[myid] ;i++) {
         ii = i + displ[myid];
         AddParticle(x_[ii],y_[ii],z_[ii],vx_[ii],vy_[ii],vz_[ii],Ions[ii],_cloud);
-        //cout<<"particle added\t"<<x_[i] <<" "<< y_[i] <<" "<< z_[i] <<" "<< vx_[i] <<" "<< vy_[i] <<" "<< vz_[i] <<" "<< Ions[j]<<endl;cin.get();
     }
 
     delete [] counts;
@@ -115,7 +110,6 @@ void CreateCloud(int nparticles, vector<Ion> Ions,IonCloud &_cloud, _trap_param 
     {
         // cout<<"particle added\t"<<i<<"\t"<<x_[i] <<" "<< y_[i] <<" "<< z_[i] <<" "<< vx_[i] <<" "<< vy_[i] <<" "<< vz_[i] <<" "<< endl;//Ions[i]<<endl;
         AddParticle(x_[i],y_[i],z_[i],vx_[i],vy_[i],vz_[i],Ions[i],_cloud);
-        // cout << i << endl;
     }
 #endif // __MPI_ON__
 }
@@ -300,8 +294,8 @@ void DoSimulation(INIReader & parser, IonCloud & _cloud,_ode_vars &odev) throw(c
         string tmp_string;
         string orig_name;
         double time_operation=0;
-        operation Ope_tmp;
-        operations Ope;
+        operation op;
+        operations ops;
 
         if(myid == 0){
             cout << endl;
@@ -519,67 +513,20 @@ void DoSimulation(INIReader & parser, IonCloud & _cloud,_ode_vars &odev) throw(c
                 double op_duration = parser.GetReal(op_num.str(),"duration",1e-3);
                 cout << "    type = " << op_type << endl;
                 cout << "    duration = " << op_duration << " s" << endl;
-            }
-        }
 
-        SimParser sparser("bench2.sim"); 
-        for(int i=0; i<sparser.operation_vec.size(); i++) {
-            string ope_name = sparser.operation_vec[i].name;
-            if(ope_name=="NE") {
-                time_operation = sparser.operation_vec[i].time;
-
-                Ope_tmp.name = "NE";
-                Ope_tmp.time = time_operation;
-                Ope.add(Ope_tmp);	
-
-
-            }
-
-            // DEW,DEB,QEW,QEB,OEW,OEB
-            if(ope_name=="DEB" || ope_name=="DEW" || ope_name=="QEB" || ope_name=="QEW" || ope_name=="OEB" || ope_name=="OEW"){
-                time_operation = sparser.operation_vec[i].time;
-                tmp_string = sparser.operation_vec[i].EigenLett;
-                if(tmp_string == "f"||tmp_string == "Pf"){
-                    tmp_frequency = sparser.operation_vec[i].freq_bias;
-                    tmp_amplitude = sparser.operation_vec[i].amp;
-                }else{
-                    tmp_name = sparser.operation_vec[i].Element;
-                    tmp_f_bias = sparser.operation_vec[i].freq_bias;
-                    tmp_amplitude = sparser.operation_vec[i].amp;
-                    if(Table.TestIonName(tmp_name)){
-                        tmp_double = Table.ResearchMass(tmp_name);
-                    }else if(pdgTable.TestPDGName(tmp_name)){
-                        int pdgid = pdgTable.GetPDGId(orig_name);
-                        tmp_double = pdgTable.GetPDGMass(pdgid)*1000.0/mass_Mev; // PDG table: need to convert here GeV to amu
-                    }else{
-                        if(myid == 0)throw( "Can't calculate particle mass for operatation ");// << i << " !" << SLogger::endmsg;
-                    }
-                    // Ope_tmp.ion_name = tmp_name;
-                    Ion_tmp.SetParameters(tmp_double);
-                }
-                if(tmp_string!="c"&&tmp_string!="f"&&tmp_string!="m"&&tmp_string!="p"&&tmp_string!="Pc"&&tmp_string!="Pf"&&tmp_string!="Pm"&&tmp_string!="Pp"){
-                    if(myid==0)
-                        throw( "wrong operation label");
-                    return;
-                }
-                //cout << tmp_amplitude << endl;
-                Ope_tmp.name = ope_name.substr(0,2);
-                if(tmp_string[0]=='P')
+                if (op_type == "normal" || op_type=="none" || op_type=="n")
                 {
-                    if(tmp_string == "Pf")tmp_double = 2.*pi/(tmp_frequency);
-                    time_operation *=tmp_double;
+                    op.name = "normal";
+                    op.time = op_duration;
+                    ops.add(op);
                 }
-                Ope_tmp.time = time_operation;
-                // Ope_tmp.amplitude = tmp_amplitude;
-                // Ope_tmp.frequency = tmp_frequency;
-                // Ope_tmp.f_bias = tmp_f_bias;
-
-                Ope.add(Ope_tmp);
-            } // end if DEW, DEB, QEW, QEB, OEW, OEB
+            }
         }
+
+
         if(myid==0) {
             cout << "OPERATIONS" << endl;
-            Ope.write();
+            ops.write();
             cout << "*********************************************" << endl;
         }
         // OUTPUT
@@ -608,7 +555,7 @@ void DoSimulation(INIReader & parser, IonCloud & _cloud,_ode_vars &odev) throw(c
             cout << "ODE order : " << ODEORDER << ", timestep : " << timestep <<  " s " << endl;
             if(adaptive_timestep) 
                 cout << "with adaptive time step" << endl;
-            if(Coulomb==1)
+            if(Coulomb_enable)
                 cout << "with Coulomb force calculation, Coulomb scale factor : " << Coulomb_scale_factor << endl;
             else
                 cout << "without Coulomb force calculation" << endl;
@@ -645,7 +592,7 @@ void DoSimulation(INIReader & parser, IonCloud & _cloud,_ode_vars &odev) throw(c
         tmplogger.open(filename_logger);
 
 #ifdef __NBODY_ON__	
-        tmplogger << "Using NBODY code \n";
+        tmplogger << "Using NBODY single precision code \n";
 #endif
 #ifdef __CUNBODY_ON__
         tmplogger <<"Using CUNBODY code\n";
@@ -653,12 +600,12 @@ void DoSimulation(INIReader & parser, IonCloud & _cloud,_ode_vars &odev) throw(c
         tmplogger<<"\t *** it assumes the same charge when calculating the Coulomb interaction\n";
         cout <<"\t *** WARNING CUNBODY doesn`t include the charge state of the particle,\n";
         cout<<"\t *** it assumes the same charge when calculating the Coulomb interaction\n";
-#endif // __NBODY_ON__	
+#endif
 
         //Print out the particle information in
         //true: each particle has his own file (default)
         //false: print out all information in one .._pAll.txt
-        use_particle_file(separateparticlefile_bool,_cloud);
+        _cloud.use_particles_files(separateparticlefile_bool);
 
         //Initialize the ODE. First the filename_prefix, then the Order of the ODE can be 1,4 or 5, next is the initial timestep (should be around 1e-9), next is a boulean
         //true= with adaptive stepsize, false is without adaptive stepsize.
@@ -687,7 +634,7 @@ void DoSimulation(INIReader & parser, IonCloud & _cloud,_ode_vars &odev) throw(c
         MPI::COMM_WORLD.Barrier();
 #endif // __MPI_ON__	
 
-        Ope.launch(_cloud,odev);	
+        ops.launch(_cloud,odev);	
 
         ExitIonFly(_cloud);
 
@@ -723,7 +670,7 @@ void Run(INIReader & parser) {
     int    namelen;
     char   processor_name[MPI_MAX_PROCESSOR_NAME];
     MPI::Status status;
-    MPI::Init(0,"");
+    MPI::Init();
     int myid = MPI::COMM_WORLD.Get_rank();
     int numprocs = MPI::COMM_WORLD.Get_size();
     MPI::Get_processor_name(processor_name,namelen);

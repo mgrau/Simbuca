@@ -6,14 +6,14 @@ LogFile clogger;
 //char *stream =new char[256];
 char line[256];
 
-IonCloud::~IonCloud() {
-}
+IonCloud::~IonCloud() {}
 
 IonCloud::IonCloud() {
     //definition off static things...
     //private:
     sim_time_start = 0;
     globalstream = NULL;
+    // cloud_stream = NULL;
 
     filenamebegin = ("xxx");
 
@@ -21,6 +21,7 @@ IonCloud::IonCloud() {
     IDs.resize(0);
     nrparticles= 0;
 
+    cloud_stream.resize(0); //so #streams = #particles
     streamvector.resize(0); //so #streams = #particles
     // nrcoll.resize(0);
     lifetime = 0.0;
@@ -40,30 +41,28 @@ void IonCloud::Delete() {
 
     PrintParticles();
     if(particles_files){
-        for(int k=0;k < particles.size(); k++){
-            //IMPORTANT, Don`t delete this line, filesplitter uses the first * on the line to break the whole sequence
+        for(int k=0;k < particles.size(); k++) {
             (*streamvector[k])<< "#*******************************************************************************"<<endl;
             (*streamvector[k])<<"#simulation ended after "<<time(0)-sim_time_start<<" s\n";
             (*streamvector[k])<<"# #Particles left= "<<particles.size()<<endl;
-            // (*streamvector[k])<<"#total number of collisions = "<< nrcoll[k]<<endl;
             (*streamvector[k])<<"#End time of simulation: "<<ctime(&tm);
             (*streamvector[k]).flush();
             (*streamvector[k]).close();
 
         }
-    }else{
-
-        // double tmpdouble=0.0;
-        // for(int k=0;k < particles.size(); k++) {
-            // tmpdouble += nrcoll[k];
-        // }
+    }
+    else {
         (*globalstream)<< "#*******************************************************************************"<<endl;
         (*globalstream)<<"#simulation ended after "<<time(0)-sim_time_start<<" s\n";
         (*globalstream)<<"# #Particles left= "<<particles.size()<<endl;
-        // (*globalstream)<<"#total number of collisions of all particles = "<< tmpdouble<<endl;
         (*globalstream)<<"#End time of simulation: "<<ctime(&tm);
         (*globalstream).flush();
         (*globalstream).close();
+    }
+
+    for (int k=0; k < ion_types.size(); k++) {
+        (*cloud_stream[k]).flush();
+        (*cloud_stream[k]).close();
     }
 
     clogger<<"#simulation ended after ";clogger<<time(0)-sim_time_start;clogger<<" s\n";
@@ -117,6 +116,43 @@ void IonCloud::PrintParticles() {
         PrintParticle(k);
 }
 
+void IonCloud::PrintCloud() {
+    for (set<string>::iterator type = ion_types.begin(); type!=ion_types.end(); ++type) {
+        int id = distance(ion_types.begin(),type);
+        double x0 = 0, y0 = 0, z0 = 0;
+        double x1 = 0, y1 = 0, z1 = 0;
+        double energy = 0.0;
+        for (int i=0; i<particles.size(); i++)
+            if ((*ions)[i].name == *type) {
+                x0 += pos[i][0];
+                y0 += pos[i][1];
+                z0 += pos[i][2];
+                energy += 0.5*Joule_to_eV*(*ions)[i].mass*(vel[i][0]*vel[i][0] + vel[i][1]*vel[i][1] + vel[i][2]*vel[i][1]);
+            }
+        x0 /= particles.size();
+        y0 /= particles.size();
+        z0 /= particles.size();
+        for (int i=0; i<particles.size(); i++)
+            if ((*ions)[i].name == *type) {
+                x1 += (pos[i][0] - x0)*(pos[i][0] - x0);
+                y1 += (pos[i][1] - y0)*(pos[i][1] - y0);
+                z1 += (pos[i][2] - z0)*(pos[i][2] - z0);
+            }
+        x1 = sqrt(x1/particles.size());
+        y1 = sqrt(y1/particles.size());
+        z1 = sqrt(z1/particles.size());
+
+        (*cloud_stream[id]) << id <<" ";
+        (*cloud_stream[id]) << *type << " ";
+        (*cloud_stream[id]) << particles.size() <<" ";
+        (*cloud_stream[id]) << lifetime*1e3 << " ";
+        (*cloud_stream[id]) << 1000.0*x0 << " " << 1000.0*y0 << " " << 1000.0*z0 << " ";
+        (*cloud_stream[id]) << 1000.0*x1 << " " << 1000.0*y1 << " " << 1000.0*z1 << " ";
+        (*cloud_stream[id]) << energy;
+        (*cloud_stream[id]) << endl;
+    }
+}
+
 void IonCloud::use_particles_files(bool _bool) {
     particles_files = _bool;
 }
@@ -124,76 +160,88 @@ void IonCloud::use_particles_files(bool _bool) {
 void IonCloud::PrintMembers() {
     for(int j=0; j< ions->size(); j++){
         cout<<"ion ";cout<<j;clogger<<" ";cout<<(*ions)[j];cout<<"\n";
-        // cout<<"nrcoll = ";cout<<nrcoll[j];cout<<"\n";
     }
     clogger<<"cloud lifetime = ";clogger<<lifetime;clogger<<"\n";
 }
 
 void IonCloud::CreateFile() {
-    //file initialiseren
-    //IMPORTANT, Don`t delete this line, filesplitter uses the first * on the line to break the whole sequence
-
-
-
-    int particleIndex = (particles.size()-1);
-    stringstream ss (stringstream::in | stringstream::out);
-    if (particles_files == true){
-        ss<<filenamebegin<<"_p"<<(particleIndex+1)<<".txt";
-        char filename[100]; //different from _filename (parameter) he!!
-        ss >>filename;
-        //cout<<filename<<endl; //just a check wich files are created...
-        streamvector.push_back(new ofstream(filename));
-        if(!(*streamvector[particleIndex]).is_open())
-        {
-            cout << "problem to open the file of particle " <<  particleIndex+1 << endl;
-        }
-        time_t rawtime2;
-        time ( &rawtime2 );
-        (*streamvector[particleIndex])<<"#Simulation started: "<<ctime (&rawtime2);
-        (*streamvector[particleIndex])<<"#------------------------------------------------------------------------------#\n";
-        (*streamvector[particleIndex])<<"#                Penning Trap Simulation Program by Simon Van Gorp             #\n";
-        (*streamvector[particleIndex])<<"#      Dormand-Prince Runga-Kutta with Proportional Integrating controller     #\n" ;
-        (*streamvector[particleIndex])<<"#------------------------------------------------------------------------------#\n";
-        (*streamvector[particleIndex])<<"#index mass x y z (mm) vx vy vz (m/s) \t r+(mm) \t r-(mm) \t R(mm) \t Energy(eV) \t Temperature(K) \t t(ms) \n";
-        (*streamvector[particleIndex])<<"#*******************************************************************************\n";
-        //cout<<"stream for particles"<<particleIndex+1<<endl;
-    }
-    else{
-        ss<<filenamebegin<<"_pAll.txt";
-        char filename[50]; //different from _filename (parameter) he!!
-        ss >>filename;
-        if(globalstream == NULL){
-            globalstream = new ofstream(filename);
+    if (particles.size()>0) {
+        stringstream ss (stringstream::in | stringstream::out);
+        if (particles_files) {
+            int particleIndex = (particles.size()-1);
+            ss<<filenamebegin<<"_p"<<(particleIndex+1)<<".txt";
+            char filename[100]; //different from _filename (parameter) he!!
+            ss >>filename;
+            streamvector.push_back(new ofstream(filename));
+            if(!(*streamvector[particleIndex]).is_open())
+            {
+                cout << "problem to open the file of particle " <<  particleIndex+1 << endl;
+            }
             time_t rawtime2;
             time ( &rawtime2 );
-            streamvector.push_back(new ofstream(filename));
-            streamvector[particleIndex] = globalstream;
             (*streamvector[particleIndex])<<"#Simulation started: "<<ctime (&rawtime2);
             (*streamvector[particleIndex])<<"#------------------------------------------------------------------------------#\n";
             (*streamvector[particleIndex])<<"#                Penning Trap Simulation Program by Simon Van Gorp             #\n";
             (*streamvector[particleIndex])<<"#      Dormand-Prince Runga-Kutta with Proportional Integrating controller     #\n" ;
             (*streamvector[particleIndex])<<"#------------------------------------------------------------------------------#\n";
-            (*streamvector[particleIndex])<< "#index mass x y z (mm) \t r+(mm) \t r-(mm) \t R(mm) \t Energy(eV) \t Temperature(K) \t t(ms) \n";
+            (*streamvector[particleIndex])<<"#index mass x y z (mm) vx vy vz (m/s) \t r+(mm) \t r-(mm) \t R(mm) \t Energy(eV) \t Temperature(K) \t t(ms) \n";
             (*streamvector[particleIndex])<<"#*******************************************************************************\n";
-
+            (*streamvector[particleIndex]).setf(std::ios::scientific, std::ios::floatfield);
+            //cout<<"stream for particles"<<particleIndex+1<<endl;
         }
-        else{streamvector.push_back(globalstream);
+        else {
+            ss<<filenamebegin<<"_pAll.txt";
+            char filename[100]; //different from _filename (parameter) he!!
+            ss >>filename;
+            if(globalstream == NULL) {
+                globalstream = new ofstream(filename);
+                time_t rawtime2;
+                time ( &rawtime2 );
+                // streamvector.push_back(new ofstream(filename));
+                // streamvector[particleIndex] = globalstream;
+                // (*streamvector[particleIndex])<<"#Simulation started: "<<ctime (&rawtime2);
+                // (*streamvector[particleIndex])<<"#------------------------------------------------------------------------------#\n";
+                // (*streamvector[particleIndex])<<"#                Penning Trap Simulation Program by Simon Van Gorp             #\n";
+                // (*streamvector[particleIndex])<<"#      Dormand-Prince Runga-Kutta with Proportional Integrating controller     #\n" ;
+                // (*streamvector[particleIndex])<<"#------------------------------------------------------------------------------#\n";
+                // (*streamvector[particleIndex])<< "#index mass x y z (mm) \t r+(mm) \t r-(mm) \t R(mm) \t Energy(eV) \t Temperature(K) \t t(ms) \n";
+                // (*streamvector[particleIndex])<<"#*******************************************************************************\n";
+                (*globalstream)<<"#Simulation started: "<<ctime (&rawtime2);
+                (*globalstream)<<"#------------------------------------------------------------------------------#\n";
+                (*globalstream)<<"#                Penning Trap Simulation Program by Simon Van Gorp             #\n";
+                (*globalstream)<<"#      Dormand-Prince Runga-Kutta with Proportional Integrating controller     #\n" ;
+                (*globalstream)<<"#------------------------------------------------------------------------------#\n";
+                (*globalstream)<< "#index mass x y z (mm) \t r+(mm) \t r-(mm) \t R(mm) \t Energy(eV) \t Temperature(K) \t t(ms) \n";
+                (*globalstream)<<"#*******************************************************************************\n";
+                (*globalstream).setf(std::ios::scientific, std::ios::floatfield);
+            }
+            // else
+            //     streamvector.push_back(globalstream);
+        }
+
+        if (cloud_stream.size() < ion_types.size()) {
+            stringstream ss (stringstream::in | stringstream::out);
+            string cloud_filename(filenamebegin);
+            int ion_type = ion_types.size() - 1;
+            ss << "_cloud" << ion_type << ".txt";
+            cloud_filename.append(ss.str());
+            cloud_stream.push_back(new ofstream(cloud_filename.c_str()));
+            time_t rawtime2;
+            time ( &rawtime2 );
+            (*cloud_stream[ion_type]) << "#Simulation started: " << ctime(&rawtime2);
+            (*cloud_stream[ion_type]).setf(std::ios::scientific, std::ios::floatfield);
         }
 
     }
-    (*streamvector[particleIndex]).setf(std::ios::scientific, std::ios::floatfield);
 }
 
 void IonCloud::CloseFile(int _pindex, char* _reason) {
     //print particle for the last time he.
-    //close the file
-
     (*streamvector[_pindex])<<"#******************************************************************************\n";
     (*streamvector[_pindex])<<"#Particle lost: "<<_reason<<endl;
     time_t rawtime;struct tm * timeinfo;time ( &rawtime );timeinfo = localtime ( &rawtime );
     (*streamvector[_pindex])<<"# simulation ended after "<<time(0)-sim_time_start<<" s\n";
     (*streamvector[_pindex])<<"# #Particles= "<<particles.size()<<endl;
-    // (*streamvector[_pindex])<<"#total number of collisions = "<< nrcoll[_pindex]<<endl;
     (*streamvector[_pindex])<<"#End time of simulation: "<<asctime (timeinfo)<<endl;
     (*streamvector[_pindex])<<"#simulation ended after "<<time(0)-sim_time_start<<" s\n";
 }
@@ -206,7 +254,7 @@ void IonCloud::AddParticle(Particle _p, Ion _i) {
 
     initialvalues.push_back(_p);
     ions->push_back(_i);
-    // nrcoll.push_back(0);
+    ion_types.insert(_i.name);
     nrparticles++;
     CreateFile();
 }
@@ -221,17 +269,10 @@ void IonCloud::DelParticle(int _index, char* _reason) {
     particles.erase(particles.begin()+_index);//remove the index-1'th particle
 
     ions->erase(ions->begin()+_index);
-    // nrcoll.erase(nrcoll.begin()+_index);
     charge.erase(charge.begin()+_index);
     mass.erase(mass.begin()+_index);
-    // wc.erase(wc.begin()+_index);
-    // wz2.erase(wz2.begin()+_index);
     streamvector.erase(streamvector.begin()+_index);
 
-    // 2D arrays
-    // here pos2 and vel2 are used as buffer
-
-    // copy of the first part in buf
     if(_index!=0)
     {
         std::copy(pos,pos+_index,pos2);
@@ -245,13 +286,7 @@ void IonCloud::DelParticle(int _index, char* _reason) {
     std::copy(pos2,pos2+nrparticles,pos);
     std::copy(vel2,vel2+nrparticles,vel);
 
-
     IDs.erase(IDs.begin()+_index);
-
-
-
-
-
 
     clogger<<"Deleted particle nr ";clogger<<initialvalues.size()-particles.size();clogger<<" with ID: ";
     clogger<<IDs[_index];clogger<<" because ";clogger<<_reason;clogger<<" @";clogger<<lifetime;clogger<<" sec.\n";
@@ -332,8 +367,6 @@ void IonCloud::InitializePoolVectors() {
     int n=particles.size();
     mass.resize(n);
     charge.resize(n);
-    // wc.resize(n);
-    // wz2.resize(n);
     pos = new double[n][3];
     pos2 = new double[n][3];
     vel = new double[n][3];

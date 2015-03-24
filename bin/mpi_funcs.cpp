@@ -1,6 +1,3 @@
-
-
-
 #ifdef __MPI_ON__
 #include "mpi_funcs.h"
 #include <iostream>
@@ -18,8 +15,6 @@ _mpi_vars::_mpi_vars()
 {
 
     MPI_Comm_size(MPI_COMM_WORLD,&nb_procs);
-   
-    
 
     const int ndims = 2;
     const int reorder = 0;
@@ -27,16 +22,17 @@ _mpi_vars::_mpi_vars()
     int dims[2];
 
     coords = new int [2];
-#if defined(__CUNBODY_ON__) || defined(__NBODY_ON__)    
+#if defined(__CUNBODY_ON__) || defined(__NBODY_ON__)
     cudaGetDeviceCount(&(nb_gpu));
     if(nb_procs%nb_gpu!=0)
     {
         if (rank==0) {
+            cout << "nb_procs = " << nb_procs << endl;
+            cout << "nb_gpu = " << nb_gpu << endl;
             SLogger slogger("trapparameters");
             slogger << ERROR << "Number of nodes is not modulo the number of GPU" << SLogger::endmsg;
             exit(EXIT_FAILURE);
         }
- 
     }
     ID_node_GPU = new int [nb_gpu];
     int remain_dims_h[2] = {0,1}; // communication only btw  row
@@ -46,8 +42,8 @@ _mpi_vars::_mpi_vars()
 #endif
     //nb_gpu =1 ; // short cut REMOVE AT THE END
     nb_node_per_gpu =   nb_procs /nb_gpu;
-    
-  
+
+
     // Create 2D cartesian topology
     dims[0]=nb_gpu;
     dims[1]=nb_node_per_gpu;
@@ -55,21 +51,21 @@ _mpi_vars::_mpi_vars()
     MPI_Cart_create(MPI_COMM_WORLD,ndims,dims,periods,reorder,&comm2d);
     MPI_Comm_rank(comm2d,&(rank)); 
     MPI_Cart_coords(comm2d,rank,ndims,(coords));
-    
+
     if (rank==0) {
-        
+
         cout << "\n MPI execution with " <<  nb_procs <<" processes ("<<dims[0]<<" x "<<dims[1]<<")\n"<<endl;
-       
+
     }
-    
-#if defined(__CUNBODY_ON__) || defined(__NBODY_ON__)     
+
+#if defined(__CUNBODY_ON__) || defined(__NBODY_ON__)
     MPI_Cart_sub(comm2d,remain_dims_h,&comm1d_h);
     MPI_Cart_sub(comm2d,remain_dims_v,&comm_gpu);
     for(int dev=0;dev<nb_gpu;dev++)
         ID_node_GPU[dev] = dev*nb_node_per_gpu;
 
-    
-    
+
+
     counts_F4 = new int[nb_procs];
     disps_F4  = new int[nb_procs];
     counts_F3 = new int[nb_procs];
@@ -82,15 +78,15 @@ _mpi_vars::_mpi_vars()
 
     counts_Arow = new int[nb_gpu];
     disps_Arow  = new int[nb_gpu];
-    
+
     // Create Datatype MPI_FlOAT3 for broadcasting calculated acc from GPU
-	MPI_Type_contiguous(3, MPI_FLOAT, &MPI_FLOAT3);
+    MPI_Type_contiguous(3, MPI_FLOAT, &MPI_FLOAT3);
     MPI_Type_commit(&MPI_FLOAT3);
-	// Create Datatype MPI_FlOAT4 for gathering positions for GPU
-	MPI_Type_contiguous(4, MPI_FLOAT, &MPI_FLOAT4);
+    // Create Datatype MPI_FlOAT4 for gathering positions for GPU
+    MPI_Type_contiguous(4, MPI_FLOAT, &MPI_FLOAT4);
     MPI_Type_commit(&MPI_FLOAT4);
-    
-    
+
+
 #endif    
     // counts and disps
     counts = new int[nb_procs];
@@ -98,15 +94,15 @@ _mpi_vars::_mpi_vars()
     counts_3 = new int[nb_procs];
     disps_3  = new int[nb_procs];
 
-    
+
     MPI_Barrier(comm2d);
 }
 
 _mpi_vars::~_mpi_vars()
 {
-    
+
     MPI_Comm_free(&comm2d);
-    
+
     delete [] counts;
     delete [] disps;
     delete [] counts_3;
@@ -114,11 +110,11 @@ _mpi_vars::~_mpi_vars()
 #ifdef __CPUNBODY_ON__
     //delete [] pos_tot;
 #endif
-    
-#if defined(__CUNBODY_ON__) || defined(__NBODY_ON__)   
+
+#if defined(__CUNBODY_ON__) || defined(__NBODY_ON__)
     //MPI_Comm_free(&comm_gpu);
     MPI_Comm_free(&comm1d_h);
-    
+
     delete [] coords;
     delete [] ID_node_GPU;
     delete [] disps_F4  ;
@@ -154,8 +150,8 @@ void _mpi_vars::ComputeCounts_Disps(int nrparticles)
         disps[i] = counts[i-1] + disps[i-1];
         disps_3[i] = counts_3[i-1] + disps_3[i-1];
     }
-   
-#if defined(__CUNBODY_ON__) || defined(__NBODY_ON__)      
+
+#if defined(__CUNBODY_ON__) || defined(__NBODY_ON__)
     int ii;
     if(nb_gpu>1)
     {
@@ -179,24 +175,24 @@ void _mpi_vars::ComputeCounts_Disps(int nrparticles)
         for(int j_=0;j_<nb_gpu;j_++)
         {
             counts_Arow[j_] =0;
-            
+
             for(int i_=0;i_<nb_node_per_gpu;i_++)
             {
                 ii = i_ + coords[0]*nb_node_per_gpu;
                 counts_Arow[j_]+= counts[ii];
             }
-           
+
             if(j_==0)
             {
                 disps_Arow[j_]=0;
-  
+
             }
             else
             {
 
                 disps_Arow[j_] = disps_Arow[j_-1] + counts_Arow[j_-1];
             }
- 
+
             //if(rank==0)
             //   printf("%d %d %d \n",j_,counts_Arow[j_],disps_Arow[j_]);
 
@@ -212,14 +208,14 @@ void _mpi_vars::Init_GlobalPos(int nrparticles)
 {
     if(n_part_tot==0)
         ComputeCounts_Disps(nrparticles);
-        
+
     if(n_part_tot!=0)
         pos_tot = new double[n_part_tot][3];
     else
     {
         if(rank==0)
             cout << "n_part_tot = 0 in MPI VARS" << endl;
-        
+
     }
 }
 #else
@@ -233,6 +229,3 @@ void _mpi_vars::LoadCharge( vector<int > ion_charge)
 
 
 #endif // __MPI_ON__
-
-
-

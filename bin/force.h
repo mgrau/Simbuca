@@ -1,7 +1,6 @@
 #ifndef FORCE_H
 #define FORCE_H
 
-// #include "ioncloud.h"
 #include "ode.h"
 
 void force(const IonCloud &_cloud,_ode_vars &odev);

@@ -4,9 +4,7 @@
 #include "ion.h"
 using namespace std;
 
-
 LogFile plogger;   
-
 
 int ImportData(const char * filename_prefix,IonTable Table,PDGTable pdgTable, IonCloud &cloud, _trap_param & trap_param) {
 #ifdef  __MPI_ON__  
@@ -272,7 +270,7 @@ int ImportData(const char * filename_prefix,IonTable Table,PDGTable pdgTable, Io
 #endif // __MPI_ON__  
 
     // Set lifetime
-    SetLifetime(t*1e-3,cloud);
+    cloud.lifetime = t*1e-3;
     // fill logger file
     if(myid==0)
     {

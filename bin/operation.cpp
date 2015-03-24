@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <vector>
 #include "ioncloud.h"
-#include "ionFly.h"
+#include "ion_fly.h"
 #include "operation.h"
 
 using namespace std;
@@ -25,66 +25,21 @@ operation::operation(string _name)
 
 operation::~operation(){};
 
-void operation::launch(IonCloud &_cloud, _ode_vars & odev)
+void operation::launch(IonCloud &cloud, _ode_vars & odev)
 {
-    stringstream ss_tmp;
-    if(name=="NE")
-        DoNoExcitation(time,false,0.0,_cloud,odev);
+    if(name=="normal")
+        normal_operation(time,cloud,odev);
+    else
+        normal_operation(time,cloud,odev);
 }
 
 void operation::write()
 {
     cout.precision(9);
-    if(name=="NE")
-    {
-        cout << "No excitation during " << time << " s\n" << endl;
-    }
-    if(name=="DE"||name=="QE"||name=="OE")
-    {
-        if(name=="DE")
-            cout << "Dipole excitation ";
-        if(name=="QE")
-            cout << "Quadrupole excitation ";
-        if(name=="OE")
-            cout << "Octupole excitation" ;
-        cout << "during " << time << " s" << endl;
-    }
-    string str_order;
-    if(name=="RW")
-    {
-        cout.precision(9);
-        cout << "during " << time << " s" << endl; 
-    }
-    if(name=="AW")
-    {
-        cout.precision(9);
-        cout << "during " << time << " s" << endl; 
-    }
-    if(name=="AC")
-    {
-        cout.precision(9);
-        cout << "Axial Coupling excitation without buffer gas during " << time << " s" << endl; 
-    }
-    if(name=="SC")
-    {
-        cout << "SIMCO  excitation without buffer gas during " << time << " s" << endl;
-    }
-    if(name=="AR")
-    {
-        cout << "Auto Resonance drive for " << time << " s" << endl;
-    }
-    if(name=="FB")
-    {
-        cout << "FB excitation drive for " << time << " s" << endl;
-    }
-    if(name=="SWIFT")
-    {
-        cout << "SWIFT dipole excitation  for " << time << " s" << endl;
-    }
-    if(name=="RW_SWIFT")
-    {
-        cout << "Rotating Wall SWIFT dipole excitation  for " << time << " s" << endl;
-    }
+    if (name == "normal")
+        cout << "normal operation for " << time << " s" << endl;
+    else
+        cout << "No operation defined for " << time << " s!" << endl;
 }
 
 operations::operations() {};
@@ -107,7 +62,7 @@ void operations::launch(IonCloud &_cloud, _ode_vars & odev)
 {
     if(ops.size()!=0) 
     {
-        SetTotalTime_of_Simu(total_time(),odev);
+        odev.total_time = total_time();
         for (std::vector<operation>::iterator op = ops.begin(); op != ops.end(); ++op)
             op->launch(_cloud, odev);
     }

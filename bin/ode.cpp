@@ -644,8 +644,7 @@ _force_vars::_force_vars() {
     coulombinteraction = false;
 }
 
-_force_vars::~_force_vars() {
-}
+_force_vars::~_force_vars() {}
 
 void _force_vars::Reset_excitation_type(){
     for(int i=0;i<15;i++)

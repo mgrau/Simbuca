@@ -10,10 +10,6 @@
 #include <mpi.h>
 #endif
 
-#ifdef __NBODY_ON__
-#include "nbody.h"
-#endif //__NBODY_ON__
-
 int main(int argc, char* argv[])
 {
     if(argc>1)

@@ -16,10 +16,10 @@ static const std::string::size_type MAXIMUM_SOURCE_NAME_LENGTH = 18;
  * @param source Name of the component sending the messages
  */
 SLogger::SLogger( const std::string& source )
-   : m_strSource( source ), m_activeType( INFO ) {
+    : m_strSource( source ), m_activeType( INFO ) {
 
-   m_logWriter = SLogWriter::Instance();
-}
+        m_logWriter = SLogWriter::Instance();
+    }
 
 /**
  * This constructor is necessary to be able to freely copy objects
@@ -29,11 +29,11 @@ SLogger::SLogger( const std::string& source )
  * @see SLogger::operator=
  */
 SLogger::SLogger( const SLogger& parent )
-   : std::basic_ios< SLogger::char_type, SLogger::traits_type >(),
-     std::ostringstream() {
+    : std::basic_ios< SLogger::char_type, SLogger::traits_type >(),
+    std::ostringstream() {
 
-   *this = parent;
-}
+        *this = parent;
+    }
 
 
 /**
@@ -41,8 +41,8 @@ SLogger::SLogger( const SLogger& parent )
  */
 void SLogger::SetSource( const std::string& source ) {
 
-   m_strSource = source;
-   return;
+    m_strSource = source;
+    return;
 }
 
 /**
@@ -50,7 +50,7 @@ void SLogger::SetSource( const std::string& source ) {
  */
 const char* SLogger::GetSource() const {
 
-      return m_strSource.c_str();
+    return m_strSource.c_str();
 }
 
 /**
@@ -62,10 +62,10 @@ const char* SLogger::GetSource() const {
  */
 SLogger& SLogger::operator= ( const SLogger& parent ) {
 
-   m_strSource = parent.m_strSource;
-   m_logWriter = SLogWriter::Instance();
+    m_strSource = parent.m_strSource;
+    m_logWriter = SLogWriter::Instance();
 
-   return *this;
+    return *this;
 }
 
 /**
@@ -80,50 +80,50 @@ SLogger& SLogger::operator= ( const SLogger& parent ) {
  * @param message The text of the message
  */
 void SLogger::Send( const SMsgType type, const std::string& message ) const {
-   // Bail right away if we don't need to print the message:
-   if( type < m_logWriter->GetMinType() ) return;
+    // Bail right away if we don't need to print the message:
+    if( type < m_logWriter->GetMinType() ) return;
 
-   std::string::size_type previous_pos = 0, current_pos = 0;
+    std::string::size_type previous_pos = 0, current_pos = 0;
 
-   //
-   // Make sure the source name is no longer than MAXIMUM_SOURCE_NAME_LENGTH:
-   //
-   std::string source_name( GetSource() );
-   if( source_name.size() > MAXIMUM_SOURCE_NAME_LENGTH ) {
-      source_name = source_name.substr( 0, MAXIMUM_SOURCE_NAME_LENGTH - 3 );
-      source_name += "...";
-   }
+    //
+    // Make sure the source name is no longer than MAXIMUM_SOURCE_NAME_LENGTH:
+    //
+    std::string source_name( GetSource() );
+    if( source_name.size() > MAXIMUM_SOURCE_NAME_LENGTH ) {
+        source_name = source_name.substr( 0, MAXIMUM_SOURCE_NAME_LENGTH - 3 );
+        source_name += "...";
+    }
 
-  //if GUI:
+    //if GUI:
 #ifdef __GUI_ON__
-   //<<"use GUI!\n";
-   QMessageBox msgBox;
-   msgBox.setWindowTitle("Simbuca error");
-   msgBox.setText(QString::fromStdString(message));
-   msgBox.exec();
+    //<<"use GUI!\n";
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("Simbuca error");
+    msgBox.setText(QString::fromStdString(message));
+    msgBox.exec();
 #else
-   //
-   // Slice the recieved message into lines:
-   //
-   for( ; ; ) {
+    //
+    // Slice the recieved message into lines:
+    //
+    for( ; ; ) {
 
-      current_pos = message.find( '\n', previous_pos );
-      std::string line = message.substr( previous_pos, current_pos -
-                                         previous_pos );
+        current_pos = message.find( '\n', previous_pos );
+        std::string line = message.substr( previous_pos, current_pos -
+                previous_pos );
 
-      std::ostringstream message_to_send;
-      // I have to call the modifiers like this, otherwise g++ get's confused
-      // with the operators...
-      message_to_send.setf( std::ios::adjustfield, std::ios::left );
-      message_to_send.width( MAXIMUM_SOURCE_NAME_LENGTH );
-      message_to_send << source_name << " : " << line;
-      m_logWriter->Write( type, message_to_send.str() );
+        std::ostringstream message_to_send;
+        // I have to call the modifiers like this, otherwise g++ get's confused
+        // with the operators...
+        message_to_send.setf( std::ios::adjustfield, std::ios::left );
+        message_to_send.width( MAXIMUM_SOURCE_NAME_LENGTH );
+        message_to_send << source_name << " : " << line;
+        m_logWriter->Write( type, message_to_send.str() );
 
-      if( current_pos == message.npos ) break;
-      previous_pos = current_pos + 1;
-   }
+        if( current_pos == message.npos ) break;
+        previous_pos = current_pos + 1;
+    }
 #endif
-   return;
+    return;
 }
 
 /**
@@ -134,17 +134,17 @@ void SLogger::Send( const SMsgType type, const std::string& message ) const {
  */
 void SLogger::Send() {
 
-   //
-   // Call the "other" send(...) function:
-   //
-   this->Send( m_activeType, this->str() );
+    //
+    // Call the "other" send(...) function:
+    //
+    this->Send( m_activeType, this->str() );
 
-   //
-   // Reset the stream buffer:
-   //
-   this->str( "" );
+    //
+    // Reset the stream buffer:
+    //
+    this->str( "" );
 
-   return;
+    return;
 }
 
 /**
@@ -158,6 +158,6 @@ void SLogger::Send() {
  */
 SLogger& SLogger::endmsg( SLogger& logger ) {
 
-   logger.Send();
-   return logger;
+    logger.Send();
+    return logger;
 }

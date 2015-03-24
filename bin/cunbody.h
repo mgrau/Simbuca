@@ -59,8 +59,6 @@ class _cunbody{
     private:
 };
 
-
-
 #ifdef after
 void MultiGPUs_CUNBODY_begin();
 void MultiGPUs_CUNBODY_end();

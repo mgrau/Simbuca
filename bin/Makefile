@@ -7,23 +7,22 @@
 ############################################ 
 VERSION=3.4
 
-
-
 #---------------------------------------------#
 #------------USER INPUT PARAMETERS------------#
 #---------------------------------------------#
 
 #compiler:  mpic++ / g++ / icpc
-COMPILER=g++
+# COMPILER=g++
+# COMPILER=icpc
+COMPILER=mpic++
 
 #processing unit: cpu / gpu
-PU=cpu
+PU=gpu
 
 #NBODY algorithm for the calculation: CUNBODY / NBODY
 #after changing $PU, type 'make clean' to remove all *.o files.
 NBODY_ALGO=CUNBODY
-
-#NBODY_ALGO=NBODY
+# NBODY_ALGO=NBODY
 
 #simulation directory
 SIMULATION_DIR=../simulations
@@ -32,17 +31,13 @@ SIMULATION_DIR=../simulations
 EXECUTABLE=$(SIMULATION_DIR)/simbuca
 
 #---------------------------------------------#
-#---------------------------------------------#
-#---------------------------------------------#
-
-#---------------------------------------------#
 #--------- SET NBODY ALGO --------------------#
 #---------------------------------------------#
 ifeq ($(PU),gpu)
   ifeq ($(NBODY_ALGO),NBODY)
   NBODY_ALGO_FLAGS = -D__NBODY_ON__ -I$(CUDASYS)/include 
   else
-  NBODY_ALGO_FLAGS = -D__CUNBODY_ON__ -I$(CUDASYS)/include #-D__OCTGRAV_ON__   
+  NBODY_ALGO_FLAGS = -D__CUNBODY_ON__ -I$(CUDASYS)/include
   endif
 endif
 ifeq ($(PU),cpu)
@@ -52,34 +47,27 @@ endif
 #---------------------------------------------#
 
 
-#-L $CUDASYS/lib -L $CUDASYS/NVIDIA_CUDA_SD$
-
-
 #---------------------------------------------#
 #---------COMPILE AND LINK OPTIONS------------#
 #---------------------------------------------#
 #g++ Compiler
 CC_gpp=g++ -O3 -g -Wno-write-strings $(NBODY_ALGO_FLAGS) -c
-LINK_gpp=g++ -g -lm -O3 -o
+LINK_gpp=g++ -lm -O3 -o
 
 #icpc Compiler
-CC_icpc=icpc -O3 -std=c++11 -ipo -no-prec-div -fast -xavx $(NBODY_ALGO_FLAGS) -c
-LINK_icpc=icpc -lm -O3 -std=c++11 -o  
+CC_icpc=icpc -no-ipo -fast $(NBODY_ALGO_FLAGS) -c
+LINK_icpc=icpc -o  
 
 # CUDA Compiler
 CUDASYS = /usr/local/cuda
-NVCC = /usr/local/cuda/bin/nvcc	
+NVCC = $(CUDASYS)/bin/nvcc	
 NVCCFLAGS = -ccbin gcc --compiler-options -fno-strict-aliasing,-Wall,-Wextra,-Wno-unused-parameter -O3
 #MPI Compiler
 MPI_PATH = /usr/local/mpich2/bin
-CC_mpicpp=$(MPI_PATH)/mpicxx  -O3 -D__MPI_ON__ -finline-functions -Wno-write-strings  -DMPICH_IGNORE_CXX_SEEK  $(NBODY_ALGO_FLAGS) -c 
-LINK_mpicpp=$(MPI_PATH)/mpicxx -O3   -std -lm -o 
-#CC_mpicpp=mpicxx  -Wall -O3 -D__MPI_ON__ -finline-functions -I/Users/pdupre/mpich2/include    -DMPICH_IGNORE_CXX_SEEK -c
-#LINK_mpicpp=g++ -O3  -L/Users/pdupre/mpich2/lib -lmpichcxx -lpmpich -lmpich -Wwrite-strings -std -lm -o 
-
+CC_mpicpp=$(MPI_PATH)/mpicxx -no-ipo -fast -D__MPI_ON__ -finline-functions -Wno-write-strings $(NBODY_ALGO_FLAGS) -c 
+LINK_mpicpp=$(MPI_PATH)/mpicxx -no-ipo -o 
 #libraries
 cunbodylib=../libraries/cunbody/libcunbody1.a_TI20140519_CUDA60
-TREE_LIB=../libraries/octgrav_v1.7d/
 #--------------------------------------------#
 
 
@@ -149,42 +137,37 @@ parameters:
 export:
 	mkdir -p ../backup
 	tar --exclude=.svn -c -v -p -s -f  ../backup/Simbuca_v$(VERSION).`date +"%Y%m%d-%H%M%S"`.tar ../bin/Makefile ../bin/*.cpp ../bin/*.h ../bin/*.a \
-	../doc/readme.txt \
-	../CoulombSnippet/* \
-	../libraries/* \
-	../tools/ioncloud_parser/main.cpp \
-	../tools/ioncloud_parser/Makefile \
-	$(SIMULATION_DIR)/example*.sim \
-	$(SIMULATION_DIR)/trap_config.dat \
-	../tools/fft/*/fft.cpp \
-	../tools/fft/*/Makefile \
-	../tools/column_selector/Makefile \
-	../tools/column_selector/columnselect.cpp \
-	../tools/movie/create_movie.txt \
-	../tools/movie/draw_movie.C
+		../doc/readme.txt \
+		../CoulombSnippet/* \
+		../libraries/* \
+		../tools/ioncloud_parser/main.cpp \
+		../tools/ioncloud_parser/Makefile \
+		$(SIMULATION_DIR)/example*.sim \
+		$(SIMULATION_DIR)/trap_config.dat \
+		../tools/fft/*/fft.cpp \
+		../tools/fft/*/Makefile \
+		../tools/column_selector/Makefile \
+		../tools/column_selector/columnselect.cpp \
+		../tools/movie/create_movie.txt \
+		../tools/movie/draw_movie.C
 
 ifeq ($(PU)$(NBODY_ALGO),gpuNBODY)
-$(EXECUTABLE) : main.o parser.o ionFly.o ode.o force.o matrix.o ioncloud.o particle.o ion.o mtrand.o logfile.o IonTable.o PDGTable.o operation.o nbody_kernel.o trapparameters.h SimParser.o initialization.o mpi_funcs.o nbody.o trapparameters.o numrec.o Potmap.o SLogger.o SLogWriter.o inireader.o ini.o
+$(EXECUTABLE) : main.o parser.o ion_fly.o ode.o force.o matrix.o ioncloud.o particle.o ion.o mtrand.o logfile.o IonTable.o PDGTable.o operation.o nbody_kernel.o trapparameters.h initialization.o mpi_funcs.o nbody.o trapparameters.o numrec.o SLogger.o SLogWriter.o inireader.o ini.o
 else
-$(EXECUTABLE) : main.o parser.o ionFly.o ode.o force.o matrix.o ioncloud.o particle.o ion.o mtrand.o logfile.o IonTable.o PDGTable.o operation.o trapparameters.h SimParser.o initialization.o mpi_funcs.o cunbody.o trapparameters.o numrec.o Potmap.o SLogger.o SLogWriter.o inireader.o ini.o
+$(EXECUTABLE) : main.o parser.o ion_fly.o ode.o force.o matrix.o ioncloud.o particle.o ion.o mtrand.o logfile.o IonTable.o PDGTable.o operation.o trapparameters.h initialization.o mpi_funcs.o cunbody.o trapparameters.o numrec.o SLogger.o SLogWriter.o inireader.o ini.o
 endif
 	mkdir -p $(SIMULATION_DIR)
 ifeq ($(PU),cpu)
-	$(LINK) $(EXECUTABLE) main.o parser.o ionFly.o ode.o force.o matrix.o ioncloud.o particle.o ion.o mtrand.o logfile.o IonTable.o PDGTable.o operation.o SimParser.o initialization.o mpi_funcs.o trapparameters.o numrec.o Potmap.o SLogger.o SLogWriter.o inireader.o ini.o
+	$(LINK) $(EXECUTABLE) main.o parser.o ion_fly.o ode.o force.o matrix.o ioncloud.o particle.o ion.o mtrand.o logfile.o IonTable.o PDGTable.o operation.o initialization.o mpi_funcs.o trapparameters.o numrec.o SLogger.o SLogWriter.o inireader.o ini.o
 endif
 ifeq ($(PU),gpu)
   ifeq ($(NBODY_ALGO),NBODY)
-	$(LINK) $(EXECUTABLE)  main.o parser.o ionFly.o ode.o force.o \
-	-L $(CUDASYS)/lib64 -lcuda -lcudart -lGL -lGLU \
--L $(CUDASYS)/lib -L /usr/local/NVIDIA_GPU_Computing_SDK-v40/C/lib -lcuda -lcudart -lGL -lGLU  \
-    matrix.o  ioncloud.o particle.o ion.o mtrand.o logfile.o IonTable.o PDGTable.o nbody_kernel.o operation.o SimParser.o initialization.o mpi_funcs.o nbody.o trapparameters.o numrec.o Potmap.o SLogger.o SLogWriter.o inireader.o ini.o
+    $(LINK) $(EXECUTABLE)  main.o parser.o ion_fly.o ode.o force.o -L $(CUDASYS)/lib64 -lcuda -lcudart -lGL -lGLU -L $(CUDASYS)/lib -lcuda -lcudart -lGL -lGLU matrix.o  ioncloud.o particle.o ion.o mtrand.o logfile.o IonTable.o PDGTable.o nbody_kernel.o operation.o initialization.o mpi_funcs.o nbody.o trapparameters.o numrec.o SLogger.o SLogWriter.o inireader.o ini.o
   else
-	$(LINK) $(EXECUTABLE)  main.o parser.o ionFly.o ode.o force.o \
-    matrix.o  ioncloud.o particle.o ion.o mtrand.o logfile.o IonTable.o PDGTable.o operation.o SimParser.o initialization.o mpi_funcs.o cunbody.o trapparameters.o numrec.o  Potmap.o SLogger.o SLogWriter.o inireader.o ini.o $(cunbodylib) -lm -L $(CUDASYS)/lib64 -lcudart -lcuda -lGL -lGLU
-endif
-    
+	$(LINK) $(EXECUTABLE)  main.o parser.o ion_fly.o ode.o force.o matrix.o  ioncloud.o particle.o ion.o mtrand.o logfile.o IonTable.o PDGTable.o operation.o initialization.o mpi_funcs.o cunbody.o trapparameters.o numrec.o  SLogger.o SLogWriter.o inireader.o ini.o $(cunbodylib) -lm -L $(CUDASYS)/lib64 -lcudart -lcuda -lGL -lGLU
+  endif
 endif	
-	@echo "compiled: $(EXECUTABLE)" 
+@echo "compiled: $(EXECUTABLE)" 
 
 #------------OBJECT FILES------------#
 ifeq ($(NBODY_ALGO),NBODY)
@@ -192,21 +175,20 @@ ifeq ($(NBODY_ALGO),NBODY)
 	$(NVCC) $(NVCCFLAGS) -c $< -o $@
 endif
 
-
-main.o : main.cpp parser.h ionFly.h ode.h force.h matrix.h ioncloud.h particle.h ion.h mtrand.h logfile.h MPI_simbuca.h IonTable.h PDGTable.h operation.h  SimParser.h initialization.h SMsgType.h SLogger.h SLogWriter.h
+main.o : main.cpp parser.h ion_fly.h ode.h force.h matrix.h ioncloud.h particle.h ion.h mtrand.h logfile.h MPI_simbuca.h IonTable.h PDGTable.h operation.h  initialization.h SMsgType.h SLogger.h SLogWriter.h
 	$(CC) main.cpp
-parser.o : parser.cpp parser.h ionFly.h ode.h force.h matrix.h ioncloud.h particle.h ion.h mtrand.h logfile.h SMsgType.h SLogger.h SLogWriter.h
+parser.o : parser.cpp parser.h ion_fly.h ode.h force.h matrix.h ioncloud.h particle.h ion.h mtrand.h logfile.h SMsgType.h SLogger.h SLogWriter.h
 	$(CC) parser.cpp
-ionFly.o : ionFly.cpp ionFly.h ode.h force.h matrix.h ioncloud.h particle.h ion.h mtrand.h logfile.h SMsgType.h SLogger.h SLogWriter.h
-	$(CC) ionFly.cpp
-ode.o : ode.cpp ode.h force.h matrix.h ioncloud.h particle.h ion.h mtrand.h logfile.h MPI_simbuca.h mpi_funcs.h Potmap.h SMsgType.h SLogger.h SLogWriter.h
+ion_fly.o : ion_fly.cpp ion_fly.h ode.h force.h matrix.h ioncloud.h particle.h ion.h mtrand.h logfile.h SMsgType.h SLogger.h SLogWriter.h
+	$(CC) ion_fly.cpp
+ode.o : ode.cpp ode.h force.h matrix.h ioncloud.h particle.h ion.h mtrand.h logfile.h MPI_simbuca.h mpi_funcs.h SMsgType.h SLogger.h SLogWriter.h
 	$(CC) ode.cpp
-force.o : force.cpp force.h matrix.h ioncloud.h particle.h ion.h mtrand.h logfile.h  MPI_simbuca.h mpi_funcs.h Potmap.h SMsgType.h SLogger.h SLogWriter.h
+force.o : force.cpp force.h matrix.h ioncloud.h particle.h ion.h mtrand.h logfile.h  MPI_simbuca.h mpi_funcs.h SMsgType.h SLogger.h SLogWriter.h
 ifeq ($(PU),cpu)
 	$(CC) force.cpp
 endif
 ifeq ($(PU),gpu)
-	$(CC) -I$(TREE_LIB) -I/usr/local/cuda/include  force.cpp
+	$(CC) -I/usr/local/cuda/include  force.cpp
 endif	
 matrix.o : matrix.cpp matrix.h ioncloud.h particle.h ion.h mtrand.h logfile.h
 	$(CC) matrix.cpp
@@ -224,7 +206,7 @@ mtrand.o : mtrand.cpp mtrand.h logfile.h
 	$(CC) mtrand.cpp
 logfile.o: logfile.cpp logfile.h
 	$(CC) logfile.cpp
-operation.o: operation.cpp operation.h ionFly.cpp ionFly.h mpi_funcs.h
+operation.o: operation.cpp operation.h ion_fly.cpp ion_fly.h mpi_funcs.h
 	$(CC) operation.cpp
 mpi_funcs.o: mpi_funcs.cpp mpi_funcs.h
 	$(CC) mpi_funcs.cpp
@@ -232,16 +214,12 @@ nbody.o: nbody.cpp nbody.h
 	$(CC) nbody.cpp      
 cunbody.o: cunbody.cpp cunbody.h
 	$(CC) cunbody.cpp
-SimParser.o: SimParser.cpp SimParser.h
-	$(CC) SimParser.cpp
-initialization.o: initialization.cpp parser.h ionFly.h ode.h force.h matrix.h ioncloud.h particle.h ion.h mtrand.h logfile.h MPI_simbuca.h IonTable.h PDGTable.h operation.h SimParser.h initialization.h trapparameters.h numrec.h Potmap.h inireader.h ini.h
+initialization.o: initialization.cpp parser.h ion_fly.h ode.h force.h matrix.h ioncloud.h particle.h ion.h mtrand.h logfile.h MPI_simbuca.h IonTable.h PDGTable.h operation.h initialization.h trapparameters.h numrec.h inireader.h ini.h
 	$(CC) initialization.cpp
 trapparameters.o: trapparameters.cpp trapparameters.h
 	$(CC) trapparameters.cpp   
 numrec.o: numrec.cpp numrec.h
 	$(CC) numrec.cpp   
-Potmap.o: Potmap.cpp Potmap.h
-	$(CC) Potmap.cpp   
 SLogger.o: SLogger.cpp SLogger.h
 	$(CC) SLogger.cpp
 SLogWriter.o: SLogWriter.cpp SLogWriter.h
