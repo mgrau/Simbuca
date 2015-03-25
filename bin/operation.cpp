@@ -13,24 +13,45 @@ using namespace std;
 
 operation::operation()
 {
-    name="NE";
+    name="normal";
     time=1e-9;
+    print_time = 0.0;
 }
 
 operation::operation(string _name)
 {
     name=_name;
     time=1e-9;
+    print_time= 0.0;
 }
 
 operation::~operation(){};
 
 void operation::launch(IonCloud &cloud, _ode_vars & odev)
 {
-    if(name=="normal")
+    if (print_time) {
+        SetPrintInterval(print_time);
+        if (odev.h > print_time) {
+            odev.hnext = print_time;
+            odev.h = print_time;
+        }
+    }
+    odev.forcev.reset_ops();
+    if (name=="normal") {
+        cout << "normal operation launching" << endl;
+        odev.forcev.trap = true;
         normal_operation(time,cloud,odev);
-    else
+    }
+    else if (name == "tof") {
+        cout << "time of flight operation launching" << endl;
+        odev.forcev.trap = false;
+        odev.forcev.tof = true;
         normal_operation(time,cloud,odev);
+    }
+    else {
+        cout << "free flight operation launching" << endl;
+        normal_operation(time,cloud,odev);
+    }
 }
 
 void operation::write()
@@ -38,6 +59,8 @@ void operation::write()
     cout.precision(9);
     if (name == "normal")
         cout << "normal operation for " << time << " s" << endl;
+    else if (name == "tof")
+        cout << "time of flight kick for " << time << " s" << endl;
     else
         cout << "No operation defined for " << time << " s!" << endl;
 }
@@ -46,8 +69,7 @@ operations::operations() {};
 
 operations::~operations(){};
 
-void operations::add(operation op)
-{
+void operations::add(operation op) {
     ops.push_back(op);
 }
 

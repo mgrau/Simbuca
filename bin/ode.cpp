@@ -428,7 +428,7 @@ bool error_succes(const double err,_ode_vars &odev){
     //default setting is beta = 0 (no PI control). Set beta to 0.04 or 0.08 to turn on PI control
     //Returns true if err <= 1, false otherwise. If step was successful, sets hnext to the estimated
     //optimal stepsize for the next step. If the step failed, reduces h appropriately for another try.
-    static const double beta=0.08,alpha=0.2-beta*0.75,safe=0.9, //beta=0.4/k en k=5 hier want 5e orde
+    static const double beta=0.0,alpha=0.2-beta*0.75,safe=0.9, //beta=0.4/k en k=5 hier want 5e orde
                  minscale=0.2,maxscale=10.0;
     //Set beta to a nonzero value for PI control. beta D 0:04\960.08 is a good default. !!!
     double scale;
@@ -519,10 +519,10 @@ _ode_vars::_ode_vars() {
 
     EPS=numeric_limits<double>::epsilon();
     poolvectorsInitialized = false;      //standard false he
-    withCharge = false;
-    PrintAfterOperation = false;
-    PrintatZpos_bool =false;
-    PrintZpos = 0;
+    with_charge = false;
+    print_after_operation = false;
+    print_at_x =false;
+    print_x = 0;
     yerr.resize(6);
 }
 
@@ -637,16 +637,17 @@ void _ode_vars::Initpoolvectors(int nrParticles)  {
     }
 }
 
+void _force_vars::reset_ops() {
+    trap = false;
+    tof = false;
+}
+
 _force_vars::_force_vars() {
-    for(unsigned i=0;i<15;i++){
-        excitation_type[i] = false;} // dip, quad, oct , axial , RW, AW,SIMCO,SIMCOAxial
-    scaledCoulombFactor =1.;
-    coulombinteraction = false;
+    coulomb_scale = 1.0;
+    coulomb_interaction = false;
+
+    trap = true;
+    tof = false;
 }
 
 _force_vars::~_force_vars() {}
-
-void _force_vars::Reset_excitation_type(){
-    for(int i=0;i<15;i++)
-        excitation_type[i] = false;
-}

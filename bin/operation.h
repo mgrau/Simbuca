@@ -19,8 +19,9 @@ struct operation {
     ~operation();
     void launch(IonCloud &_cloud, _ode_vars & odev); 
     void write();
-    string name; // "NE" "DE" "QE" "OE" "RW" "DT"
+    string name;
     double time;
+    double print_time;
 };
 
 class operations {

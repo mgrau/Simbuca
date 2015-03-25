@@ -1,18 +1,18 @@
 //ode.h
- /*        Calculate Dormand Prince for all particles together and the error for all the particles together 
-           inside the Dormand_Prince_rk function then calculate the hnext and assign it to the next h.
-           Make sure beta=0.08 otherwise you`re error becomes >1 and you have to calculate 
-           Dormand Prince all over again! this is solving the equations for all the particles, AGAIN!
-           see note: 
-           
-           The beta=0.08 (because 5th order rk) is the control mechanism to hold h fluently. 
-           If beta is 0.04 or even 0 then your timestep(h) is altered by letting your error
-           become bigger and just then (approx around every 10 cycles your err>1) h is set 
-           gradually smaller.
-           The control method with b=0.08 is preferable, since h changes rather smoothly this way.
-           In general, when putting beta=0.08 your step stays around 10-9 so you should have no problems
-           at all! Great :-)
-*/
+/*        Calculate Dormand Prince for all particles together and the error for all the particles together 
+          inside the Dormand_Prince_rk function then calculate the hnext and assign it to the next h.
+          Make sure beta=0.08 otherwise you`re error becomes >1 and you have to calculate 
+          Dormand Prince all over again! this is solving the equations for all the particles, AGAIN!
+          see note: 
+
+          The beta=0.08 (because 5th order rk) is the control mechanism to hold h fluently. 
+          If beta is 0.04 or even 0 then your timestep(h) is altered by letting your error
+          become bigger and just then (approx around every 10 cycles your err>1) h is set 
+          gradually smaller.
+          The control method with b=0.08 is preferable, since h changes rather smoothly this way.
+          In general, when putting beta=0.08 your step stays around 10-9 so you should have no problems
+          at all! Great :-)
+          */
 #ifndef ODE_H
 #define ODE_H
 
@@ -43,15 +43,15 @@ struct _force_vars {
     _force_vars();
     ~_force_vars();
     double (*derivs)[3];
-    bool excitation_type[15];
 
-    double scaledCoulombFactor;
-    bool coulombinteraction;
+    double coulomb_scale;
+    bool coulomb_interaction;
 
+    bool trap;
+    bool tof;
+
+    void reset_ops();
     _trap_param trap_param;
-    
-    void Reset_excitation_type();
-    inline void Set_excitation_type(int _exc){excitation_type[_exc]=true;};
 };
 
 struct _ode_vars {
@@ -62,9 +62,9 @@ struct _ode_vars {
     void Reset_ode();
     void Initpoolvectors(int nrParticles);
     // ode vars
-       double httry;
+    double httry;
     double h;
-    
+
     bool RK4;
     bool DP5;
     bool change_stepsize;
@@ -98,22 +98,18 @@ struct _ode_vars {
     _force_vars forcev;
     double time_ini_ope;
     // charge
-    bool withCharge;
-    inline void SetwithCharge(bool b_){withCharge = b_;};
-    inline bool GetwithCharge(){return withCharge;};
+    bool with_charge;
     // PRINT PARTICLES
-    inline void SetPrintAfterOperation(bool b_){PrintAfterOperation=true;}
-    bool PrintAfterOperation;
-    bool PrintatZpos_bool;
-    double PrintZpos;
-    inline void SetPrintatZpos_bool(bool b_){PrintatZpos_bool = b_;};
-    inline void SetPrintZpos(double z_){PrintZpos = z_;};
-    
+
+    bool print_after_operation;
+    bool print_at_x;
+    double print_x;
+
     // time of simu
     double initial_time; // initial time of the simu
     double final_time; // final time of the operation
     double total_time; // final time of the simulations
-    
+
     // mpi funcs
 #ifdef __MPI_ON__
     //pointeur -> can be create and delete when I want
@@ -122,12 +118,12 @@ struct _ode_vars {
     inline void create_mpiv(){mpiv = new _mpi_vars;};
     inline void delete_mpiv(){delete mpiv;};
 #endif // __MPI_ON__
-    
+
     // NBODY ALGO
 #ifdef __CUNBODY_ON__
     _cunbody cunbody;
 #endif //__CUNBODY_ON__
-    
+
 #ifdef __NBODY_ON__
     _nbody nbody;
 #endif //__NBODY_ON__

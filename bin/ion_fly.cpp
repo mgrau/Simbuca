@@ -5,8 +5,8 @@ bool firstoperation = true;
 LogFile ilogger;
 double print_interval=0.01e-3; //in sec
 int nr_interval = 0;
-bool coulombinteraction;
-double scaledCoulombFactor;
+bool coulomb_interaction;
+double coulomb_scale;
 
 vector<double> im_q;
 vector<double> im_i;
@@ -30,8 +30,8 @@ void move_particles(double _time_movement,IonCloud &_cloud,_ode_vars &odev) {
         firstoperation = false;
         //odev
         odev.Initpoolvectors(_cloud.nrparticles);
-        odev.forcev.coulombinteraction = coulombinteraction;
-        odev.forcev.scaledCoulombFactor = scaledCoulombFactor;
+        odev.forcev.coulomb_interaction = coulomb_interaction;
+        odev.forcev.coulomb_scale = coulomb_scale;
 #ifdef __MPI_ON__
         odev.mpiv->ComputeCounts_Disps(_cloud.nrparticles);
 #ifdef __CPUNBODY_ON__
@@ -61,7 +61,7 @@ void move_particles(double _time_movement,IonCloud &_cloud,_ode_vars &odev) {
         _cloud.InitializePoolVectors();
         _cloud.CopyParticlesToVectors();
 #ifdef __CUNBODY_ON__
-        if(odev.forcev.coulombinteraction) {
+        if(odev.forcev.coulomb_interaction) {
             odev.cunbody.begin(_cloud);
             odev.cunbody.end(_cloud);
         }
@@ -69,7 +69,7 @@ void move_particles(double _time_movement,IonCloud &_cloud,_ode_vars &odev) {
 
 
         //PRINT PARTICLES
-        if(odev.PrintAfterOperation)
+        if(odev.print_after_operation)
             _cloud.CopyVectorsToParticles();
     }
 
@@ -85,30 +85,30 @@ void move_particles(double _time_movement,IonCloud &_cloud,_ode_vars &odev) {
         if(_cloud.nrparticles == 0)
             break;
 
-        if(odev.PrintatZpos_bool)
-            for(int i=0;i<_cloud.nrparticles;i++)
-                _cloud.old_z[i] = _cloud.pos[i][2];
+        if(odev.print_at_x)
+            for(int i=0; i<_cloud.nrparticles; i++)
+                _cloud.old_x[i] = _cloud.pos[i][0];
 
         step(_cloud,odev);
 
         // PRINT PARTICLES
-        if(!odev.PrintAfterOperation&&!odev.PrintatZpos_bool)
             if ( (_cloud.lifetime-starttime )> (print_interval*nr_interval)){
                 _cloud.CopyVectorsToParticles();
                 _cloud.PrintParticles();
                 _cloud.PrintCloud();
                 nr_interval++;
             }
-        if(odev.PrintatZpos_bool)
-            for(int i=0;i<_cloud.nrparticles;i++)
-                if((_cloud.old_z[i]<odev.PrintZpos)&&(_cloud.pos[i][2]>odev.PrintZpos))
-                    _cloud.PrintParticle(i);
+        if(odev.print_at_x)
+            for(int i=0; i<_cloud.nrparticles; i++)
+                if(((_cloud.old_x[i]<odev.print_x)&&(_cloud.pos[i][0]>odev.print_x)) || ((_cloud.old_x[i]>odev.print_x)&&(_cloud.pos[i][0]<odev.print_x))) {
+                    _cloud.PrintX(i);
+                }
     }
-    if(odev.PrintAfterOperation)
+    if(odev.print_after_operation)
     {
         _cloud.CopyVectorsToParticles();
         _cloud.PrintParticles();
-        // _cloud.PrintCloud();
+        _cloud.PrintCloud();
     }
 }
 
@@ -138,9 +138,9 @@ void normal_operation(double time, IonCloud &cloud, _ode_vars & odev){
     move_particles(time,cloud,odev);
 }
 
-void SetCoulomb(bool _coulombinteraction){
-    coulombinteraction = _coulombinteraction;
-    if(_coulombinteraction){
+void SetCoulomb(bool _coulomb_interaction){
+    coulomb_interaction = _coulomb_interaction;
+    if(_coulomb_interaction){
         ilogger<<"with Coulomb Interaction";
         ilogger<<"\n";
     }
@@ -149,10 +149,10 @@ void SetCoulomb(bool _coulombinteraction){
         ilogger<<"\n";
     }
 }
-void UseScaledCoulomb(double _ScaledCoulombFactor){
-    scaledCoulombFactor = _ScaledCoulombFactor;
+void UseScaledCoulomb(double _scale_factor){
+    coulomb_scale = _scale_factor;
     ilogger<<"with scaled coulomb Interaction: factor ";
-    ilogger<<scaledCoulombFactor;
+    ilogger<<coulomb_scale;
     ilogger<<".\n";
 }
 void SetPrintInterval(double _print_interval){

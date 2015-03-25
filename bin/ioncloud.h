@@ -29,7 +29,7 @@ struct IonCloud
     double (*pos2)[3];
     double (*vel)[3];
     double (*vel2)[3];
-    vector<double > old_z; // old z for Zpos print option
+    vector<double > old_x; // old z for Zpos print option
     vector < double > mass;
     vector < int > charge;
     int nrparticles;
@@ -41,6 +41,7 @@ struct IonCloud
     double lifetime;
 
     std::ofstream* globalstream;
+    std::ofstream* print_x_stream;
     std::vector<std::ofstream*> cloud_stream;
     std::vector<std::ofstream*> streamvector; //so #streams = #particles
     double sim_time_start;
@@ -55,6 +56,7 @@ struct IonCloud
     void Reset();
     void AddParticle(Particle _p, Ion _i);
     void PrintParticle(int &k);
+    void PrintX(int k);
     void PrintParticles();
     void PrintCloud();
     void PrintMembers();

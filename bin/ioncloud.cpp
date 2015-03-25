@@ -13,6 +13,7 @@ IonCloud::IonCloud() {
     //private:
     sim_time_start = 0;
     globalstream = NULL;
+    print_x_stream = NULL;
     // cloud_stream = NULL;
 
     filenamebegin = ("xxx");
@@ -65,6 +66,11 @@ void IonCloud::Delete() {
         (*cloud_stream[k]).close();
     }
 
+    if (print_x_stream != NULL) {
+        (*print_x_stream).flush();
+        (*print_x_stream).close();
+    }
+
     clogger<<"#simulation ended after ";clogger<<time(0)-sim_time_start;clogger<<" s\n";
     cout<<"#simulation ended after "<<time(0)-sim_time_start<<" s ";
 #ifdef __MPI_ON__
@@ -114,6 +120,28 @@ void IonCloud::PrintParticle(int &k) {
 void IonCloud::PrintParticles() {
     for(int k=0;k < particles.size(); k++)
         PrintParticle(k);
+}
+
+void IonCloud::PrintX(int k) {
+    if (print_x_stream == NULL) { 
+        string print_x_filename(filenamebegin);
+        print_x_filename.append("_x.txt");
+        print_x_stream = new ofstream(print_x_filename.c_str());
+        (*print_x_stream) << "#Print at X";
+        (*print_x_stream).setf(std::ios::scientific, std::ios::floatfield);
+    }
+    else {
+        (*print_x_stream)<<IDs[k]<<" ";
+        (*print_x_stream)<<(*ions)[k];
+        (*print_x_stream)<<" "<< lifetime*1000.0 ;
+        (*print_x_stream)<<" "<<pos[k][0]*1000.0;
+        (*print_x_stream)<<" "<<pos[k][1]*1000.0;
+        (*print_x_stream)<<" "<<pos[k][2]*1000.0;
+        (*print_x_stream)<<" "<< vel[k][0];
+        (*print_x_stream)<<" "<< vel[k][1];
+        (*print_x_stream)<<" "<< vel[k][2];
+        (*print_x_stream)<<endl;
+    }
 }
 
 void IonCloud::PrintCloud() {
@@ -371,7 +399,7 @@ void IonCloud::InitializePoolVectors() {
     pos2 = new double[n][3];
     vel = new double[n][3];
     vel2 = new double[n][3];
-    old_z.resize(n);
+    old_x.resize(n);
 }
 
 void IonCloud::CopyParticlesToVectors() {

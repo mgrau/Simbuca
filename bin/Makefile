@@ -13,8 +13,8 @@ VERSION=3.4
 
 #compiler:  mpic++ / g++ / icpc
 # COMPILER=g++
-# COMPILER=icpc
-COMPILER=mpic++
+COMPILER=icpc
+# COMPILER=mpic++
 
 #processing unit: cpu / gpu
 PU=gpu
@@ -55,7 +55,7 @@ CC_gpp=g++ -O3 -g -Wno-write-strings $(NBODY_ALGO_FLAGS) -c
 LINK_gpp=g++ -lm -O3 -o
 
 #icpc Compiler
-CC_icpc=icpc -no-ipo -fast $(NBODY_ALGO_FLAGS) -c
+CC_icpc=icpc -fast $(NBODY_ALGO_FLAGS) -c
 LINK_icpc=icpc -o  
 
 # CUDA Compiler
@@ -64,8 +64,8 @@ NVCC = $(CUDASYS)/bin/nvcc
 NVCCFLAGS = -ccbin gcc --compiler-options -fno-strict-aliasing,-Wall,-Wextra,-Wno-unused-parameter -O3
 #MPI Compiler
 MPI_PATH = /usr/local/mpich2/bin
-CC_mpicpp=$(MPI_PATH)/mpicxx -no-ipo -fast -D__MPI_ON__ -finline-functions -Wno-write-strings $(NBODY_ALGO_FLAGS) -c 
-LINK_mpicpp=$(MPI_PATH)/mpicxx -no-ipo -o 
+CC_mpicpp=$(MPI_PATH)/mpicxx -fast -D__MPI_ON__ -finline-functions -Wno-write-strings $(NBODY_ALGO_FLAGS) -c 
+LINK_mpicpp=$(MPI_PATH)/mpicxx -o 
 #libraries
 cunbodylib=../libraries/cunbody/libcunbody1.a_TI20140519_CUDA60
 #--------------------------------------------#
@@ -164,7 +164,7 @@ ifeq ($(PU),gpu)
   ifeq ($(NBODY_ALGO),NBODY)
     $(LINK) $(EXECUTABLE)  main.o parser.o ion_fly.o ode.o force.o -L $(CUDASYS)/lib64 -lcuda -lcudart -lGL -lGLU -L $(CUDASYS)/lib -lcuda -lcudart -lGL -lGLU matrix.o  ioncloud.o particle.o ion.o mtrand.o logfile.o IonTable.o PDGTable.o nbody_kernel.o operation.o initialization.o mpi_funcs.o nbody.o trapparameters.o numrec.o SLogger.o SLogWriter.o inireader.o ini.o
   else
-	$(LINK) $(EXECUTABLE)  main.o parser.o ion_fly.o ode.o force.o matrix.o  ioncloud.o particle.o ion.o mtrand.o logfile.o IonTable.o PDGTable.o operation.o initialization.o mpi_funcs.o cunbody.o trapparameters.o numrec.o  SLogger.o SLogWriter.o inireader.o ini.o $(cunbodylib) -lm -L $(CUDASYS)/lib64 -lcudart -lcuda -lGL -lGLU
+	$(LINK) $(EXECUTABLE)  main.o parser.o ion_fly.o ode.o force.o matrix.o  ioncloud.o particle.o ion.o mtrand.o logfile.o IonTable.o PDGTable.o operation.o initialization.o mpi_funcs.o cunbody.o trapparameters.o numrec.o  SLogger.o SLogWriter.o inireader.o ini.o $(cunbodylib) -L$(CUDASYS)/lib64 -lcudart -lcuda
   endif
 endif	
 @echo "compiled: $(EXECUTABLE)" 

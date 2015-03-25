@@ -324,7 +324,7 @@ void DoSimulation(INIReader & parser, IonCloud & _cloud,_ode_vars &odev) throw(c
         }
 
         // CLOUD COMPOSITON
-        odev.SetwithCharge(false);
+        odev.with_charge = false;
         if (is_in(sections,"composition")) {
             cout << "[composition]" << endl;
             set<string> components = parser.GetFields("composition");
@@ -374,7 +374,7 @@ void DoSimulation(INIReader & parser, IonCloud & _cloud,_ode_vars &odev) throw(c
                 }
 
                 if (charge!=1)
-                    odev.SetwithCharge(true);
+                    odev.with_charge = true;
 
                 if(fraction>1)
                     if(myid==0)
@@ -467,7 +467,7 @@ void DoSimulation(INIReader & parser, IonCloud & _cloud,_ode_vars &odev) throw(c
 
         // IMPORTDATA
         if (is_in(sections,"import")) {
-            odev.SetwithCharge(false);
+            odev.with_charge = false;
             filename_prefix_importdata = parser.Get("import","prefix","out"); 
 #ifndef __MPI_ON__
             int numprocs = 1;
@@ -497,7 +497,16 @@ void DoSimulation(INIReader & parser, IonCloud & _cloud,_ode_vars &odev) throw(c
             cout << "    timestep = " << printinterval_timestep << endl;
             separateparticlefile_bool = parser.GetBoolean("output","separate",false);
             cout << "    separate_files = " << separateparticlefile_bool << endl;
-            // odev.SetPrintAfterOperation(true);
+            bool print_after_operation = parser.GetBoolean("output","print_after_operation",false);
+            cout << "    print_after_operation = " << print_after_operation << endl;
+            bool print_at_x = parser.GetBoolean("output","print_at_x",false);
+            cout << "    print_at_x = " << print_at_x << endl;
+            double print_x = parser.GetReal("output","print_x",false);
+            cout << "    print_x = " << print_x << endl;
+
+            odev.print_after_operation = print_after_operation;
+            odev.print_at_x = print_at_x;
+            odev.print_x = print_x;
         }
         else
             if(myid ==0)
@@ -511,21 +520,35 @@ void DoSimulation(INIReader & parser, IonCloud & _cloud,_ode_vars &odev) throw(c
                 cout << "[" << op_num.str() << "]" << endl;
                 string op_type = parser.Get(op_num.str(),"type","none");
                 double op_duration = parser.GetReal(op_num.str(),"duration",1e-3);
+                double op_print= parser.GetReal(op_num.str(),"print_timestep",0.0);
                 cout << "    type = " << op_type << endl;
                 cout << "    duration = " << op_duration << " s" << endl;
 
-                if (op_type == "normal" || op_type=="none" || op_type=="n")
-                {
+                if (op_type == "normal" || op_type=="none" || op_type=="n") {
                     op.name = "normal";
                     op.time = op_duration;
+                    op.print_time = op_print;
                     ops.add(op);
                 }
+                else if (op_type == "tof" || op_type=="TOF") {
+                    op.name = "tof";
+                    op.time = op_duration;
+                    op.print_time = op_print;
+                    ops.add(op);
+                }
+                else if (op_type == "nop" || op_type=="none") {
+                    op.name = "nop";
+                    op.time = op_duration;
+                    op.print_time = op_print;
+                    ops.add(op);
+                }
+
             }
         }
 
 
         if(myid==0) {
-            cout << "OPERATIONS" << endl;
+            cout << endl << "OPERATIONS" << endl;
             ops.write();
             cout << "*********************************************" << endl;
         }
@@ -535,34 +558,8 @@ void DoSimulation(INIReader & parser, IonCloud & _cloud,_ode_vars &odev) throw(c
                 cout << NRPARTICLES << " particles for cloud"<< endl;
                 if(myid==0)
                     vector<int> nfractions;
-                //Print out ion name, charge and fraction
-
-                cout << "Cloud semiaxis: " << semiaxis_cloud[0] << " " << semiaxis_cloud[1] << " " << semiaxis_cloud[2] << " m" << endl;
-                cout << "Cloud center position: " << offset_cloud[0] << " " << offset_cloud[1] << " " << offset_cloud[2] << " m" << endl;
-                if(energy.size()==1)
-                {
-                    cout << "MB energy distribution with <E>= " << energy[0] << " eV" << endl;
-                }
-                else
-                {
-                    cout << "MB long. energy distribution with <E>= " << energy[0] << " eV" << endl;
-                    cout << "MB tran. energy distribution with <E>= " << energy[1] << " eV" << endl;
-                }
             }
         }
-
-        if(myid==0) {       
-            cout << "ODE order : " << ODEORDER << ", timestep : " << timestep <<  " s " << endl;
-            if(adaptive_timestep) 
-                cout << "with adaptive time step" << endl;
-            if(Coulomb_enable)
-                cout << "with Coulomb force calculation, Coulomb scale factor : " << Coulomb_scale_factor << endl;
-            else
-                cout << "without Coulomb force calculation" << endl;
-            cout << "filename prefix: " << filename_prefix_ << endl;
-            cout << "data saved every " << printinterval_timestep << " s" << endl;
-        }    
-
 
         //initialize the prefix of the filenames
         size_t found=filename_prefix_.find_last_of("/\\");
