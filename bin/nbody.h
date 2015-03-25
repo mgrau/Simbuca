@@ -16,8 +16,7 @@
 
 
 using namespace std;
-class _nbody{
-public:
+struct _nbody{
     //structor
     _nbody();
     ~_nbody();
@@ -66,14 +65,6 @@ public:
     float4 *host_pos_sub;
     float3 *host_acc_sub;
 #endif // __MPI_ON__
-private:
-    
 };
-
-
-
-
-
-
 #endif // NBODY_H_INCLUDED
 #endif // __NBODY_ON__

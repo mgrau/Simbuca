@@ -33,14 +33,13 @@ DPe5=-17253.0/339200.0,DPe6=22.0/525.0,DPe7=-1.0/40.0;
 
 LogFile ologger;
 
-void InitAcceleraction(int nrParticles,IonCloud &_cloud,_ode_vars &odev){
-    /*    	Init forces for Gear Method
-            a = (FB+FE)/m
-
-            a_x = q/m * (vy*Bz - By*vz+Ex)
-            a_y = q/m * (vz*Bx - Bz*vx+Ey)
-            a_z = q/m * (vx*By - Bx*vy+Ez)
-            */
+void InitAcceleraction(int nrParticles,IonCloud &_cloud,_ode_vars &odev) {
+    // Init forces for Gear Method
+    // a = (FB+FE)/m
+    //
+    // a_x = q/m * (vy*Bz - By*vz+Ex)
+    // a_y = q/m * (vz*Bx - Bz*vx+Ey)
+    // a_z = q/m * (vx*By - Bx*vy+Ez)
     double q_div_mass =0;
     double vx,vy,vz=0;
     double x,y,z=0;
@@ -56,27 +55,24 @@ void InitAcceleraction(int nrParticles,IonCloud &_cloud,_ode_vars &odev){
         odev.forcev.derivs[i][0] = odev.accel_new_suggestion[i][0]=1.6e9;
         odev.forcev.derivs[i][1] = odev.accel_new_suggestion[i][1]=1.1e9;
         odev.forcev.derivs[i][2] = odev.accel_new_suggestion[i][2]=-5e8;
-
     } 
 }
 
-double Dormand_Prince_5(IonCloud &_cloud,_ode_vars &odev){
-    /*	
-        goes over all the particles he!!
-        vtmp is the proposed output vector
-
-
-        adapts the vector latest(6) and pre_latest(6) and odev.yerr(6)
-        4e orde Runga Kutta methode voor y[1..n] en de afgeleiden dydx[1..n] op x. 
-        De bedoeling is om de oplossing door te trekken over een interval h, 
-        en de geincrementeerde waarde terug te geven als yout[1..n] . 
-        De gebruiker gebruikt Force(x,y,dydx) om de afgeleide van dydx(=v)  dus a terug te geven
-
-        new_suggestions are vectors off positions[0,1,2] and velocities[3,4,5]
-        k`s are vectors with velocities[0,1,2] and accelerations[3,4,5] witch are later *h and counted 
-        so they are vectors off positions[0,1,2] and velocities[3,4,5]! Then they are with their 
-        respective weights the new vectors wich contain the information off the system.
-        */ 
+double Dormand_Prince_5(IonCloud &_cloud,_ode_vars &odev) {
+    // goes over all the particles he!!
+    // vtmp is the proposed output vector
+    //
+    //
+    // adapts the vector latest(6) and pre_latest(6) and odev.yerr(6)
+    // 4e orde Runga Kutta methode voor y[1..n] en de afgeleiden dydx[1..n] op x. 
+    // De bedoeling is om de oplossing door te trekken over een interval h, 
+    // en de geincrementeerde waarde terug te geven als yout[1..n] . 
+    // De gebruiker gebruikt Force(x,y,dydx) om de afgeleide van dydx(=v)  dus a terug te geven
+    //
+    // new_suggestions are vectors off positions[0,1,2] and velocities[3,4,5]
+    // k`s are vectors with velocities[0,1,2] and accelerations[3,4,5] witch are later *h and counted 
+    // so they are vectors off positions[0,1,2] and velocities[3,4,5]! Then they are with their 
+    // respective weights the new vectors wich contain the information off the system.
     static const double DPc2=1.0/5.0,DPc3=3.0/10.0,DPc4=4.0/5.0,DPc5=8.0/9.0,DPc6=1.0,DPc7=1.0,
                  DPa21=1.0/5.0,
                  DPa31=3.0/40.0,DPa32=9.0/40.0,
@@ -93,48 +89,36 @@ double Dormand_Prince_5(IonCloud &_cloud,_ode_vars &odev){
 
     unsigned i;
     double h = odev.h;
-    //alles berekenen, pas later vermenigvuldigen met h
 
-    for(unsigned j=0; j< nrparticles; j++){
-        //stap 0
-        //for (i=0; i<3;i++) odev.k1[i]=old_particles[j][i+3];				//Stap 1a: speed updating
+    for(unsigned j=0; j< nrparticles; j++) {
         odev.k1[j][0]= _cloud.vel[j][0];
         odev.k1[j][1]= _cloud.vel[j][1];
         odev.k1[j][2]= _cloud.vel[j][2];
-
-
     }
-    // copy pos in pos2
-    // copy vel in vel2
-    //memcpy (dest, source, sizeof(source) );
     memcpy(_cloud.pos2,_cloud.pos,sizeof(double)*3*nrparticles);
     memcpy(_cloud.vel2,_cloud.vel,sizeof(double)*3*nrparticles);
 
     force(_cloud,odev); //1
 
-    for(unsigned j=0; j< nrparticles; j++){	
+    for(unsigned j=0; j< nrparticles; j++) {	
         odev.k1[j][3]= odev.forcev.derivs[j][0];	//Stap 1b: accel updaten
         odev.k1[j][4]= odev.forcev.derivs[j][1];
         odev.k1[j][5]= odev.forcev.derivs[j][2];
-        //for (i=0; i<3;i++) new_suggestion[j][i]=old_particles[j][i]+c2*h;			//posities updaten
         _cloud.pos2[j][0]=_cloud.pos[j][0] +h*(DPa21*odev.k1[j][0]);
         _cloud.pos2[j][1]=_cloud.pos[j][1] +h*(DPa21*odev.k1[j][1]);
         _cloud.pos2[j][2]=_cloud.pos[j][2] +h*(DPa21*odev.k1[j][2]);
-        //for (i=0; i<3;i++) odev.odev.k2[i]=new_suggestion[j][i+3]=old_particles[j][i+3]+h*(a21*odev.k1[i+3]);//Stap 2a: snelheden updaten
         odev.k2[j][0]=_cloud.vel2[j][0]=_cloud.vel[j][0]+h*(DPa21*odev.k1[j][3]);
         odev.k2[j][1]=_cloud.vel2[j][1]=_cloud.vel[j][1]+h*(DPa21*odev.k1[j][4]);
         odev.k2[j][2]=_cloud.vel2[j][2]=_cloud.vel[j][2]+h*(DPa21*odev.k1[j][5]);
     } 
     force(_cloud,odev);//2
-    for(unsigned j=0; j< nrparticles; j++){
+    for(unsigned j=0; j< nrparticles; j++) {
         odev.k2[j][3]= odev.forcev.derivs[j][0];	//Stap 2b: accel updaten
         odev.k2[j][4]= odev.forcev.derivs[j][1];
         odev.k2[j][5]= odev.forcev.derivs[j][2];
-        //for (i=0; i<3;i++) new_suggestion[j][i]=old_particles[j][i]+c3*h;	//posities updaten
         _cloud.pos2[j][0]=_cloud.pos[j][0]+h*(DPa31*odev.k1[j][0]+DPa32*odev.k2[j][0]);
         _cloud.pos2[j][1]=_cloud.pos[j][1]+h*(DPa31*odev.k1[j][1]+DPa32*odev.k2[j][1]);
         _cloud.pos2[j][2]=_cloud.pos[j][2]+h*(DPa31*odev.k1[j][2]+DPa32*odev.k2[j][2]);
-        //for (i=0; i<3;i++) odev.k3[i]=new_suggestion[j][i+3]=old_particles[j][i+3]+h*(a31*odev.k1[i+3]+a32*odev.k2[i+3]);//Stap 3a: snelheden updaten
         odev.k3[j][0]=_cloud.vel2[j][0]=_cloud.vel[j][0]+h*(DPa31*odev.k1[j][3]+DPa32*odev.k2[j][3]);
         odev.k3[j][1]=_cloud.vel2[j][1]=_cloud.vel[j][1]+h*(DPa31*odev.k1[j][4]+DPa32*odev.k2[j][4]);
         odev.k3[j][2]=_cloud.vel2[j][2]=_cloud.vel[j][2]+h*(DPa31*odev.k1[j][5]+DPa32*odev.k2[j][5]);
@@ -145,11 +129,9 @@ double Dormand_Prince_5(IonCloud &_cloud,_ode_vars &odev){
         odev.k3[j][4]= odev.forcev.derivs[j][1];
         odev.k3[j][5]= odev.forcev.derivs[j][2];
 
-        //for (i=0; i<3;i++) new_suggestion[j][i]=old_particles[j][i]+c4*h;		//in temp steken voor later force te berekenen
         _cloud.pos2[j][0]=_cloud.pos[j][0]+h*(DPa41*odev.k1[j][0]+DPa42*odev.k2[j][0]+DPa43*odev.k3[j][0]);
         _cloud.pos2[j][1]=_cloud.pos[j][1]+h*(DPa41*odev.k1[j][1]+DPa42*odev.k2[j][1]+DPa43*odev.k3[j][1]);
         _cloud.pos2[j][2]=_cloud.pos[j][2]+h*(DPa41*odev.k1[j][2]+DPa42*odev.k2[j][2]+DPa43*odev.k3[j][2]);
-        //for (i=0; i<3;i++) odev.k4[i]=new_suggestion[j][i+3]=old_particles[j][i+3]+h*(a41*odev.k1[i+3]+a42*odev.k2[i+3]+a43*odev.k3[i+3]);		//Stap 4a: posities updaten
         odev.k4[j][0]=_cloud.vel2[j][0]=_cloud.vel[j][0]+h*(DPa41*odev.k1[j][3]+DPa42*odev.k2[j][3]+DPa43*odev.k3[j][3]);
         odev.k4[j][1]=_cloud.vel2[j][1]=_cloud.vel[j][1]+h*(DPa41*odev.k1[j][4]+DPa42*odev.k2[j][4]+DPa43*odev.k3[j][4]);
         odev.k4[j][2]=_cloud.vel2[j][2]=_cloud.vel[j][2]+h*(DPa41*odev.k1[j][5]+DPa42*odev.k2[j][5]+DPa43*odev.k3[j][5]);
@@ -159,11 +141,9 @@ double Dormand_Prince_5(IonCloud &_cloud,_ode_vars &odev){
         odev.k4[j][3]= odev.forcev.derivs[j][0];	//Stap 1b: accel updaten
         odev.k4[j][4]= odev.forcev.derivs[j][1];
         odev.k4[j][5]= odev.forcev.derivs[j][2];
-        //for (i=0; i<3;i++) new_suggestion[j][i]=old_particles[j][i]+c5*h;		//in temp steken voor later force te berekenen
         _cloud.pos2[j][0]=_cloud.pos[j][0]+h*(DPa51*odev.k1[j][0]+DPa52*odev.k2[j][0]+DPa53*odev.k3[j][0]+DPa54*odev.k4[j][0]);
         _cloud.pos2[j][1]=_cloud.pos[j][1]+h*(DPa51*odev.k1[j][1]+DPa52*odev.k2[j][1]+DPa53*odev.k3[j][1]+DPa54*odev.k4[j][1]);
         _cloud.pos2[j][2]=_cloud.pos[j][2]+h*(DPa51*odev.k1[j][2]+DPa52*odev.k2[j][2]+DPa53*odev.k3[j][2]+DPa54*odev.k4[j][2]);
-        //for (i=0; i<3;i++) odev.k5[i]=new_suggestion[j][i+3]=old_particles[j][i+3]+h*(a51*odev.k1[i+3]+a52*odev.k2[i+3]+a53*odev.k3[i+3]+a54*odev.k4[i+3]);		//Stap 5a: posities updaten
         odev.k5[j][0]=_cloud.vel2[j][0]=_cloud.vel[j][0]+h*(DPa51*odev.k1[j][3]+DPa52*odev.k2[j][3]+DPa53*odev.k3[j][3]+DPa54*odev.k4[j][3]);
         odev.k5[j][1]=_cloud.vel2[j][1]=_cloud.vel[j][1]+h*(DPa51*odev.k1[j][4]+DPa52*odev.k2[j][4]+DPa53*odev.k3[j][4]+DPa54*odev.k4[j][4]);
         odev.k5[j][2]=_cloud.vel2[j][2]=_cloud.vel[j][2]+h*(DPa51*odev.k1[j][5]+DPa52*odev.k2[j][5]+DPa53*odev.k3[j][5]+DPa54*odev.k4[j][5]);
@@ -173,11 +153,9 @@ double Dormand_Prince_5(IonCloud &_cloud,_ode_vars &odev){
         odev.k5[j][3]= odev.forcev.derivs[j][0];	//Stap 1b: accel updaten
         odev.k5[j][4]= odev.forcev.derivs[j][1];
         odev.k5[j][5]= odev.forcev.derivs[j][2];						//Stap 5b: snelheden updaten
-        //for (i=0; i<3;i++) new_suggestion[j][i]=old_particles[j][i]+h;//DPc6=1		in temp steken voor later force te berekenen
         _cloud.pos2[j][0]=_cloud.pos[j][0]+h*(DPa61*odev.k1[j][0]+DPa62*odev.k2[j][0]+DPa63*odev.k3[j][0]+DPa64*odev.k4[j][0]+DPa65*odev.k5[j][0]);
         _cloud.pos2[j][1]=_cloud.pos[j][1]+h*(DPa61*odev.k1[j][1]+DPa62*odev.k2[j][1]+DPa63*odev.k3[j][1]+DPa64*odev.k4[j][1]+DPa65*odev.k5[j][1]);
         _cloud.pos2[j][2]=_cloud.pos[j][2]+h*(DPa61*odev.k1[j][2]+DPa62*odev.k2[j][2]+DPa63*odev.k3[j][2]+DPa64*odev.k4[j][2]+DPa65*odev.k5[j][2]);
-        //for (i=0; i<3;i++) odev.k6[i]=new_suggestion[j][i+3]=old_particles[j][i+3]+h*(a61*odev.k1[i+3]+a62*odev.k2[i+3]+a63*odev.k3[i+3]+a64*odev.k4[i+3]+a65*odev.k5[i+3]);		//Stap 6a: posities updaten
         odev.k6[j][0]=_cloud.vel2[j][0]=_cloud.vel[j][0]+h*(DPa61*odev.k1[j][3]+DPa62*odev.k2[j][3]+DPa63*odev.k3[j][3]+DPa64*odev.k4[j][3]+DPa65*odev.k5[j][3]);
         odev.k6[j][1]=_cloud.vel2[j][1]=_cloud.vel[j][1]+h*(DPa61*odev.k1[j][4]+DPa62*odev.k2[j][4]+DPa63*odev.k3[j][4]+DPa64*odev.k4[j][4]+DPa65*odev.k5[j][4]);
         odev.k6[j][2]=_cloud.vel2[j][2]=_cloud.vel[j][2]+h*(DPa61*odev.k1[j][5]+DPa62*odev.k2[j][5]+DPa63*odev.k3[j][5]+DPa64*odev.k4[j][5]+DPa65*odev.k5[j][5]);
@@ -187,11 +165,9 @@ double Dormand_Prince_5(IonCloud &_cloud,_ode_vars &odev){
         odev.k6[j][3]= odev.forcev.derivs[j][0];	//Stap 1b: accel updaten
         odev.k6[j][4]= odev.forcev.derivs[j][1];
         odev.k6[j][5]= odev.forcev.derivs[j][2];
-        //for (i=0; i<3;i++) new_suggestion[j][i]=old_particles[j][i]+h;//DPc7= 1 in temp steken voor later force te berekenen
         _cloud.pos2[j][0]=_cloud.pos[j][0]+h*(DPa71*odev.k1[j][0]+DPa73*odev.k3[j][0]+DPa74*odev.k4[j][0]+DPa75*odev.k5[j][0]+DPa76*odev.k6[j][0]);
         _cloud.pos2[j][1]=_cloud.pos[j][1]+h*(DPa71*odev.k1[j][1]+DPa73*odev.k3[j][1]+DPa74*odev.k4[j][1]+DPa75*odev.k5[j][1]+DPa76*odev.k6[j][1]);
         _cloud.pos2[j][2]=_cloud.pos[j][2]+h*(DPa71*odev.k1[j][2]+DPa73*odev.k3[j][2]+DPa74*odev.k4[j][2]+DPa75*odev.k5[j][2]+DPa76*odev.k6[j][2]);
-        //for (i=0; i<3;i++) odev.k7[i]=new_suggestion[j][i+3]=old_particles[j][i+3]+h*(a71*odev.k1[i+3]+a73*odev.k3[i+3]+a74*odev.k4[i+3]+a75*odev.k5[i+3]+a76*odev.k6[i+3]);		//Stap 6a: posities updaten	
         odev.k7[j][0]=_cloud.vel2[j][0]=_cloud.vel[j][0]+h*(DPa71*odev.k1[j][3]+DPa73*odev.k3[j][3]+DPa74*odev.k4[j][3]+DPa75*odev.k5[j][3]+DPa76*odev.k6[j][3]);
         odev.k7[j][1]=_cloud.vel2[j][1]=_cloud.vel[j][1]+h*(DPa71*odev.k1[j][4]+DPa73*odev.k3[j][4]+DPa74*odev.k4[j][4]+DPa75*odev.k5[j][4]+DPa76*odev.k6[j][4]);
         odev.k7[j][2]=_cloud.vel2[j][2]=_cloud.vel[j][2]+h*(DPa71*odev.k1[j][5]+DPa73*odev.k3[j][5]+DPa74*odev.k4[j][5]+DPa75*odev.k5[j][5]+DPa76*odev.k6[j][5]);
@@ -202,7 +178,6 @@ double Dormand_Prince_5(IonCloud &_cloud,_ode_vars &odev){
         odev.k7[j][3]= odev.forcev.derivs[j][0];	//Stap 1b: accel updaten
         odev.k7[j][4]= odev.forcev.derivs[j][1];
         odev.k7[j][5]= odev.forcev.derivs[j][2];  
-        //for (i=0; i<6;i++){old_particles[j][i]=old_particles[j][i]+h*(b1*odev.k1[i]+b3*odev.k3[i]+b4*odev.k4[i]+b5*odev.k5[i]+b6*odev.k6[i]);} 
         _cloud.pos2[j][0]=_cloud.pos[j][0]+h*(DPb1*odev.k1[j][0]+DPb3*odev.k3[j][0]+DPb4*odev.k4[j][0]+DPb5*odev.k5[j][0]+DPb6*odev.k6[j][0]);
         _cloud.pos2[j][1]=_cloud.pos[j][1]+h*(DPb1*odev.k1[j][1]+DPb3*odev.k3[j][1]+DPb4*odev.k4[j][1]+DPb5*odev.k5[j][1]+DPb6*odev.k6[j][1]);
         _cloud.pos2[j][2]=_cloud.pos[j][2]+h*(DPb1*odev.k1[j][2]+DPb3*odev.k3[j][2]+DPb4*odev.k4[j][2]+DPb5*odev.k5[j][2]+DPb6*odev.k6[j][2]);
@@ -239,11 +214,10 @@ double Dormand_Prince_5(IonCloud &_cloud,_ode_vars &odev){
 #else 
     odev.err= sqrt(odev.err/(6*_cloud.nrparticles));  
 #endif // __MPI_ON__
-
     return odev.err;       
 }
 
-double RungaKutta4(IonCloud &_cloud,_ode_vars &odev){
+double RungaKutta4(IonCloud &_cloud,_ode_vars &odev) {
     double h = odev.h;
     unsigned i,j;
     static const double	RKb21=0.2,
@@ -357,7 +331,6 @@ double RungaKutta4(IonCloud &_cloud,_ode_vars &odev){
         odev.sk=odev.rk_atol+odev.rk_rtol*max(fabs(_cloud.vel[j][2]),fabs(_cloud.vel2[j][2]));
         odev.err = odev.err+(odev.yerr[5]/odev.sk)*(odev.yerr[5]/odev.sk); //5
     }//end off loops over particles
-
 #ifdef __MPI_ON__
     double dum_ode;
     int ode_npart_tot;
@@ -368,7 +341,6 @@ double RungaKutta4(IonCloud &_cloud,_ode_vars &odev){
 #else 
     odev.err= sqrt(odev.err/(6*_cloud.nrparticles));  
 #endif // __MPI_ON__
-
     return odev.err; 
 }
 
@@ -456,7 +428,7 @@ bool error_succes(const double err,_ode_vars &odev){
     //default setting is beta = 0 (no PI control). Set beta to 0.04 or 0.08 to turn on PI control
     //Returns true if err <= 1, false otherwise. If step was successful, sets hnext to the estimated
     //optimal stepsize for the next step. If the step failed, reduces h appropriately for another try.
-    static const double beta=0.08,alpha=0.2-beta*0.75,safe=0.9, //beta=0.4/k en k=5 hier want 5e orde
+    static const double beta=0.0,alpha=0.2-beta*0.75,safe=0.9, //beta=0.4/k en k=5 hier want 5e orde
                  minscale=0.2,maxscale=10.0;
     //Set beta to a nonzero value for PI control. beta D 0:04\960.08 is a good default. !!!
     double scale;
@@ -485,91 +457,47 @@ bool error_succes(const double err,_ode_vars &odev){
 }      
 
 void step(IonCloud &_cloud,_ode_vars &odev){
-    /* 
-       Attempts a step with stepsize htry. On output, positions (x) and velocities (y) are replaced by their new values, hdid
-       is the stepsize that was actually accomplished, and hnext is the estimated next stepsize.
-       Doub h=htry; Set stepsize to the initial trial value.
-       */
+    // Attempts a step with stepsize htry. On output, positions (x) and velocities (y) are replaced by their new values, hdid
+    // is the stepsize that was actually accomplished, and hnext is the estimated next stepsize.
+    // Doub h=htry; Set stepsize to the initial trial value.
 
     int nrparticles = _cloud.nrparticles;
 
     double error;
-    //if(!poolvectorsInitialized){Initpoolvectors(_cloud.nrparticles);poolvectorsInitialized = true;}
 
     double particletime = _cloud.lifetime - odev.time_ini_ope;
-    if(odev.sweep_flag)
-    {
-        odev.w_exc = odev.sweep_wi + (odev.sweep_wf-odev.sweep_wi)*(_cloud.lifetime - odev.initial_time)/(odev.final_time-odev.initial_time);
-        if(odev.sweep_par!=0)
-        {
-            odev.w_exc = odev.sweep_wi + odev.sweep_par*(_cloud.lifetime - odev.initial_time) + odev.sweep_wf*pow(_cloud.lifetime - odev.initial_time,2);
-        }
-    }
-
-    if(odev.swift_flag)
-    {
-        if(odev.swift_RW)
-        {
-            odev.forcev.coswTtimeTU = odev.Interpolate_SWIFT(particletime,0);
-            odev.forcev.sinwTtimeTU = odev.Interpolate_SWIFT(particletime,1);
-        }
-        else
-        {
-            odev.forcev.coswTtimeTU = odev.Interpolate_SWIFT(particletime);
-        }
-    }
-    else
-    {
-        odev.forcev.coswTtimeTU=cos(odev.w_exc*particletime)*odev.U_exc;
-        odev.forcev.sinwTtimeTU=sin(odev.w_exc*particletime)*odev.U_exc;
-        odev.forcev.coswTtimeTU2=cos(odev.w_exc2*particletime)*odev.U_exc2;
-        odev.forcev.coswTtimeTU3=cos(odev.w_exc3*particletime)*odev.U_exc3;
-        odev.forcev.coswTtimeTU4=cos(odev.w_exc4*particletime)*odev.U_exc4;
-        odev.forcev.cos2wTtimeTU=cos(2.*odev.w_exc*particletime)*odev.U_exc;
-        odev.forcev.sin2wTtimeTU=sin(2.*odev.w_exc*particletime)*odev.U_exc;
-    }
-
 
     for (;;) {   
-
-        if(odev.RK4 == false && odev.DP5 == true && odev.VV == false) error = Dormand_Prince_5(_cloud,odev);
-        if(odev.RK4 == true  && odev.DP5 == false && odev.VV == false) error = RungaKutta4(_cloud,odev);
-        if(odev.RK4 == false && odev.DP5 == false && odev.VV == false) { // in the case of the Gear Method!
+        if(odev.RK4 == false && odev.DP5 == true) error = Dormand_Prince_5(_cloud,odev);
+        if(odev.RK4 == true  && odev.DP5 == false) error = RungaKutta4(_cloud,odev);
+        if(odev.RK4 == false && odev.DP5 == false) { // in the case of the Gear Method!
             GearMethod(_cloud,odev);
-            //VerletMethod();
             odev.change_stepsize = false;
         }
 
-        if(odev.change_stepsize == true){
+        if(odev.change_stepsize == true) {
             odev.countstep++;
             if (error_succes(error,odev))
                 break; //Step odev.rejected. Try again with reduced h set		 
             if (fabs(odev.h) <= fabs(_cloud.pos[0][0])*odev.EPS) //It was...fabs(h) <= fabs(particles[0].px)*EPS XXX this [0][0] should be different for all
                 throw("stepsize underflow created");
-        }else{
-            break;//don`t change stepsize, go out off loop.
-            //hnext stays the same, as initialized in InitOde.
         }
-
+        else
+            break;//don`t change stepsize, go out off loop.
     }
     memcpy(_cloud.pos,_cloud.pos2,sizeof(double)*3*nrparticles);
     memcpy(_cloud.vel,_cloud.vel2,sizeof(double)*3*nrparticles);
 
-
-
     //update particles time he.
     _cloud.lifetime = _cloud.lifetime+odev.h;        
     odev.h=odev.hnext; //hnext is calculated in error stuff
-
-    //printf("step =%e\n",h);
 }
 
 double GetTimeStep(_ode_vars &odev) {
     return odev.h;
 }
 
-_ode_vars::_ode_vars()
-{
+_ode_vars::_ode_vars() {
     //init the vectors for 1 particle:
     k1 = new double[1][6];
     k2 = new double[1][6];
@@ -584,7 +512,6 @@ _ode_vars::_ode_vars()
     DP5 = false;
     change_stepsize = true;
     Gear_initialized = false;
-    VV_initialized=false;
     rk_atol=1e-7;
     rk_rtol=1e-7;
 
@@ -592,22 +519,14 @@ _ode_vars::_ode_vars()
 
     EPS=numeric_limits<double>::epsilon();
     poolvectorsInitialized = false;      //standard false he
-    withCharge = false;
-    PrintAfterOperation = false;
-    PrintatZpos_bool =false;
-    PrintZpos = 0;
+    with_charge = false;
+    print_after_operation = false;
+    print_at_x =false;
+    print_x = 0;
     yerr.resize(6);
-    // force
-
-
-    // sweep
-    sweep_flag = false;
-    swift_flag = false;
-    swift_RW = false;
 }
 
-_ode_vars::~_ode_vars()
-{
+_ode_vars::~_ode_vars() {
     delete [] k1;
     delete [] k2;
     delete [] k3;
@@ -615,11 +534,9 @@ _ode_vars::~_ode_vars()
     delete [] k5;
     delete [] k6;
     delete [] k7;
-
 }
 
-void _ode_vars::Init_ode(int _ode_order, double _timestep, bool _adaptive_stepsize)
-{
+void _ode_vars::Init_ode(int _ode_order, double _timestep, bool _adaptive_stepsize) {
     errold=1.0e-4;
     reject = false;
     httry = _timestep;
@@ -637,20 +554,10 @@ void _ode_vars::Init_ode(int _ode_order, double _timestep, bool _adaptive_stepsi
     change_stepsize = _adaptive_stepsize;
 
     switch (_ode_order) {
-        case 0: {
-                    ologger<<"Choose Velocity Verlet integration method.";
-                    RK4 = false;
-                    DP5 = false;
-                    VV = true;
-                    h=_timestep;
-                    hnext=_timestep;
-                    break;
-                }
         case 1: {
                     ologger<<"Choose Gear Method 5th order. Leapfrog";
                     RK4 = false;
                     DP5 = false;
-                    VV = false;
                     h=_timestep;
                     hnext=_timestep;
                     break;
@@ -659,14 +566,12 @@ void _ode_vars::Init_ode(int _ode_order, double _timestep, bool _adaptive_stepsi
                     ologger<<"Choose Runga Kutta 4th order.";
                     RK4 = true;
                     DP5 = false;
-                    VV = false;
                     break;
                 }
         case 5: {
                     ologger<<"Choose Dormand Prince 5th order.";
                     DP5 = true;
                     RK4 = false;
-                    VV = false;
                     break;
                 }
         default: {
@@ -681,7 +586,7 @@ void _ode_vars::Init_ode(int _ode_order, double _timestep, bool _adaptive_stepsi
     poolvectorsInitialized = false;
 }
 
-void _ode_vars::Reset_ode(){
+void _ode_vars::Reset_ode() {
     h=httry;
     hnext=reset_timestep;
     h2f=h*h/2.;
@@ -691,7 +596,7 @@ void _ode_vars::Reset_ode(){
     h6f=pow(h,6)/720.;
 }
 
-void _ode_vars::Initpoolvectors(int nrParticles){
+void _ode_vars::Initpoolvectors(int nrParticles)  {
     k1 = new double[nrParticles][6];
     k2 = new double[nrParticles][6];
     k3 = new double[nrParticles][6];
@@ -699,7 +604,6 @@ void _ode_vars::Initpoolvectors(int nrParticles){
     k5 = new double[nrParticles][6];
     k6 = new double[nrParticles][6];
     k7 = new double[nrParticles][6];
-
 
     bn.resize(nrParticles);
     cn.resize(nrParticles);
@@ -733,159 +637,17 @@ void _ode_vars::Initpoolvectors(int nrParticles){
     }
 }
 
-double _ode_vars::SetSWIFT_function(string nf){
-    ifstream file;
-    double dum,dum2;
-    bool first_line= true;
-    double t0;
-    file.open(nf.c_str(),ios::in);
-    if(!file)
-    {
-        cout << "SWIFT FILE " << nf << " not found" << endl;
-        exit(EXIT_FAILURE);
-    }
-    else
-    {
-        while(!file.eof())
-        {
-            file >> dum >> dum2;
-            if(first_line)
-            {
-                t0 = dum;
-                first_line =false;
-            }
-            swift_time.push_back(dum-t0);
-            swift_amp.push_back(dum2);
-            //cout << swift_time.back() << " " << swift_amp.back() << endl;
-        }
-        swift_time.pop_back();
-        swift_amp.pop_back();
-        file.close();
-    }
-    swift_nsample = swift_time.size();
-    swift_dt = swift_time[1] - swift_time[0];
-    //cout << swift_dt << endl;
-    return swift_time.back();
-
-}
-
-double _ode_vars::SetSWIFT_function_RW(string nf){
-    ifstream file;
-    double dum,dum2,dum3;
-    bool first_line= true;
-    double t0;
-    file.open(nf.c_str(),ios::in);
-    if(!file)
-    {
-        cout << "SWIFT FILE " << nf << " not found" << endl;
-        exit(EXIT_FAILURE);
-    }
-    else
-    {
-        while(!file.eof())
-        {
-            file >> dum >> dum2 >> dum3;
-            if(first_line)
-            {
-                t0 = dum;
-                first_line =false;
-            }
-            swift_time.push_back(dum-t0);
-            swift_amp_sin.push_back(dum2);
-            swift_amp_cos.push_back(dum3);
-            //cout << swift_time.back() << " " << swift_amp.back() << endl;
-        }
-        swift_time.pop_back();
-        swift_amp.pop_back();
-        file.close();
-    }
-    swift_nsample = swift_time.size();
-    swift_dt = swift_time[1] - swift_time[0];
-    //cout << swift_dt << endl;
-    return swift_time.back();
-
-}
-
-
-double _ode_vars::Interpolate_SWIFT(double t_){
-    //linear interpolation
-    int index = floor(t_/swift_dt);
-    double res;
-    if(index<swift_nsample)
-    {
-        res = swift_amp[index] + (t_ - swift_time[index])*(swift_amp[index+1]-swift_amp[index])/swift_dt;
-    }
-    else
-    {
-        res = swift_amp[swift_nsample-1];
-    }
-    return res;
-}
-
-
-void _ode_vars::UnsetSWIFT()
-{
-    swift_time.clear();
-    swift_amp_sin.clear();
-    swift_amp_cos.clear();
-    swift_amp.clear();
-}
-
-double _ode_vars::Interpolate_SWIFT(double t_,int sc){
-    //linear interpolation
-    int index = floor(t_/swift_dt);
-    double res;
-    if(sc==0)
-    {
-        if(index<swift_nsample)
-        {
-            res = swift_amp_cos[index] + (t_ - swift_time[index])*(swift_amp_cos[index+1]-swift_amp_cos[index])/swift_dt;
-        }
-        else
-        {
-            res = swift_amp_cos[swift_nsample-1];
-        }
-    }
-    else
-    {
-        if(index<swift_nsample)
-        {
-            res = swift_amp_sin[index] + (t_ - swift_time[index])*(swift_amp_sin[index+1]-swift_amp_sin[index])/swift_dt;
-        }
-        else
-        {
-            res = swift_amp_sin[swift_nsample-1];
-        }
-    }
-    return res;
+void _force_vars::reset_ops() {
+    trap = false;
+    tof = false;
 }
 
 _force_vars::_force_vars() {
-    for(unsigned i=0;i<15;i++){
-        excitation_type[i] = false;} // dip, quad, oct , axial , RW, AW,SIMCO,SIMCOAxial
-    scaledCoulombFactor =1.;
-    coulombinteraction = false;
+    coulomb_scale = 1.0;
+    coulomb_interaction = false;
+
+    trap = true;
+    tof = false;
 }
 
-_force_vars::~_force_vars()
-{
-
-}
-void _force_vars::Reset_excitation_type(){
-    for(int i=0;i<15;i++)
-        excitation_type[i] = false;
-    return;
-}
-void _force_vars::Load_EXC_EMAP(string _file_name,double _factor){
-    exc_emap = new fieldmap(400,400);
-    exc_emap->ReadField(&_file_name[0]);
-    exc_emap->SetFactor(_factor);
-    exc_emap->SetRmin(-20);
-    exc_emap->SetZmin(-20);
-    return;
-}
-
-void _force_vars::Reset_EXC_EMAP(){
-    delete exc_emap;
-    return;
-}
+_force_vars::~_force_vars() {}

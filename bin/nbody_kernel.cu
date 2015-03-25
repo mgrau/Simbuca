@@ -130,7 +130,7 @@ extern "C" void initialize(int n_,int p_, int q_ ,int gridx_)
 	
 		p_nb=min(nbody,p_nb);
 		
-		while ((nbody > 0) && p_nb > 1 && (nbody / p_nb < (unsigned)props.multiProcessorCount))
+		while ((nbody > 0) && p_nb > 1 && (nbody / p_nb < int((unsigned)props.multiProcessorCount)))
        		{
             		p_nb /= 2;
             		q *= 2;

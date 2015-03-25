@@ -30,7 +30,7 @@ public:
     int nb_node_per_gpu; // number of node per GPU;
     int n_part_tot;
     int * coords;
-#if defined(__CUNBODY_ON__) || defined(__NBODY_ON__)    
+#if defined(__CUNBODY_ON__) || defined(__NBODY_ON__) || defined(__NBODY2_ON__)
 
     int * ID_node_GPU ; // MPI rank of node using GPU
     MPI_Comm comm1d_h; // communicator_row

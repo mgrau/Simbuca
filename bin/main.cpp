@@ -3,31 +3,31 @@
 #include <sstream>
 
 #include "initialization.h"
+#include "inireader.h"
 #include "SLogger.h"
 
 #if defined(__MPI_ON__)
 #include <mpi.h>
 #endif
 
-#ifdef __NBODY_ON__
-#include "nbody.h"
-#endif //__NBODY_ON__
-
-int main(int argc,  char* argv[] )
+int main(int argc, char* argv[])
 {
-    if(argc==2)
+    if(argc>1)
     {
-        string simFile = argv[1];
-        if(simFile.rfind(".sim")!=string::npos)
-        {
-            SimParser sparser(simFile.c_str());
-            Run(argc,argv,sparser);
+        try {
+            INIReader parser(argv[1]);
+            // SimParser sparser();
+            Run(parser);
+        }
+        catch (const char * error) {
+            cout << "could not open configuration file " << argv[1] << ". Error: " << error << endl;
         }
     }
     else
     {
         SLogger slogger("trapparameters");
-        slogger << ERROR << "Simbuca requires an inputfile\n" << SLogger::endmsg;exit(1);
+        slogger << ERROR << "Simbuca requires an inputfile\n" << SLogger::endmsg;
+        exit(1);
     }
     return 0;
 }

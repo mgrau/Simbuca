@@ -11,95 +11,41 @@
 #include "cuda_runtime_api.h"
 #endif // _NBODY_ON__
 
-const bool useTree = false;
-//if useTree = false -> Cunbody is used.
-
-//Pool of objects so constructor doesn`t need to be calles so often!
-//located here, because returned by reference
-vector< vector<double> > pool_force;
-vector<double> e_field(3);
-vector<double> B_scalar(3);
-bool poolvectorsinitialized = false;
-
 ofstream tmpstream;
 double tmpinterval;
 
 LogFile flogger;
-
-//    Adjust the settings of these matrices: rows,columns
-//    For example for the WITCH experiment: E:(1000,1000), B:(701,26)
-//    For the ASACUSA experiment: E:(1000,1000), B:(500,500)
-fieldmap Efieldmap(1000,1000);
-fieldmap Bfieldmap(1000,1000);
-fieldmap Electrodefieldmap(1000,1000); //electrode to do the excitation on
-
-#ifdef __OCTGRAV_ON__
-#define NMAX (2048) // NMAX = total number of particles in the cloud
-static octgrav tree;
-std::vector< float4 > pos(NMAX);
-std::vector< float4 > acc(NMAX);
-std::vector< float3 > vel(NMAX);
-std::vector< float3 > vel1(NMAX);
-#endif // __OCTGRAV_ON__
 
 #ifdef __MPI_ON__
 int numprocs; // number of nodes
 int myid; // id of the node
 #endif //__MPI_ON__
 
-int npart; //  number of particles in the sub cloud at the beginning
-int npart_tot; // total number of particle in the cloud at the beginning
-int jj_;
+// int npart; //  number of particles in the sub cloud at the beginning
+// int npart_tot; // total number of particle in the cloud at the beginning
 
 bool asynchro = true;
 
 void Initpoolvector(int nrParticles,const IonCloud &_cloud,_force_vars &forcev){
-    pool_force.resize(nrParticles);
-
-    poolvectorsinitialized = true;
-#ifdef __OCTGRAV_ON__
-    pos.resize(nrParticles);
-    acc.resize(nrParticles);
-    vel.resize(nrParticles);
-    vel1.resize(nrParticles);
-    //initialize the tree
-    const double eps = 1e-23;
-    const float theta = 0.2;
-    tree.set_softening(eps);
-    tree.set_opening_angle(theta);
-
-    flogger<<"Using the Octtree code. \n";
-#endif // __OCTGRAV_ON__
+    // pool_force.resize(nrParticles);
+    // poolvectorsinitialized = true;
 }
 
-void force(const IonCloud &_cloud,_ode_vars &odev){
+void force(const IonCloud &_cloud,_ode_vars &odev) {
     double x,y,z,vx,vy,vz,r2,r3,r5,z2,r4,z4, qDmassa,qqDmassaXke, el2ke;
     double t = _cloud.lifetime;
     _force_vars *forcev = &odev.forcev;
-    int trap_config = (*forcev).trap_param.trap_config;
-    double Ud2 = (*forcev).trap_param.Ud2;
-    double U0 = (*forcev).trap_param.U0;
-    double c4 = (*forcev).trap_param.c4;
-    double c6 = (*forcev).trap_param.c6;
-    double B0 = (*forcev).trap_param.B0;
-    double B2 = (*forcev).trap_param.B2;
-    double B;
+    int trap_type = (*forcev).trap_param.trap_type;
 
-    double kU0 = 0.1;
-    double Z02 = 0.05*0.05;
-    double V0 = 50.0;
-    double R02 = 0.04*0.04;
-    double Omega_rf = 2*pi*50e3;
-    //given vector with positions[0,1,2] and velocities[3,4,5],
-    //output is the acceleration ax, ay,az
-    //force cannot alter the value of pos and vel!!!! just of pos2 and vel2 !!
-
-    if(!poolvectorsinitialized){Initpoolvector(_cloud.nrparticles,_cloud,odev.forcev);}
+    double kVdc = forcev->trap_param.kappa * forcev->trap_param.Vdc;
+    double Vrf = forcev->trap_param.Vrf;
+    double r02 = forcev->trap_param.r0 * forcev->trap_param.r0;
+    double z02 = forcev->trap_param.z0 * forcev->trap_param.z0;
+    double omega_rf = forcev->trap_param.freq_rf*2*pi;
 
     el2ke = el_charge*el_charge*ke; //charges should be taken into account!
 
-
-    if ((*forcev).coulombinteraction) {        
+    if ((*forcev).coulomb_interaction) {        
 #ifdef __CUNBODY_ON__
         odev.cunbody.begin(_cloud);
 #endif // __CUNBODY_ON__
@@ -116,82 +62,29 @@ void force(const IonCloud &_cloud,_ode_vars &odev){
         vy=_cloud.vel2[j_][1];
         vz=_cloud.vel2[j_][2];
 
-#ifdef __OCTGRAV_ON__
-        //init tree stuff
-        pos[j_].x=x;
-        pos[j_].y=y;
-        pos[j_].z=z;
-        pos[j_].w=1.0;
-#endif // __OCTGRAV_ON__
+        forcev->derivs[j_][0] = 0;
+        forcev->derivs[j_][1] = 0;
+        forcev->derivs[j_][2] = 0;
 
-        switch (trap_config) {		   
-            case 0:
-                qDmassa = _cloud.charge[j_]*el_charge/_cloud.mass[j_];
-                // (*forcev).derivs[j_][0] =  qDmassa*Ud2*x*0.5;
-                // (*forcev).derivs[j_][1] =  qDmassa*Ud2*y*0.5;
-                // (*forcev).derivs[j_][2] = -qDmassa*Ud2*z;
-                // (*forcev).derivs[j_][0] += qDmassa*B0*vy;
-                // (*forcev).derivs[j_][1] += -qDmassa*B0*vx;
-                (*forcev).derivs[j_][0] = qDmassa*(kU0/Z02 - V0*cos(Omega_rf*t)/R02)*x;
-                (*forcev).derivs[j_][1] = qDmassa*(kU0/Z02 + V0*cos(Omega_rf*t)/R02)*y;
-                (*forcev).derivs[j_][2] = qDmassa*(-2.0*kU0/Z02)*z;
-                break;
-            case 1:
-                qDmassa= _cloud.charge[j_]*el_charge/_cloud.mass[j_];
-                (*forcev).derivs[j_][0] =  qDmassa*Ud2*x*0.5;
-                (*forcev).derivs[j_][1] =  qDmassa*Ud2*y*0.5;
-                (*forcev).derivs[j_][2] = -qDmassa*Ud2*z;
-                //c4
-                r2 = x*x+y*y;
-                z2 = z*z;
-                (*forcev).derivs[j_][0] += qDmassa*U0*c4*(6.*x*z2-1.5*x*r2);
-                (*forcev).derivs[j_][1] += qDmassa*U0*c4*(6.*y*z2-1.5*y*r2);
-                (*forcev).derivs[j_][2] += qDmassa*U0*c4*(-4.*z2*z+6.*r2*z);
-                //c6
-                r4 = r2*r2;
-                z4 = z2*z2;
-                (*forcev).derivs[j_][0] += qDmassa*U0*c6*(15.*x*z4 + 45./2.*z2*x*r2 -15./8.*x*r4);
-                (*forcev).derivs[j_][1] += qDmassa*U0*c6*(15.*y*z4 + 45./2.*z2*y*r2 -15./8.*y*r4);
-                (*forcev).derivs[j_][2] += qDmassa*U0*c6*(-6.*z*z4 + 30.*r2*z*z2 -45./4.*r4*z);
-                //B2
-                B = B0*(1-B2*(z2-r2*0.5));
-                (*forcev).derivs[j_][0] += qDmassa*vy*B;
-                (*forcev).derivs[j_][1] -= qDmassa*vx*B;
-                break;        
-            case 4:
-                e_field=(*forcev).Potential_map.GetEField_from_Pot(x,y,z);
-                B_scalar[0]=0;//normaal
-                B_scalar[1]=0;//normaal
-                B_scalar[2]=(*forcev).trap_param.B0;//normaal
-                qDmassa= _cloud.charge[j_]*el_charge/_cloud.mass[j_];
-                (*forcev).derivs[j_][0] = qDmassa*e_field[0];
-                (*forcev).derivs[j_][1] = qDmassa*e_field[1];
-                (*forcev).derivs[j_][2] = qDmassa*e_field[2];
-                (*forcev).derivs[j_][0] += qDmassa*(vy*B_scalar[2]-vz*B_scalar[1]);
-                (*forcev).derivs[j_][1] += qDmassa*(vz*B_scalar[0]-vx*B_scalar[2]);
-                (*forcev).derivs[j_][2] += qDmassa*(vx*B_scalar[1]-vy*B_scalar[0]);
-                break;
-            default:
-                e_field=Efieldmap.getField(x,y,z);
-                B_scalar=Bfieldmap.getField(x,y,z);
-                qDmassa= _cloud.charge[j_]*el_charge/_cloud.mass[j_];
-                (*forcev).derivs[j_][0] = qDmassa*e_field[0];
-                (*forcev).derivs[j_][1] = qDmassa*e_field[1];
-                (*forcev).derivs[j_][2] = qDmassa*e_field[2];
-                (*forcev).derivs[j_][0] += qDmassa*(vy*B_scalar[2]-vz*B_scalar[1]);
-                (*forcev).derivs[j_][1] += qDmassa*(vz*B_scalar[0]-vx*B_scalar[2]);
-                (*forcev).derivs[j_][2] += qDmassa*(vx*B_scalar[1]-vy*B_scalar[0]);
-        }//end case structure	
+        if (forcev->trap) {
+            qDmassa = _cloud.charge[j_]*el_charge/_cloud.mass[j_];
+            (*forcev).derivs[j_][0] += qDmassa*(kVdc/z02 - Vrf*cos(omega_rf*t)/r02)*x;
+            (*forcev).derivs[j_][1] += qDmassa*(kVdc/z02 + Vrf*cos(omega_rf*t)/r02)*y;
+            (*forcev).derivs[j_][2] += qDmassa*(-2.0*kVdc/z02)*z;
+        }
+
+        if (forcev->tof) {
+            qDmassa = _cloud.charge[j_]*el_charge/_cloud.mass[j_];
+            (*forcev).derivs[j_][0] += qDmassa*3000.0;
+        }
     }//end off loop over particles
 
-
-
-    if ((*forcev).coulombinteraction){      
+    if ((*forcev).coulomb_interaction) {
 #ifdef __CUNBODY_ON__
         odev.cunbody.end(_cloud);
         for(int j_=0;j_ <_cloud.nrparticles;j_++)
         {
-            qqDmassaXke = (*forcev).scaledCoulombFactor*el2ke/ _cloud.mass[j_];
+            qqDmassaXke = (*forcev).coulomb_scale*el2ke/ _cloud.mass[j_];
             (*forcev).derivs[j_][0] -= qqDmassaXke*odev.cunbody.ai[j_][0];
             (*forcev).derivs[j_][1] -= qqDmassaXke*odev.cunbody.ai[j_][1];
             (*forcev).derivs[j_][2] -= qqDmassaXke*odev.cunbody.ai[j_][2];
@@ -201,38 +94,13 @@ void force(const IonCloud &_cloud,_ode_vars &odev){
 
 #ifdef __NBODY_ON__
         odev.nbody.force_end( _cloud);        
-#ifdef __MPI_ON__
-        //MPI_Barrier(odev.mpiv->comm2d);
-        for(int j_=0;j_ <_cloud.nrparticles;j_++)
-        {
-            qqDmassaXke = (*forcev).scaledCoulombFactor*el2ke/ _cloud.mass[j_];
-            (*forcev).derivs[j_][0] -= qqDmassaXke*odev.nbody.host_acc_sub[j_].x;
-            (*forcev).derivs[j_][1] -= qqDmassaXke*odev.nbody.host_acc_sub[j_].y;
-            (*forcev).derivs[j_][2] -= qqDmassaXke*odev.nbody.host_acc_sub[j_].z;
-        }
-
-#else
-        for(int j_=0;j_ <_cloud.nrparticles;j_++)
-        {
-            qqDmassaXke = (*forcev).scaledCoulombFactor*el2ke/ _cloud.mass[j_];
+        for(int j_=0;j_ <_cloud.nrparticles;j_++) {
+            qqDmassaXke = (*forcev).coulomb_scale*el2ke/ _cloud.mass[j_];
             (*forcev).derivs[j_][0] -= qqDmassaXke*odev.nbody.host_acc[j_].x;
             (*forcev).derivs[j_][1] -= qqDmassaXke*odev.nbody.host_acc[j_].y;
             (*forcev).derivs[j_][2] -= qqDmassaXke*odev.nbody.host_acc[j_].z;
         }
-#endif // __MPI_ON__
 #endif // __NBODY_ON__
-
-#ifndef __MPI_ON__
-#ifdef __OCTGRAV_ON__
-        tree.evaluate_gravity(pos, acc);
-        for(j_=0;j_ <_cloud.nrparticles;j_++){
-            qqDmassaXke = el2ke/ _cloud.mass[j_];
-            (*forcev).derivs[j_][0] += -(*forcev).scaledCoulombFactor*qqDmassaXke*mj[j_]*acc[j_].x;
-            (*forcev).derivs[j_][1] += -(*forcev).scaledCoulombFactor*qqDmassaXke*mj[j_]*acc[j_].y;
-            (*forcev).derivs[j_][2] += -(*forcev).scaledCoulombFactor*qqDmassaXke*mj[j_]*acc[j_].z;
-        }
-#endif
-#endif
 
         /*** CPU ***/
 #ifdef __CPUNBODY_ON__
@@ -250,7 +118,7 @@ void force(const IonCloud &_cloud,_ode_vars &odev){
         {
             fx=fy=fz=0.0;
             r_ij=0.0,
-                kTqiTqjDmj=(*forcev).scaledCoulombFactor*ke*_cloud.charge[j_]*el_charge*el_charge/_cloud.mass[j_];
+                kTqiTqjDmj=(*forcev).coulomb_scale*ke*_cloud.charge[j_]*el_charge*el_charge/_cloud.mass[j_];
             //new iterator jj_ taking in account particles of previous nodes
             //jj_ = j_ + MPI_displ[myid]; 
             bjx = _cloud.pos2[j_][0];
@@ -280,7 +148,7 @@ void force(const IonCloud &_cloud,_ode_vars &odev){
         for(unsigned j_=0;j_ <_cloud.nrparticles;j_++){
             fx=fy=fz=0.0;
             r_ij=0.0;
-            kTqiTqjDmj=(*forcev).scaledCoulombFactor*ke*el_charge*_cloud.charge[j_]*el_charge/_cloud.mass[j_];
+            kTqiTqjDmj=(*forcev).coulomb_scale*ke*el_charge*_cloud.charge[j_]*el_charge/_cloud.mass[j_];
             bjx = _cloud.pos2[j_][0];
             bjy = _cloud.pos2[j_][1];
             bjz = _cloud.pos2[j_][2];
@@ -304,31 +172,5 @@ void force(const IonCloud &_cloud,_ode_vars &odev){
         }
 #endif // _MPI_ON__
 #endif // __CPUNBODY_ON__
-    } //end if forcev.coulombinteraction
+    } //end if forcev.coulomb_interaction
 }
-
-void NoIdealTrap(char *_Er_filename, char *_Ez_filename, char *_B_filename) {
-    flogger<<"Use of NonIdeal trap\n";
-    flogger<<"\tEr//Ez fieldmaps: ";flogger<<_Er_filename;flogger<<" // ";flogger<<_Ez_filename;flogger<<"\n ";
-    flogger<<"\tB fieldmap: ";flogger<<_B_filename;flogger<<"\n";
-    Efieldmap.ReadField(_Er_filename,_Ez_filename);
-    Bfieldmap.ReadField(_B_filename);
-}
-
-void NoIdealTrap(char *_Erz_filename, char *_B_filename) {
-    flogger<<"Use of NonIdeal trap\n";
-    flogger<<"\tErz fieldmaps: ";flogger<<_Erz_filename;flogger<<"\n ";
-    flogger<<"\tB fieldmap: ";flogger<<_B_filename;flogger<<"\n";
-    Efieldmap.ReadField(_Erz_filename);
-    Bfieldmap.ReadField(_B_filename);
-}
-
-void NoIdealTrap() { //in case when the trappotentials are being calculated.
-    flogger<<"Use of NonIdeal trap\n";
-    flogger<<"E and B fieldmap are calculated with the equations defined in fieldcalc.cpp\n";
-}
-
-void ChangeEfield(char *_Erz_filename) {
-    Efieldmap.ReadField(_Erz_filename);
-}
-

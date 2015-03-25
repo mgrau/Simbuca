@@ -21,32 +21,39 @@ _nbody::_nbody(){}
 _nbody::~_nbody(){}
 
 
-void _nbody::Initialization(const IonCloud & _cloud, bool _withCharge)
-{
+void _nbody::Initialization(const IonCloud & _cloud, bool _withCharge) {
 #ifdef __MPI_ON__
     n_cpu = mpiv->n_part_tot;
     if(mpiv->coords[1]==0) // node using GPU
     {
-        
 #else
         n_cpu = _cloud.nrparticles;
 #endif
-        
+        cout << "Begin NBODY init" << endl;
+        int devID;
         cudaDeviceProp props;
-        cudaGetDeviceProperties(&props, 0);
+        cudaGetDevice(&devID);
+        cout << "cudaGetDeviceProperties begin" << endl;
+        cudaGetDeviceProperties(&props, devID);
+        cout << "cudaGetDeviceProperties end" << endl;
         name = props.name;
         sm = props.multiProcessorCount;
         step = sm*16;
         cc = props.maxThreadsPerBlock;
+        cout << "devID: " << devID << endl;
+        cout << "Name: " << name << endl;
+        cout << "Processors: " << sm << endl;
         n_max_alloc = FindSupN(n_cpu);
-       
-        LoadFile();
-       
 
-        //cout << n_max_alloc << endl;
+        cout << "Nmax: " << n_max_alloc << endl;
+        LoadFile();
+        cout << "Loaded File..." << endl;
+        cout << "Will cudaHostAlloc " <<n_max_alloc * sizeof (float4) << " plus " << n_max_alloc * sizeof (float3) << "\n";
+
         cudaHostAlloc( (void**)&host_pos,n_max_alloc*sizeof(float4),cudaHostAllocDefault);
         cudaHostAlloc( (void**)&host_acc,n_max_alloc*sizeof(float3),cudaHostAllocDefault);
-        
+
+        cout << "Memory allocated..." << endl;
 
         //host_pos  = (float4 *) malloc (n_max_alloc * sizeof (float4));
         //host_acc  = (float3 *) malloc (n_max_alloc * sizeof (float3));
@@ -57,23 +64,19 @@ void _nbody::Initialization(const IonCloud & _cloud, bool _withCharge)
     if(mpiv->coords[1]!=0) // node using GPU
     {
 #endif
+        cout << "Will malloc " <<n_max_alloc * sizeof (float4) << " plus " << n_max_alloc * sizeof (float3) << "\n";
         host_pos  = (float4 *) malloc (n_max_alloc * sizeof (float4));
         host_acc  = (float3 *) malloc (n_max_alloc * sizeof (float3));
 #ifdef __MPI_ON__
-        
+
     }
     host_pos_sub = (float4 *) malloc (_cloud.nrparticles * sizeof (float4));
     host_acc_sub = (float3 *) malloc (_cloud.nrparticles * sizeof (float3));
 #endif
-    
 }
 
-
-
-int _nbody::FindSupN(int n_)
-{
+int _nbody::FindSupN(int n_) {
     int n_temp = step;
-    
     if(n_ < step)
     {
         cout << " n too small" << endl;
@@ -82,13 +85,12 @@ int _nbody::FindSupN(int n_)
     while(n_>n_temp)
     {
         n_temp +=step;
+
     }
-    
     return n_temp;
 }
 
-void _nbody::Finalize()
-{
+void _nbody::Finalize() {
 #ifdef __MPI_ON__
     if(mpiv->coords[1]==0) // node using GPU
     {
@@ -106,13 +108,11 @@ void _nbody::Finalize()
     free(host_pos_sub);
     free(host_acc_sub);
 #endif
-
 }
 
-void _nbody::LoadPosition(const IonCloud &_cloud)
-{
+void _nbody::LoadPosition(const IonCloud &_cloud) {
 #ifndef  __MPI_ON__
-    
+
     for(int i=0;i<n_cpu;i++)
     {
         host_pos[i].x = _cloud.pos2[i][0];
@@ -120,7 +120,7 @@ void _nbody::LoadPosition(const IonCloud &_cloud)
         host_pos[i].z = _cloud.pos2[i][2];
         host_pos[i].w = 1;// CHARGE
     }
-    
+
     // ghost particles
     if(n_cpu<n_gpu)
         for(int i=n_cpu;i<n_gpu;i++)
@@ -138,11 +138,11 @@ void _nbody::LoadPosition(const IonCloud &_cloud)
         host_pos_sub[i].y = _cloud.pos2[i][1];
         host_pos_sub[i].z = _cloud.pos2[i][2];
         host_pos_sub[i].w = 1; // CHARGE
-        
+
     }
-   
+
     MPI_Gatherv(&host_pos_sub[0],_cloud.nrparticles,mpiv->MPI_FLOAT4,&host_pos[0],mpiv->counts,mpiv->disps,mpiv->MPI_FLOAT4,0,mpiv->comm2d); // here
-   
+
     if(mpiv->coords[1]==0) // node using GPU
     {
         if(n_cpu<n_gpu)
@@ -154,15 +154,14 @@ void _nbody::LoadPosition(const IonCloud &_cloud)
                 host_pos[i].w = 0;
             }
     }
-    
+
 #endif
 }
 
-void _nbody::SetParameterWithoutFile()
-{
+void _nbody::SetParameterWithoutFile() {
     int n,p,q,t;
     n_gpu =  FindSupN(n_cpu);
-    
+
     n = n_gpu;
     p = min(cc,n);
     q = 1;
@@ -188,59 +187,50 @@ void _nbody::SetParameterWithoutFile()
     p_gpu =p ;
     q_gpu =q ;
     t_gpu =t ;
-    // cout << n << "  " << p << "  " << q << " " << t << endl;
 }
-void _nbody::SetParameterWithFile()
-{
+void _nbody::SetParameterWithFile() {
     int gpu_i = 0;
-    
+
     while(n_cpu>Vgpu_n[gpu_i])
     {
         gpu_i++;
     }
-    
+
     n_gpu = Vgpu_n[gpu_i];
     p_gpu = Vgpu_p[gpu_i];
     q_gpu = Vgpu_q[gpu_i];
     t_gpu = Vgpu_ntiles[gpu_i];
-    
 }
 
-void _nbody::SetParameters()
-{
+void _nbody::SetParameters() {
     if(!file||(n_cpu>n_max_file))
     {
         SetParameterWithoutFile();
-        
+
     }
     else
     {
         SetParameterWithFile();
     }
-    // cout << n_gpu << " " << p_gpu << " " << q_gpu<< " " << t_gpu<< endl;
 }
-void _nbody::force_begin(const IonCloud &_cloud)
-{
-    
-
+void _nbody::force_begin(const IonCloud &_cloud) {
 #ifdef  __MPI_ON__
-    
     n_cpu = mpiv->n_part_tot;
 #else
     n_cpu = _cloud.nrparticles;
 #endif
-    
+
 #ifdef  __MPI_ON__
     if(mpiv->coords[1]==0)
         SetParameters();
 #else
     SetParameters();
 #endif
-    
+
     LoadPosition(_cloud);
-    
+
 #ifdef  __MPI_ON__
-    
+
     if(mpiv->coords[1]==0)
     {
         cudaEventCreate (&end_gpu2);
@@ -248,36 +238,33 @@ void _nbody::force_begin(const IonCloud &_cloud)
         cudaEventRecord(end_gpu2,0);
 
     }
-    
+
 #else
     cudaEventCreate (&end_gpu2);
     simulation_Async(host_pos,host_acc,n_gpu, p_gpu, q_gpu, t_gpu);
     cudaEventRecord(end_gpu2,0);
-
 #endif
-               
 }
 
 
-void _nbody::force_end(const IonCloud &_cloud)
-{
+void _nbody::force_end(const IonCloud &_cloud) {
 #ifdef  __MPI_ON__
     int iii=0;
     if(mpiv->rank==0)
     {
         while( cudaEventQuery(end_gpu2) == cudaErrorNotReady )
         {
-           
+
         }
         cudaEventDestroy(end_gpu2);
-        
+
     }
     MPI_Scatterv(host_acc,mpiv->counts,mpiv->disps,mpiv->MPI_FLOAT3,host_acc_sub,_cloud.nrparticles,mpiv->MPI_FLOAT3,0,mpiv->comm2d);
-    
+
 #else
     while( cudaEventQuery(end_gpu2) == cudaErrorNotReady )
     {
-        
+
     }
     cudaEventDestroy(end_gpu2);
 #endif
@@ -285,12 +272,11 @@ void _nbody::force_end(const IonCloud &_cloud)
 
 
 
-void _nbody::LoadFile()
-{
+void _nbody::LoadFile() {
     int tmp_n,tmp_p,tmp_q,tmp_ntiles;
     double tmp1;
-    
-    
+
+
     unsigned found = name.find(' ');
     while(found>name.size())
     {
@@ -300,10 +286,10 @@ void _nbody::LoadFile()
     stringstream filename;
     //filename << "../../libraries/NBODY/" << name << "_NB0DY.dat";
     filename << "" << name << "_NB0DY.dat";
-    
-    
+
+
     GPUfile.open(filename.str().c_str(),ios::in);
-    
+
     if(!GPUfile)
     {
         file = false;
@@ -326,7 +312,7 @@ void _nbody::LoadFile()
         Vgpu_p.pop_back();
         Vgpu_q.pop_back();
         Vgpu_ntiles.pop_back();
-        
+
         n_max_file = tmp_n;
         n_max_alloc = max(n_max_alloc,n_max_file);
         GPUfile.close();
@@ -338,10 +324,7 @@ void _nbody::LoadFile()
 void _nbody::InitMPI(_mpi_vars * _mpiv)
 {
     mpiv = _mpiv;
-    //AllocArrays(mpiv->n_part_tot);
-    //ai = new double[mpiv->counts[mpiv->rank]][3];    
 }
-
 #endif //MPI
 
 #endif // __NBODY_ON__

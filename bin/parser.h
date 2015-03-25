@@ -7,7 +7,7 @@
 #include "ion.h"
 #include "trapparameters.h"
 #include "logfile.h"
-#include "ionFly.h"
+#include "ion_fly.h"
 #include "IonTable.h"
 #include "PDGTable.h"
 #include <stdio.h>
