@@ -465,7 +465,7 @@ void step(IonCloud &_cloud,_ode_vars &odev){
 
     double error;
 
-    double particletime = _cloud.lifetime - odev.time_ini_ope;
+    double particletime = _cloud.lifetime - odev.time_start_op;
 
     for (;;) {   
         if(odev.RK4 == false && odev.DP5 == true) error = Dormand_Prince_5(_cloud,odev);
@@ -640,6 +640,7 @@ void _ode_vars::Initpoolvectors(int nrParticles)  {
 void _force_vars::reset_ops() {
     trap = false;
     tof = false;
+    trap_ramp = false;
 }
 
 _force_vars::_force_vars() {
@@ -648,6 +649,7 @@ _force_vars::_force_vars() {
 
     trap = true;
     tof = false;
+    trap_ramp = false;
 }
 
 _force_vars::~_force_vars() {}

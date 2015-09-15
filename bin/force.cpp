@@ -54,6 +54,7 @@ void force(const IonCloud &_cloud,_ode_vars &odev) {
 #endif // __NBODY_ON__
     }
 
+
     for(unsigned j_=0; j_< _cloud.nrparticles; j_++) {
         x=_cloud.pos2[j_][0];
         y=_cloud.pos2[j_][1];
@@ -75,8 +76,9 @@ void force(const IonCloud &_cloud,_ode_vars &odev) {
 
         if (forcev->tof) {
             qDmassa = _cloud.charge[j_]*el_charge/_cloud.mass[j_];
-            (*forcev).derivs[j_][0] += qDmassa*3000.0;
+            (*forcev).derivs[j_][0] += qDmassa*forcev->trap_param.E_kick;
         }
+
     }//end off loop over particles
 
     if ((*forcev).coulomb_interaction) {

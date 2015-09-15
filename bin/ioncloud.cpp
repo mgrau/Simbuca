@@ -10,11 +10,9 @@ IonCloud::~IonCloud() {}
 
 IonCloud::IonCloud() {
     //definition off static things...
-    //private:
     sim_time_start = 0;
     globalstream = NULL;
     print_x_stream = NULL;
-    // cloud_stream = NULL;
 
     filenamebegin = ("xxx");
 
@@ -24,7 +22,6 @@ IonCloud::IonCloud() {
 
     cloud_stream.resize(0); //so #streams = #particles
     streamvector.resize(0); //so #streams = #particles
-    // nrcoll.resize(0);
     lifetime = 0.0;
 }
 
@@ -33,7 +30,6 @@ void IonCloud::Create(const char* _filename) {
     filenamebegin = _filename;
     sim_time_start = time(0);
     ions = new vector<Ion> ;
-    // images.push_back(pair< double,double> (0,0));
 }
 
 void IonCloud::Delete() {
@@ -49,7 +45,6 @@ void IonCloud::Delete() {
             (*streamvector[k])<<"#End time of simulation: "<<ctime(&tm);
             (*streamvector[k]).flush();
             (*streamvector[k]).close();
-
         }
     }
     else {
@@ -127,7 +122,13 @@ void IonCloud::PrintX(int k) {
         string print_x_filename(filenamebegin);
         print_x_filename.append("_x.txt");
         print_x_stream = new ofstream(print_x_filename.c_str());
-        (*print_x_stream) << "#Print at X";
+        (*print_x_stream)<<"#Print at X position";
+        (*print_x_stream)<<"#------------------------------------------------------------------------------#\n";
+        (*print_x_stream)<<"#                          JILA EDM Paul Trap Simulation                       #\n";
+        (*print_x_stream)<<"#      Dormand-Prince Runga-Kutta with Proportional Integrating controller     #\n" ;
+        (*print_x_stream)<<"#------------------------------------------------------------------------------#\n";
+        (*print_x_stream)<<"#index \t type \t #particules \t t (ms) \t x0 y0 z0 (mm) sx sy sz (m/s) \t Energy(eV)\n";
+        (*print_x_stream)<<"#*******************************************************************************\n";
         (*print_x_stream).setf(std::ios::scientific, std::ios::floatfield);
     }
     else {
@@ -209,13 +210,12 @@ void IonCloud::CreateFile() {
             time ( &rawtime2 );
             (*streamvector[particleIndex])<<"#Simulation started: "<<ctime (&rawtime2);
             (*streamvector[particleIndex])<<"#------------------------------------------------------------------------------#\n";
-            (*streamvector[particleIndex])<<"#                Penning Trap Simulation Program by Simon Van Gorp             #\n";
+            (*streamvector[particleIndex])<<"#                          JILA EDM Paul Trap Simulation                       #\n";
             (*streamvector[particleIndex])<<"#      Dormand-Prince Runga-Kutta with Proportional Integrating controller     #\n" ;
             (*streamvector[particleIndex])<<"#------------------------------------------------------------------------------#\n";
-            (*streamvector[particleIndex])<<"#index mass x y z (mm) vx vy vz (m/s) \t r+(mm) \t r-(mm) \t R(mm) \t Energy(eV) \t Temperature(K) \t t(ms) \n";
+            (*streamvector[particleIndex])<<"#index \t mass \t t (ms) \t x y z (mm) vx vy vz (m/s) \t Energy(eV)\n";
             (*streamvector[particleIndex])<<"#*******************************************************************************\n";
             (*streamvector[particleIndex]).setf(std::ios::scientific, std::ios::floatfield);
-            //cout<<"stream for particles"<<particleIndex+1<<endl;
         }
         else {
             ss<<filenamebegin<<"_pAll.txt";
@@ -225,28 +225,16 @@ void IonCloud::CreateFile() {
                 globalstream = new ofstream(filename);
                 time_t rawtime2;
                 time ( &rawtime2 );
-                // streamvector.push_back(new ofstream(filename));
-                // streamvector[particleIndex] = globalstream;
-                // (*streamvector[particleIndex])<<"#Simulation started: "<<ctime (&rawtime2);
-                // (*streamvector[particleIndex])<<"#------------------------------------------------------------------------------#\n";
-                // (*streamvector[particleIndex])<<"#                Penning Trap Simulation Program by Simon Van Gorp             #\n";
-                // (*streamvector[particleIndex])<<"#      Dormand-Prince Runga-Kutta with Proportional Integrating controller     #\n" ;
-                // (*streamvector[particleIndex])<<"#------------------------------------------------------------------------------#\n";
-                // (*streamvector[particleIndex])<< "#index mass x y z (mm) \t r+(mm) \t r-(mm) \t R(mm) \t Energy(eV) \t Temperature(K) \t t(ms) \n";
-                // (*streamvector[particleIndex])<<"#*******************************************************************************\n";
                 (*globalstream)<<"#Simulation started: "<<ctime (&rawtime2);
                 (*globalstream)<<"#------------------------------------------------------------------------------#\n";
-                (*globalstream)<<"#                Penning Trap Simulation Program by Simon Van Gorp             #\n";
+                (*globalstream)<<"#                          JILA EDM Paul Trap Simulation                       #\n";
                 (*globalstream)<<"#      Dormand-Prince Runga-Kutta with Proportional Integrating controller     #\n" ;
                 (*globalstream)<<"#------------------------------------------------------------------------------#\n";
-                (*globalstream)<< "#index mass x y z (mm) \t r+(mm) \t r-(mm) \t R(mm) \t Energy(eV) \t Temperature(K) \t t(ms) \n";
+                (*globalstream)<<"#index \t mass \t t (ms) \t x y z (mm) vx vy vz (m/s) \t Energy(eV)\n";
                 (*globalstream)<<"#*******************************************************************************\n";
                 (*globalstream).setf(std::ios::scientific, std::ios::floatfield);
             }
-            // else
-            //     streamvector.push_back(globalstream);
         }
-
         if (cloud_stream.size() < ion_types.size()) {
             stringstream ss (stringstream::in | stringstream::out);
             string cloud_filename(filenamebegin);
@@ -256,10 +244,15 @@ void IonCloud::CreateFile() {
             cloud_stream.push_back(new ofstream(cloud_filename.c_str()));
             time_t rawtime2;
             time ( &rawtime2 );
-            (*cloud_stream[ion_type]) << "#Simulation started: " << ctime(&rawtime2);
+            (*cloud_stream[ion_type])<<"#Simulation started: " << ctime(&rawtime2);
+            (*cloud_stream[ion_type])<<"#------------------------------------------------------------------------------#\n";
+            (*cloud_stream[ion_type])<<"#                          JILA EDM Paul Trap Simulation                       #\n";
+            (*cloud_stream[ion_type])<<"#      Dormand-Prince Runga-Kutta with Proportional Integrating controller     #\n" ;
+            (*cloud_stream[ion_type])<<"#------------------------------------------------------------------------------#\n";
+            (*cloud_stream[ion_type])<<"#index \t type \t #particules \t t (ms) \t x0 y0 z0 (mm) sx sy sz (m/s) \t Energy(eV)\n";
+            (*cloud_stream[ion_type])<<"#*******************************************************************************\n";
             (*cloud_stream[ion_type]).setf(std::ios::scientific, std::ios::floatfield);
         }
-
     }
 }
 
@@ -321,10 +314,6 @@ void IonCloud::DelParticle(int _index, char* _reason) {
 }
 
 pair<double,double> IonCloud::Temperature() {
-    // E=m*v*v/2
-    // gemE = 3/2*kb*T
-    //dus vx,vy,vz->E -> alle E's -> Egem -> T
-    //if particles.size != 0
     pair<double,double> mean_energy(0.0,0.0);
 
     if (particles.size() != 0){

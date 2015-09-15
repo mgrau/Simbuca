@@ -28,8 +28,6 @@ void ExitIonFly(IonCloud &_cloud);
 
 void AddParticle(double x, double y, double z, double vx, double vy, double vz,Ion &_ion, IonCloud &_cloud);
 
-// void DelParticle(int _index, IonCloud &_cloud);
-
 void normal_operation(double time, IonCloud &_cloud,_ode_vars & odev);
 
 void SetCoulomb(bool _coulombinteraction);

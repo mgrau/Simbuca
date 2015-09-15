@@ -519,30 +519,38 @@ void DoSimulation(INIReader & parser, IonCloud & _cloud,_ode_vars &odev) throw(c
             if (is_in(sections,op_num.str())) {
                 cout << "[" << op_num.str() << "]" << endl;
                 string op_type = parser.Get(op_num.str(),"type","none");
-                double op_duration = parser.GetReal(op_num.str(),"duration",1e-3);
-                double op_print= parser.GetReal(op_num.str(),"print_timestep",0.0);
+                op.time = parser.GetReal(op_num.str(),"duration",1e-3);
+                op.print_time = parser.GetReal(op_num.str(),"print_timestep",0.0);
+                op.timestep = parser.GetReal(op_num.str(),"ode_timestep",0.0);
                 cout << "    type = " << op_type << endl;
-                cout << "    duration = " << op_duration << " s" << endl;
-
-                if (op_type == "normal" || op_type=="none" || op_type=="n") {
+                if (op_type == "normal" || op_type=="none" || op_type=="n" || op_type=="trap") {
                     op.name = "normal";
-                    op.time = op_duration;
-                    op.print_time = op_print;
                     ops.add(op);
                 }
                 else if (op_type == "tof" || op_type=="TOF") {
                     op.name = "tof";
-                    op.time = op_duration;
-                    op.print_time = op_print;
+                    odev.forcev.trap_param.E_kick = parser.GetReal(op_num.str(),"Ekick",0.0);
+                    ops.add(op);
+                }
+                else if (op_type == "trap ramp" || op_type == "trap_ramp" ) {
+                    op.name = "trap_ramp";
+                    odev.forcev.trap_param.newVrf = parser.GetReal(op_num.str(),"Vrf",0.0); 
+                    odev.forcev.trap_param.newVdc = parser.GetReal(op_num.str(),"Vdc",0.0); 
+                    ops.add(op);
+                }
+                else if (op_type == "dissociation") {
+                    op.name = "dissociation";
+                    op.dissociation_fraction = parser.GetReal(op_num.str(),"fraction",1.0);
+                    op.dissociation_reactant = parser.Get(op_num.str(),"reactant","none");
+                    op.dissociation_product = parser.Get(op_num.str(),"product","none");
+                    op.product_mass = parser.GetReal(op_num.str(),"mass",0.0);
+                    op.product_energy = parser.GetReal(op_num.str(),"energy",0.0);
                     ops.add(op);
                 }
                 else if (op_type == "nop" || op_type=="none") {
                     op.name = "nop";
-                    op.time = op_duration;
-                    op.print_time = op_print;
                     ops.add(op);
                 }
-
             }
         }
 

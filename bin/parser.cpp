@@ -47,9 +47,6 @@ int ImportData(const char * filename_prefix,IonTable Table,PDGTable pdgTable, Io
     if(myid==0)
     {   
         filename_temp = filename_prefix;
-#ifdef  __MPI_ON__ 
-        //filename_temp.erase(filename_temp.size() - 2, filename_temp.size()-1); // remove the "-0"
-#endif // __MPI_ON__
         ssfilename_input << filename_temp << "_pAll.txt";
         input_file.open(ssfilename_input.str().c_str(),ios::in);
         if(!input_file)
@@ -135,12 +132,6 @@ int ImportData(const char * filename_prefix,IonTable Table,PDGTable pdgTable, Io
             tmp_file << name_[i] << "\n" ;
         }
         tmp_file.close();
-        //for(int i=0;i<npart_tot;i++)
-        //{
-        //cout <<  i <<" "<<name_[i]<<" "<<x_[i]<<" "<<y_[i]<<" "<<z_[i]<<" "<<vx_[i]<<" "<<vy_[i]<<" "<<vz_[i] <<endl;
-        //cout <<  i <<" "<<Ion_[i].Getmass()/amu<<" "<<x_[i]<<" "<<y_[i]<<" "<<z_[i]<<" "<<vx_[i]<<" "<<vy_[i]<<" "<<vz_[i] <<endl;
-        //}
-
 
         // Research of species
         mass_frac.push_back(mass_[0]);
@@ -165,36 +156,6 @@ int ImportData(const char * filename_prefix,IonTable Table,PDGTable pdgTable, Io
                 name_frac.push_back(name_[i]);
             }	
         }
-        // Calculation of the fraction
-        //frac.resize(mass_frac.size());
-        //for(unsigned int j=0;j<mass_frac.size();j++)
-        //{
-        //	frac[j] = 0;
-        //	for(int i=0;i<npart_tot;i++)
-        //	{
-        //		if(mass_[i]==mass_frac[j])
-        //		{
-        //		frac[j]++;
-        //		}
-        //	}
-
-        //}
-        // Set the good fraction	
-        //for(int i=0;i<npart_tot;i++)
-        //{
-        //	for(unsigned int j=0;j<frac.size();j++)
-        //	{
-        //		if(mass_[i]==mass_frac[j])
-        //		{
-        //			tmp =  (double )frac[j]/npart_tot*100.;
-
-        //cout << tmp << endl;
-        //			Ion_[i].SetFraction(round(tmp));
-        //		}
-        //	}
-        //cout << i << " " << Ion_[i].GetFraction() << endl;
-        //}
-
     } // end myid==0
 
 
@@ -416,24 +377,6 @@ void MPI_Concatenate_Data(int NRPARTICLES, char * filename_prefix) {
         MPI::COMM_WORLD.Barrier();
         dum = strsendbuff.str().size()*sizeof(char);
         MPI::COMM_WORLD.Gather(&dum,1,MPI::INT,dum2,1,MPI::INT,0);
-        /*
-           for(int k=0;k<numprocs;k++)
-           {
-        //printf("%d %d\n",k,dum2[k]);
-        if(myid==k)
-        {
-        printf("%d %d\n",k,strsendbuff.str().size());
-        //printf("%d %s\n",k,strsendbuff.str().c_str());
-        }
-        }
-        for(int k=0;k<numprocs;k++)
-        {
-        //printf("%d %d\n",k,dum2[k]);
-        if(myid==0)
-        printf("myid %d %d\n",k,dum2[k]);
-
-        }
-        */
         MPI::COMM_WORLD.Barrier();
         if(myid==0)
         {
@@ -443,27 +386,15 @@ void MPI_Concatenate_Data(int NRPARTICLES, char * filename_prefix) {
         for(int k=1;k<numprocs;k++)
         {       
             MPI::COMM_WORLD.Barrier();
-            //  			if(myid==k)
-            //  			{
-            //  				output_file.seekp(ios::end); // place the pointer at the end
-            //  				output_file << strsendbuff.str(); // fill the output file
-            //  			}
-            //  			MPI::COMM_WORLD.Barrier();
-            // 			
-
             if(myid==k)
             {
                 MPI::COMM_WORLD.Send(strsendbuff.str().c_str(),(int) (strsendbuff.str().size()+1)*sizeof(char),MPI::CHAR,0,0);
-                //printf("%d send: %d\n",myid,strsendbuff.str().size());
-                //printf("%d send:\n%s\n",myid,strsendbuff.str().c_str());
             }
             if(myid==0)
             { 
                 delete [] buf;
                 buf = new char[ dum2[k]+1];
                 MPI::COMM_WORLD.Recv(buf,dum2[k]+1,MPI::CHAR,k,0);
-                //printf("%d recv: %d\n",myid,dum2[k]);
-                //printf("%d recv:\n%s\n",myid,buf);
                 output_file << buf ;
             }
             MPI::COMM_WORLD.Barrier();
@@ -478,9 +409,7 @@ void MPI_Concatenate_Data(int NRPARTICLES, char * filename_prefix) {
     if(myid==0)
     {
         input_file.getline(line_end0,256);// read the line
-        //output_file << line << "\n";
         input_file.getline(line_end1,256);// read the line
-        //output_file << line << "\n";
     }
     else
     {
@@ -492,10 +421,6 @@ void MPI_Concatenate_Data(int NRPARTICLES, char * filename_prefix) {
     input_file.ignore(256,'=');
     input_file >> npart_node;
     MPI::COMM_WORLD.Reduce(&npart_node,&npart_tot,1,MPI::INT,MPI::SUM,0);
-    //	if(myid==0)
-    //	{
-    //		output_file << "# #Particles left= " << npart_tot << "\n"; 
-    //	}
     input_file.ignore(256,'\n');	
     input_file.ignore(256,'=');
     input_file >> coll_node;

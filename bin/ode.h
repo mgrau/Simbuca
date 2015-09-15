@@ -49,6 +49,7 @@ struct _force_vars {
 
     bool trap;
     bool tof;
+    bool trap_ramp;
 
     void reset_ops();
     _trap_param trap_param;
@@ -96,7 +97,9 @@ struct _ode_vars {
     int countstep;
     // force variable
     _force_vars forcev;
-    double time_ini_ope;
+
+    double time_start_op;
+    double time_end_op;
     // charge
     bool with_charge;
     // PRINT PARTICLES

@@ -59,7 +59,7 @@ CC_icpc=icpc -fast $(NBODY_ALGO_FLAGS) -c
 LINK_icpc=icpc -o  
 
 # CUDA Compiler
-CUDASYS = /usr/local/cuda
+CUDASYS = /usr/local/cuda/7.0
 NVCC = $(CUDASYS)/bin/nvcc	
 NVCCFLAGS = -ccbin gcc --compiler-options -fno-strict-aliasing,-Wall,-Wextra,-Wno-unused-parameter -O3
 #MPI Compiler

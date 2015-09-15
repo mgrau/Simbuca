@@ -16,7 +16,6 @@ int main(int argc, char* argv[])
     {
         try {
             INIReader parser(argv[1]);
-            // SimParser sparser();
             Run(parser);
         }
         catch (const char * error) {

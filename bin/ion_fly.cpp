@@ -73,10 +73,13 @@ void move_particles(double _time_movement,IonCloud &_cloud,_ode_vars &odev) {
             _cloud.CopyVectorsToParticles();
     }
 
-    odev.time_ini_ope =_cloud.lifetime;
+    odev.time_start_op = _cloud.lifetime;
+    odev.time_end_op = _cloud.lifetime + _time_movement;
     // PRINT
 
     double Energy_step;
+    double oldVrf = odev.forcev.trap_param.Vrf;
+    double oldVdc = odev.forcev.trap_param.Vdc;
     while (_cloud.lifetime < endtime) {
         unsigned int nsteps = (unsigned int)((odev.total_time-starttime)/GetTimeStep(odev));
         unsigned int cstep = (unsigned int)((_cloud.lifetime-starttime)/GetTimeStep(odev));
@@ -89,15 +92,21 @@ void move_particles(double _time_movement,IonCloud &_cloud,_ode_vars &odev) {
             for(int i=0; i<_cloud.nrparticles; i++)
                 _cloud.old_x[i] = _cloud.pos[i][0];
 
+        if (odev.forcev.trap_ramp) {
+            double ramp = (_cloud.lifetime - odev.time_start_op)/(odev.time_end_op - odev.time_start_op);
+            odev.forcev.trap_param.Vrf = oldVrf*(1-ramp) + odev.forcev.trap_param.newVrf*ramp;
+            odev.forcev.trap_param.Vdc = oldVdc*(1-ramp) + odev.forcev.trap_param.newVdc*ramp;
+        }
+
         step(_cloud,odev);
 
         // PRINT PARTICLES
-            if ( (_cloud.lifetime-starttime )> (print_interval*nr_interval)){
-                _cloud.CopyVectorsToParticles();
-                _cloud.PrintParticles();
-                _cloud.PrintCloud();
-                nr_interval++;
-            }
+        if ( (_cloud.lifetime-starttime )> (print_interval*nr_interval)){
+            _cloud.CopyVectorsToParticles();
+            _cloud.PrintParticles();
+            _cloud.PrintCloud();
+            nr_interval++;
+        }
         if(odev.print_at_x)
             for(int i=0; i<_cloud.nrparticles; i++)
                 if(((_cloud.old_x[i]<odev.print_x)&&(_cloud.pos[i][0]>odev.print_x)) || ((_cloud.old_x[i]>odev.print_x)&&(_cloud.pos[i][0]<odev.print_x))) {

@@ -24,7 +24,6 @@ struct IonCloud
     vector<Ion> * ions; 
     set<string> ion_types; 
 
-
     double (*pos)[3];
     double (*pos2)[3];
     double (*vel)[3];
@@ -50,7 +49,6 @@ struct IonCloud
     bool particles_files; //standard true
     vector<int> IDs;
 
-    //structors!
     void Create(const char* _filename); 
     void Delete();   //also close all the files he!
     void Reset();

@@ -22,6 +22,13 @@ struct operation {
     string name;
     double time;
     double print_time;
+    double timestep;
+
+    double dissociation_fraction;
+    string dissociation_reactant;
+    string dissociation_product;
+    double product_mass;
+    double product_energy;
 };
 
 class operations {

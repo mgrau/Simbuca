@@ -8,6 +8,7 @@
 #include "ioncloud.h"
 #include "ion_fly.h"
 #include "operation.h"
+#include "mtrand.h"
 
 using namespace std;
 
@@ -16,6 +17,7 @@ operation::operation()
     name="normal";
     time=1e-9;
     print_time = 0.0;
+    timestep=0.0;
 }
 
 operation::operation(string _name)
@@ -23,18 +25,18 @@ operation::operation(string _name)
     name=_name;
     time=1e-9;
     print_time= 0.0;
+    timestep=0.0;
 }
 
 operation::~operation(){};
 
 void operation::launch(IonCloud &cloud, _ode_vars & odev)
 {
-    if (print_time) {
+    if (print_time)
         SetPrintInterval(print_time);
-        if (odev.h > print_time) {
-            odev.hnext = print_time;
-            odev.h = print_time;
-        }
+    if (timestep) {
+        odev.hnext = print_time;
+        odev.h = print_time;
     }
     odev.forcev.reset_ops();
     if (name=="normal") {
@@ -47,6 +49,26 @@ void operation::launch(IonCloud &cloud, _ode_vars & odev)
         odev.forcev.trap = false;
         odev.forcev.tof = true;
         normal_operation(time,cloud,odev);
+    }
+    else if (name == "trap_ramp") {
+        cout << "trap ramp operation launching" << endl;
+        odev.forcev.trap = true;
+        odev.forcev.trap_ramp = true;
+        normal_operation(time,cloud,odev);
+    }
+    else if (name == "dissociation") {
+        MTRand algrand;
+        algrand.seed(0);
+        cout << "dissociation operation launching" << endl;
+        for (int i=0; i<cloud.nrparticles; i++) {
+            if ((*cloud.ions)[i].name == dissociation_reactant) {
+                if (algrand() < dissociation_fraction) {
+                    cout << "dissociated " << dissociation_reactant << " into " << dissociation_product << endl;
+                    (*cloud.ions)[i].name = dissociation_product;
+                    (*cloud.ions)[i].mass = product_mass;
+                }
+            }
+        }
     }
     else {
         cout << "free flight operation launching" << endl;
@@ -61,6 +83,10 @@ void operation::write()
         cout << "normal operation for " << time << " s" << endl;
     else if (name == "tof")
         cout << "time of flight kick for " << time << " s" << endl;
+    else if (name == "trap_ramp")
+        cout << "trap ramp for " << time << " s" << endl;
+    else if (name == "dissociation")
+        cout << "dissociation" << endl;
     else
         cout << "No operation defined for " << time << " s!" << endl;
 }
